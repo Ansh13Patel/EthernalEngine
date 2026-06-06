@@ -1,69 +1,112 @@
-# Prerequisites
-*.d
+# ==========================
+# Visual Studio
+# ==========================
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
+.vs/
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ==========================
+# Build Output
+# ==========================
+
+Debug/
+Release/
+x64/
+x86/
+
+[Ee]thernalEngine/x64/
+[Ee]thernalEngine/Debug/
+[Ee]thernalEngine/Release/
+
+bin/
+obj/
+out/
+
+# ==========================
+# Compiled Files
+# ==========================
+
 *.obj
-
-# Precompiled Headers
-*.gch
+*.o
+*.lo
+*.slo
 *.pch
-
-# Linker files
+*.gch
 *.ilk
-
-# Debugger Files
 *.pdb
+*.idb
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-*.so.*
+# ==========================
+# Libraries / Executables
+# ==========================
 
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
 *.exe
-*.out
+*.dll
+*.lib
+*.a
+*.so
+*.so.*
+*.dylib
 *.app
 
-# Build directories
-build/
-Build/
-build-*/
+# ==========================
+# Logs / Temp
+# ==========================
 
-# CMake generated files
+*.log
+*.tmp
+*.bak
+*.cache
+*.swp
+
+# ==========================
+# CMake
+# ==========================
+
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
+compile_commands.json
 Makefile
 install_manifest.txt
-compile_commands.json
 
-# Temporary files
-*.tmp
-*.log
-*.bak
-*.swp
+# ==========================
+# Testing
+# ==========================
 
+Testing/
+
+# ==========================
 # vcpkg
+# ==========================
+
 vcpkg_installed/
 
-# debug information files
-*.dwo
+# ==========================
+# Ignore generated textures/shaders cache
+# (future proofing)
+# ==========================
 
-# test output & cache
-Testing/
-.cache/
+*.dds
+*.ktx
+
+# ==========================
+# Keep important assets
+# ==========================
+
+!Assets/
+!Shaders/
+!Textures/
+
+# ==========================
+# OS files
+# ==========================
+
+.DS_Store
+Thumbs.db
+desktop.ini
