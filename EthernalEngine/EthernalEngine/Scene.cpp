@@ -26,14 +26,21 @@ namespace EthernalEngine
 		{
 			cubeMesh = new CubeMesh();
 		}
-		Shader shader;
-		shader.LoadFromFile("Shader.vert", "Shader.frag");
-		Texture texture;
-		texture.LoadTexture("Textures/White.png");
+		if (cubeShader == nullptr)
+		{
+			cubeShader = new Shader();
+		}
+		if (cubeTexture == nullptr)
+		{
+			cubeTexture = new Texture();
+		}
+
+		cubeShader->LoadFromFile("Shader.vert", "Shader.frag");
+		cubeTexture->LoadTexture("Textures/White.png");
 
 		newCube->SetMesh(cubeMesh);
-		newCube->SetShader(&shader);
-		newCube->SetTexture(&texture);
+		newCube->SetShader(cubeShader);
+		newCube->SetTexture(cubeTexture);
 
 		return newCube;
 	}

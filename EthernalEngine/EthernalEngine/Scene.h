@@ -24,5 +24,7 @@ namespace EthernalEngine
 		std::vector<GameObject*> gameObjects;
 		Camera camera{ 800.0f, 600.0f };
 		CubeMesh* cubeMesh = nullptr;
+		Shader* cubeShader = nullptr;
+		Texture* cubeTexture = nullptr;
 	};
 }

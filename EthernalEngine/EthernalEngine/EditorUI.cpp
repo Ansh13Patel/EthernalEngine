@@ -8,6 +8,9 @@ namespace EthernalEngine
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		ImGui::StyleColorsDark();
+		io.Fonts->AddFontDefault();
+		ImGui::GetIO().FontGlobalScale = 1.2f;
+		ImGui::GetStyle().ScaleAllSizes(2.0f);
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 330");
 

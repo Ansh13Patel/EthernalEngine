@@ -17,8 +17,10 @@ namespace EthernalEngine
 			{
 				if (obj->GetShader() != currentShader && camera != nullptr)
 				{
+					obj->GetShader()->Use();
 					obj->GetShader()->SetMat4("view", camera->GetViewMatrix());
 					obj->GetShader()->SetMat4("projection", camera->GetProjectionMatrix());
+					currentShader = obj->GetShader();
 				}
 				obj->Draw();
 			}

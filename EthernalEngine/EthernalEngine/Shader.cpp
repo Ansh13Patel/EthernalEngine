@@ -26,10 +26,7 @@ namespace EthernalEngine
 
 		if (!file.is_open())
 		{
-			std::cout
-				<< "Failed to open shader file: "
-				<< path
-				<< std::endl;
+			std::cout << "Failed to open shader file: " << path << std::endl;
 
 			return "";
 		}
@@ -222,22 +219,10 @@ namespace EthernalEngine
 		);
 	}
 
-	void Shader::SetMat4(
-		const std::string& name,
-		const glm::mat4& matrix
-	)
+	void Shader::SetMat4(const std::string& name, const glm::mat4& matrix)
 	{
-		glUniformMatrix4fv(
-			glGetUniformLocation(
-				shaderProgram,
-				name.c_str()
-			),
-			1,
-			GL_FALSE,
-			glm::value_ptr(
-				matrix
-			)
-		);
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgram, name.c_str()), 1, GL_FALSE, 
+			glm::value_ptr(matrix));
 	}
 
 	void Shader::SetFloat(

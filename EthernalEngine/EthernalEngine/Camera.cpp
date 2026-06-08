@@ -1,6 +1,7 @@
 #include "Camera.h"
 
 #include<glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 namespace EthernalEngine
 {
@@ -15,10 +16,43 @@ namespace EthernalEngine
 
 		yaw = -90.0f;
 		pitch = 0.0f;
-		lastX = 400.0f;
-		lastY = 300.0f;
-		firstMouse = true;
 		fov = 45.0f;
+	}
+
+	void Camera::UpdateCameraRotation(float xOffset, float yOffset)
+	{
+		yaw += xOffset;
+		pitch += yOffset;
+		pitch = glm::clamp(pitch, -89.0f, 89.0f);
+
+		glm::vec3 direction;
+
+		direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+		direction.y = sin(glm::radians(pitch));
+		direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+		
+		cameraFront = glm::normalize(direction);
+
+		//std::cout << yaw << " " << pitch << std::endl;
+	}
+
+	void Camera::UpdateCameraFov(float yScrollOffset)
+	{
+		fov -= yScrollOffset;
+		fov = glm::clamp(fov, 1.0f, 45.0f);
+	}
+
+	void Camera::MoveCamera(bool forward, bool backward, bool right, bool left, float deltatime)
+	{
+		if (forward)
+			cameraPos += cameraFront * cameraSpeed * deltatime;
+		if (backward)
+			cameraPos -= cameraFront * cameraSpeed * deltatime;
+		if (right)
+			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltatime;
+		if (left)
+			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltatime;
+		//std::cout << "Camera pos x: " << cameraPos.x << " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl;
 	}
 
 	glm::mat4 Camera::GetViewMatrix() const
@@ -28,7 +62,7 @@ namespace EthernalEngine
 
 	glm::mat4 Camera::GetProjectionMatrix() const
 	{
-		return glm::perspective(glm::radians(fov), (float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
+		return glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
 	}
 
 	Camera::~Camera()

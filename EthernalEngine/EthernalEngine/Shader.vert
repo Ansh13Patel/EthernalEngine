@@ -1,15 +1,22 @@
-"version 330 core\n"
-"layout (location = 0) in vec3 aPos;\n"
-"layout (loaction = 1) in vec2 aTexCoord;\n"
-"uniform vec3 colorMulitpler;\n"
-"uniform mat4 model;\n"
-"uniform mat4 view;\n"
-"uniform mat4 projection;\n"
-"out vec2 TexCoord;\n"	
-"out vec4 vertexColor;\n"
-"void main()\n"
-"{\n"
-"   gl_Position = projection * view * model * vec4(aPos, 1.0f);\n"
-"   TexCoord = aTexCoord;\n"
-"   vertexColor = vec4(colorMulitpler, 1.0f);\n"
-"}\0";
+#version 330 core
+
+layout(location = 0) in vec3 aPos;
+layout(location = 1) in vec2 aTexCoord;
+
+//uniform vec3 colorMultiplier;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+out vec2 TexCoords;
+out vec4 vertexColor;
+
+void main()
+{
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+
+    TexCoords = aTexCoord;
+
+    //vertexColor = vec4( colorMultiplier, 1.0);
+}

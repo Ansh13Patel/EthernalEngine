@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "Scene.h"
 #include "EditorUI.h"
+#include "Input.h"
 
 #include <glad/glad.h>
 #include <iostream>
@@ -9,7 +10,7 @@
 constexpr int WIDTH = 800;
 constexpr int HEIGHT = 600;
 
-bool SetupAndInitialize(EthernalEngine::Window& window, EthernalEngine::EditorUI editorUI, bool shouldFullScreen);
+bool SetupAndInitialize(EthernalEngine::Window* window, EthernalEngine::EditorUI* editorUI, bool shouldFullScreen);
 
 int main()
 {
@@ -18,33 +19,35 @@ int main()
 	EthernalEngine::Renderer renderer;
 	EthernalEngine::Scene scene;
 
-    if (!SetupAndInitialize(window, editorUI, true))
+    if (!SetupAndInitialize(&window, &editorUI, true))
     {
         std::cout << "Failed to setup and initialize" << std::endl;
         return -1;
     }
+
+    EthernalEngine::Input input{ &window, &scene.GetCamera() };
 
     float deltaFrame = 0.0f;
     float lastFrame = 0.0f;
 
     while (!window.WindowShouldClose())
     {
-        editorUI.BeginFrame();
-		editorUI.RenderUI(&scene);
-
+        glfwPollEvents();
         float currentFrame = glfwGetTime();
         deltaFrame = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-		renderer.Clear();
+        renderer.Clear();
+
+        editorUI.BeginFrame();
+		editorUI.RenderUI(&scene);
+
+        input.ProcessKeyAndMouseInput(deltaFrame);
 
         scene.Update(deltaFrame);
         renderer.Draw(scene.GetGameObjects(), &scene.GetCamera());
 
-        std::cout << scene.GetGameObjectCount() << std::endl;
-
 		editorUI.EndFrame();    
-        glfwPollEvents();
         window.SwapBuffers();
     }
 
@@ -52,9 +55,9 @@ int main()
     return 0;
 }
 
-bool SetupAndInitialize(EthernalEngine::Window& window, EthernalEngine::EditorUI editorUI, bool shouldFullScreen = false)
+bool SetupAndInitialize(EthernalEngine::Window* window, EthernalEngine::EditorUI* editorUI, bool shouldFullScreen = false)
 {
-    if (!window.CreateWindow("Ethernal Engine", WIDTH, HEIGHT, shouldFullScreen))
+    if (!window->CreateWindow("Ethernal Engine", WIDTH, HEIGHT, shouldFullScreen))
     {
         std::cout<< "Failed to create window"<< std::endl;
         return false;
@@ -66,7 +69,7 @@ bool SetupAndInitialize(EthernalEngine::Window& window, EthernalEngine::EditorUI
         return false;
     }
 
-	editorUI.Initialize(window.GetGLFWwindow());
+	editorUI->Initialize(window->GetGLFWwindow());
 
     glEnable(GL_DEPTH_TEST);
 
