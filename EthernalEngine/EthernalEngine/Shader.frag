@@ -1,7 +1,7 @@
 #version 330 core
 
 in vec2 TexCoords;
-//in vec4 vertexColor;
+in vec4 vertexColor;
 
 out vec4 FragColor;
 
@@ -9,5 +9,5 @@ uniform sampler2D image;
 
 void main()
 {
-    FragColor = /*vertexColor * */ texture(image, TexCoords);
+    FragColor = vertexColor * texture(image, TexCoords);
 }

@@ -44,179 +44,95 @@ namespace EthernalEngine
 		const char* fragmentPath
 	)
 	{
-		std::string vertexCode =
-			ReadFile(vertexPath);
+		std::string vertexCode = ReadFile(vertexPath);
 
-		std::string fragmentCode =
-			ReadFile(fragmentPath);
+		std::string fragmentCode = ReadFile(fragmentPath);
 
-		if (
-			vertexCode.empty() ||
-			fragmentCode.empty()
-			)
+		if (vertexCode.empty() || fragmentCode.empty())
 		{
 			return false;
 		}
 
-		const char* vertexShaderSource =
-			vertexCode.c_str();
+		const char* vertexShaderSource = vertexCode.c_str();
 
-		const char* fragmentShaderSource =
-			fragmentCode.c_str();
+		const char* fragmentShaderSource = fragmentCode.c_str();
 
 		// Vertex Shader
-		unsigned int vertexShader =
-			glCreateShader(
-				GL_VERTEX_SHADER
-			);
+		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-		glShaderSource(
-			vertexShader,
-			1,
-			&vertexShaderSource,
-			nullptr
-		);
+		glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
 
-		glCompileShader(
-			vertexShader
-		);
+		glCompileShader(vertexShader);
 
 		int success;
 		char infoLog[512];
 
-		glGetShaderiv(
-			vertexShader,
-			GL_COMPILE_STATUS,
-			&success
-		);
+		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 
 		if (!success)
 		{
-			glGetShaderInfoLog(
-				vertexShader,
-				512,
-				nullptr,
-				infoLog
-			);
+			glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
 
-			std::cout
-				<< "Vertex Shader Compilation Failed:\n"
-				<< infoLog
-				<< std::endl;
+			std::cout << "Vertex Shader Compilation Failed:\n" << infoLog << std::endl;
 
 			return false;
 		}
 
 		// Fragment Shader
-		unsigned int fragmentShader =
-			glCreateShader(
-				GL_FRAGMENT_SHADER
-			);
+		unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-		glShaderSource(
-			fragmentShader,
-			1,
-			&fragmentShaderSource,
-			nullptr
-		);
+		glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
 
-		glCompileShader(
-			fragmentShader
-		);
+		glCompileShader(fragmentShader);
 
-		glGetShaderiv(
-			fragmentShader,
-			GL_COMPILE_STATUS,
-			&success
-		);
+		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 
 		if (!success)
 		{
-			glGetShaderInfoLog(
-				fragmentShader,
-				512,
-				nullptr,
-				infoLog
-			);
+			glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
 
-			std::cout
-				<< "Fragment Shader Compilation Failed:\n"
-				<< infoLog
-				<< std::endl;
+			std::cout << "Fragment Shader Compilation Failed:\n" << infoLog << std::endl;
 
-			glDeleteShader(
-				vertexShader
-			);
+			glDeleteShader(vertexShader);
 
 			return false;
 		}
 
 		// Shader Program
-		shaderProgram =
-			glCreateProgram();
+		shaderProgram = glCreateProgram();
 
-		glAttachShader(
-			shaderProgram,
-			vertexShader
-		);
+		glAttachShader(shaderProgram, vertexShader);
 
-		glAttachShader(
-			shaderProgram,
-			fragmentShader
-		);
+		glAttachShader(shaderProgram, fragmentShader);
 
-		glLinkProgram(
-			shaderProgram
-		);
+		glLinkProgram(shaderProgram);
 
-		glGetProgramiv(
-			shaderProgram,
-			GL_LINK_STATUS,
-			&success
-		);
+		glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
 
 		if (!success)
 		{
-			glGetProgramInfoLog(
-				shaderProgram,
-				512,
-				nullptr,
-				infoLog
-			);
+			glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
 
-			std::cout
-				<< "Shader Program Linking Failed:\n"
-				<< infoLog
-				<< std::endl;
+			std::cout << "Shader Program Linking Failed:\n" << infoLog << std::endl;
 
-			glDeleteShader(
-				vertexShader
-			);
+			glDeleteShader(vertexShader);
 
-			glDeleteShader(
-				fragmentShader
-			);
+			glDeleteShader(fragmentShader);
 
 			return false;
 		}
 
 		// Cleanup
-		glDeleteShader(
-			vertexShader
-		);
+		glDeleteShader(vertexShader);
 
-		glDeleteShader(
-			fragmentShader
-		);
+		glDeleteShader(fragmentShader);
 
 		return true;
 	}
 
 	void Shader::Use()
 	{
-		glUseProgram(
-			shaderProgram
-		);
+		glUseProgram(shaderProgram);
 	}
 
 	void Shader::SetMat4(const std::string& name, const glm::mat4& matrix)
@@ -225,31 +141,18 @@ namespace EthernalEngine
 			glm::value_ptr(matrix));
 	}
 
-	void Shader::SetFloat(
-		const std::string& name,
-		float value
-	)
+	void Shader::SetFloat(const std::string& name, float value)
 	{
-		glUniform1f(
-			glGetUniformLocation(
-				shaderProgram,
-				name.c_str()
-			),
-			value
-		);
+		glUniform1f(glGetUniformLocation(shaderProgram, name.c_str()), value);
 	}
 
-	void Shader::SetInt(
-		const std::string& name,
-		int value
-	)
+	void Shader::SetFloat3(const std::string& name, float value[3]) 
 	{
-		glUniform1i(
-			glGetUniformLocation(
-				shaderProgram,
-				name.c_str()
-			),
-			value
-		);
+		glUniform3fv(glGetUniformLocation(shaderProgram, name.c_str()), 1, value);
+	}
+
+	void Shader::SetInt(const std::string& name, int value)
+	{
+		glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()),value);
 	}
 }

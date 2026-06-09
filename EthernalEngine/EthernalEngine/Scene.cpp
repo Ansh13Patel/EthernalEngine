@@ -19,6 +19,16 @@ namespace EthernalEngine
 		}
 	}
 
+	void Scene::SetSelectedGameObject(GameObject* gameObject)
+	{
+		this->selectedGameObject = gameObject;
+	}
+
+	GameObject* Scene::GetSelectedGameObject()
+	{
+		return selectedGameObject;
+	}
+
 	GameObject* Scene::CreateCubeGameObject(std::string name)
 	{
 		GameObject* newCube = new GameObject(name);

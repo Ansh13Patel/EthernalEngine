@@ -16,12 +16,15 @@ namespace EthernalEngine
 		void Update(float deltaTime);
 		void AddGameObject(GameObject* gameObject);
 		int GetGameObjectCount() const { return static_cast<int>(gameObjects.size()); }
-		std::vector<GameObject*> GetGameObjects() { return gameObjects; }
+		std::vector<GameObject*>& GetGameObjects() { return gameObjects; }
 		Camera& GetCamera() { return camera; }
 		GameObject* CreateCubeGameObject(std::string name);
+		GameObject* GetSelectedGameObject();
+		void SetSelectedGameObject(GameObject* gameObject);
 
 	private:
 		std::vector<GameObject*> gameObjects;
+		GameObject* selectedGameObject = nullptr;
 		Camera camera{ 800.0f, 600.0f };
 		CubeMesh* cubeMesh = nullptr;
 		Shader* cubeShader = nullptr;

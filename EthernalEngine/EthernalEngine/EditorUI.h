@@ -19,6 +19,7 @@ namespace EthernalEngine
 
 	private:
 		void MainMenuBar(Scene* scene);
-		void Hierarchy(Scene scene);
+		void Hierarchy(Scene* scene);
+		void Inspector(GameObject* gameObject);
 	};
 }

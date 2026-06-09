@@ -3,7 +3,7 @@
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec2 aTexCoord;
 
-//uniform vec3 colorMultiplier;
+uniform vec3 colorMultiplier;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -18,5 +18,5 @@ void main()
 
     TexCoords = aTexCoord;
 
-    //vertexColor = vec4( colorMultiplier, 1.0);
+    vertexColor = vec4( colorMultiplier, 1.0);
 }

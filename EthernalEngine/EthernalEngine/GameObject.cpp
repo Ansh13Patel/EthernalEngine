@@ -9,10 +9,9 @@ namespace EthernalEngine
 
         shader->Use();
 
-        shader->SetMat4(
-            "model",
-            transform.GetModelMatrix()
-        );
+        shader->SetMat4("model", transform.GetModelMatrix());
+
+        shader->SetFloat3("colorMultiplier", color);
 
         if (texture)
         {

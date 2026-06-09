@@ -26,15 +26,11 @@ namespace EthernalEngine
 			const glm::mat4& matrix
 		);
 
-		void SetFloat(
-			const std::string& name,
-			float value
-		);
+		void SetFloat(const std::string& name, float value);
 
-		void SetInt(
-			const std::string& name,
-			int value
-		);
+		void SetFloat3(const std::string& name, float value[3]);
+
+		void SetInt(const std::string& name, int value);
 
 	private:
 

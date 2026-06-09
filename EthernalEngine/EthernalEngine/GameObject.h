@@ -36,10 +36,11 @@ namespace EthernalEngine
         virtual void Draw();
 
         Transform transform;
+        float color[3]{ 1.0f,1.0f,1.0f };
+        std::string name;
 
     private:
 
-        std::string name;
         Mesh* mesh = nullptr;
 		Shader* shader = nullptr;
 		Texture* texture = nullptr;
