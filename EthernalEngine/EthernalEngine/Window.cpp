@@ -1,5 +1,6 @@
 #include "Window.h"
 
+#include "stb_image.h"
 #include <iostream>
 
 namespace EthernalEngine
@@ -17,6 +18,8 @@ namespace EthernalEngine
         if (shouldFullScreen) glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
         m_window = glfwCreateWindow(defaultWidth, defaultHeight, title, nullptr, nullptr);
+        m_width = defaultWidth;
+        m_height = defaultHeight;
 
         if (m_window == nullptr)
         {
@@ -27,6 +30,8 @@ namespace EthernalEngine
 
         glfwMakeContextCurrent(m_window);
 
+        SetIcon();
+
         glfwSetFramebufferSizeCallback(m_window, FramebufferSizeCallback);
 
         return true;
@@ -35,6 +40,8 @@ namespace EthernalEngine
     void Window::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
     {
         glViewport(0, 0, width, height);
+        m_width = width;
+        m_height = height;
     }
 
     void Window::SetCursorPosCallback(GLFWcursorposfun callback)
@@ -50,6 +57,30 @@ namespace EthernalEngine
     void Window::SwapBuffers()
     {
         glfwSwapBuffers(m_window);
+    }
+
+    void Window::SetIcon()
+    {
+        int width, height, channels;
+
+        unsigned char* image = stbi_load("Resources/EthernalEngineIcon.png", &width, &height, &channels, 4);
+
+        if (image)
+        {
+            GLFWimage images[1];
+            images[0].width = width;
+            images[0].height = height;
+            images[0].pixels = image;
+
+            glfwSetWindowIcon(m_window, 1, images);
+
+            stbi_image_free(image);
+        }
+        else
+        {
+            std::cout << "Failed to load application Icon." << std::endl;
+
+        }
     }
 
     Window::~Window()

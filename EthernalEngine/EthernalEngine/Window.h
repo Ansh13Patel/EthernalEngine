@@ -28,16 +28,16 @@ namespace EthernalEngine
             return m_window;
         }
 
+        int GetWidth() { return m_width; }
+        int GetHeight() { return m_height; }
+
         ~Window();
 
     private:
 
-        static void FramebufferSizeCallback(
-            GLFWwindow* window,
-            int width,
-            int height
-        );
-
+        static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
+        void SetIcon();
         GLFWwindow* m_window = nullptr;
+        static int m_width, m_height;
     };
 }

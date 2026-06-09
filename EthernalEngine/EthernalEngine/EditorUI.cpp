@@ -1,5 +1,8 @@
 #include "EditorUI.h"
 
+#include <windows.h>
+#include <commdlg.h>
+
 namespace EthernalEngine
 {
 	bool EditorUI::Initialize(GLFWwindow* window)
@@ -83,12 +86,47 @@ namespace EthernalEngine
 		{
 			ImGui::Text(gameObject->name.c_str());
 			ImGui::Separator();
-			Transform& transform = gameObject->transform;
-			ImGui::DragFloat3("Position", &transform.position.x, 0.1f, -1000.0f, 1000.0f, "%.3f");
-			ImGui::DragFloat3("Rotation", &transform.rotation.x, 0.1f, -360.f, 360.f, "%.3f");
-			ImGui::DragFloat3("Scale", &transform.scale.x, 0.1f, 0.0f, 1000.0f, "%.3f");
 
-			ImGui::ColorEdit3("Color", &gameObject->color[0]);
+			Transform& transform = gameObject->transform;
+			ImGui::Text("Position");
+			ImGui::SameLine();
+			ImGui::DragFloat3("##Position", &transform.position.x, 0.1f, -1000.0f, 1000.0f, "%.3f");
+			ImGui::Text("Rotation");
+			ImGui::SameLine();
+			ImGui::DragFloat3("##Rotation", &transform.rotation.x, 0.1f, -360.f, 360.f, "%.3f");
+			ImGui::Text("Scale");
+			ImGui::SameLine();
+			ImGui::DragFloat3("##Scale", &transform.scale.x, 0.1f, 0.0f, 1000.0f, "%.3f");
+
+			ImGui::Separator();
+
+			ImGui::Text("Color");
+			ImGui::SameLine();
+			ImGui::ColorEdit3("##Color", &gameObject->color[0]);
+
+			ImGui::Separator();
+
+			ImGui::Text("Texture");
+			ImGui::SameLine();
+			if (ImGui::Button("Select Texture"))
+			{
+				char filename[MAX_PATH] = "";
+				
+				OPENFILENAMEA ofn = {};
+				ofn.lStructSize = sizeof(ofn);
+				ofn.hwndOwner = nullptr;
+				ofn.lpstrFilter = "Image Files\0*.png;*.jpg;*.jpeg\0";
+				ofn.lpstrFile = filename;
+				ofn.nMaxFile = MAX_PATH;
+				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+				if (GetOpenFileNameA(&ofn))
+				{
+					gameObject->GetTexture()->LoadTexture(filename);
+				}
+			}
+			ImGui::SameLine();
+			ImGui::Image((ImTextureID)gameObject->GetTexture()->GetTextureID(), ImVec2(25, 25));
 		}
 		ImGui::End();
 	}

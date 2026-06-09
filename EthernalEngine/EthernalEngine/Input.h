@@ -17,14 +17,15 @@ namespace EthernalEngine
 
 	private:
 
+		void GameObjectSelection(int width, int height, double xpos, double ypos);
 		static void Mouse_Callback(double xpos, double ypos);
-
 		static void Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset);
 
 	private:
 
 		static bool isMouseLeftButtonDown;
 		static bool isMouseRightButtonDown;
+		static bool canSelectGameobject;
 
 		static float lastX;
 		static float lastY;

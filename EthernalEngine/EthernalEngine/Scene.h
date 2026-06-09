@@ -21,6 +21,9 @@ namespace EthernalEngine
 		GameObject* CreateCubeGameObject(std::string name);
 		GameObject* GetSelectedGameObject();
 		void SetSelectedGameObject(GameObject* gameObject);
+		CubeMesh* GetCubeMesh() { return cubeMesh; }
+		Shader* GetCubeShader() { return cubeShader; }
+		Texture* GetCubeTexture() { return cubeTexture; }
 
 	private:
 		std::vector<GameObject*> gameObjects;

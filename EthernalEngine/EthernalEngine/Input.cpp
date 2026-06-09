@@ -10,6 +10,7 @@ namespace EthernalEngine
 {
 	bool Input::isMouseLeftButtonDown = false;
 	bool Input::isMouseRightButtonDown = false;
+	bool Input::canSelectGameobject = false;
 
 	float Input::lastX = 400.0f;
 	float Input::lastY = 300.0f;
@@ -57,13 +58,31 @@ namespace EthernalEngine
 
 			camera->MoveCamera(forward, backward, right, left, deltatime);
 
-			if (isMouseLeftButtonDown && !previousMouseState) firstMouse = true;
+			if (isMouseLeftButtonDown && !previousMouseState) 
+			{
+				canSelectGameobject = true;
+				firstMouse = true;
+			}
 			if (!isMouseLeftButtonDown) firstMouse = false;
 
 			double xpos = 0, ypos = 0;
 			glfwGetCursorPos(glfwWindow, &xpos, &ypos);
 			Mouse_Callback(xpos, ypos);
+			GameObjectSelection(window->GetWidth(), window->GetHeight(), xpos, ypos);
 		}
+	}
+
+	void Input::GameObjectSelection(int width, int height, double xpos, double ypos)
+	{
+		if (!canSelectGameobject) return;
+		canSelectGameobject = false;
+
+		float x = (2.0f * xpos) / width - 1.0f;
+		float y = 1.0f - (2.0f * ypos) / height;
+		glm::vec4 rayclip = { x,y,-1.0f,1.0f };
+		glm::vec4 rayEye = glm::inverse(camera->GetProjectionMatrix()) * rayclip;
+		rayEye = { rayEye.x, rayEye.y, -1.0f, 0.0f };
+		glm::vec3 rayWorld = glm::normalize(glm::vec3(glm::inverse(camera->GetViewMatrix()) * rayEye));
 	}
 
 	void Input::Mouse_Callback(double xpos, double ypos)
