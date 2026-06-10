@@ -32,8 +32,6 @@ namespace EthernalEngine
 		direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 		
 		cameraFront = glm::normalize(direction);
-
-		//std::cout << yaw << " " << pitch << std::endl;
 	}
 
 	void Camera::UpdateCameraFov(float yScrollOffset)
@@ -52,7 +50,6 @@ namespace EthernalEngine
 			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltatime;
 		if (left)
 			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltatime;
-		//std::cout << "Camera pos x: " << cameraPos.x << " y: " << cameraPos.y << " z: " << cameraPos.z << std::endl;
 	}
 
 	glm::mat4 Camera::GetViewMatrix() const

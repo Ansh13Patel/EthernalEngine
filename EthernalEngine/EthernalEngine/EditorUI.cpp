@@ -35,6 +35,8 @@ namespace EthernalEngine
 		MainMenuBar(scene);
 		Hierarchy(scene);
 		Inspector(scene->GetSelectedGameObject());
+		UpdateGizmoOperation();
+		DrawGizmo(scene->GetSelectedGameObject(), &scene->GetCamera());
 	}
 	void EditorUI::Shutdown()
 	{
@@ -129,5 +131,44 @@ namespace EthernalEngine
 			ImGui::Image((ImTextureID)gameObject->GetTexture()->GetTextureID(), ImVec2(25, 25));
 		}
 		ImGui::End();
+	}
+
+	void EditorUI::DrawGizmo(GameObject* selectedGameObject, Camera* camera)
+	{
+		if (!selectedGameObject) return;
+
+		ImGuizmo::BeginFrame();
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::SetDrawlist();
+		ImGuizmo::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
+		
+		glm::mat4 view = camera->GetViewMatrix();
+		glm::mat4 projection = camera->GetProjectionMatrix();
+		glm::mat4 model = selectedGameObject->transform.GetModelMatrix();
+
+		ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), currentOperation, 
+			ImGuizmo::LOCAL, glm::value_ptr(model));
+
+		if (ImGuizmo::IsUsing)
+		{
+			glm::vec3 position;
+			glm::vec3 rotation;
+			glm::vec3 scale;
+
+			ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(model), &position.x, &rotation.x, &scale.x);
+
+			selectedGameObject->transform.position = position;
+			selectedGameObject->transform.rotation = rotation;
+			selectedGameObject->transform.scale = scale;
+		}
+	}
+
+	void EditorUI::UpdateGizmoOperation()
+	{
+		if (ImGui::IsMouseDown(ImGuiMouseButton_Left)) return;
+
+		if (ImGui::IsKeyPressed(ImGuiKey_W)) currentOperation = ImGuizmo::TRANSLATE;
+		if (ImGui::IsKeyPressed(ImGuiKey_E)) currentOperation = ImGuizmo::ROTATE;
+		if (ImGui::IsKeyPressed(ImGuiKey_R)) currentOperation = ImGuizmo::SCALE;
 	}
 }

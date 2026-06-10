@@ -5,6 +5,7 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 
 #include "Scene.h"
+#include "ImGuizmo.h"
 
 namespace EthernalEngine
 {
@@ -21,5 +22,10 @@ namespace EthernalEngine
 		void MainMenuBar(Scene* scene);
 		void Hierarchy(Scene* scene);
 		void Inspector(GameObject* gameObject);
+		void DrawGizmo(GameObject* selectedGameObject, Camera* camera);
+		void UpdateGizmoOperation();
+
+	public:
+		ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;
 	};
 }

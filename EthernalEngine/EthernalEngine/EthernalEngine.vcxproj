@@ -136,6 +136,7 @@
     <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\ImGuizmo-1.10\ImGuizmo-1.10\src\ImGuizmo.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="EditorUI.cpp" />

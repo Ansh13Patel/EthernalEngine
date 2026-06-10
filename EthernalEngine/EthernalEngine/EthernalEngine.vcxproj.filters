@@ -40,33 +40,12 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{08d7ba7d-3052-4900-931e-d36d947c1de4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\ThirdParty">
+      <UniqueIdentifier>{30f17fe3-b2b1-4a66-9783-a86b1546c6b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_widgets.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\backends\imgui_impl_glfw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\backends\imgui_impl_opengl3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
@@ -107,6 +86,33 @@
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_demo.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_draw.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_tables.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\imgui-1.92.8\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\ImGuizmo-1.10\ImGuizmo-1.10\src\ImGuizmo.cpp">
+      <Filter>Source Files\ThirdParty</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

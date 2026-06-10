@@ -2,6 +2,7 @@
 
 #include "Window.h"
 #include "Camera.h"
+#include "Scene.h"
 
 namespace EthernalEngine
 {
@@ -9,7 +10,7 @@ namespace EthernalEngine
 	{
 	public:
 
-		Input(Window* window,Camera* camera);
+		Input(Window* window, Scene* scene);
 
 		~Input() = default;
 
@@ -34,5 +35,6 @@ namespace EthernalEngine
 
 		static Camera* camera;
 		static Window* window;
+		static Scene* scene;
 	};
 }

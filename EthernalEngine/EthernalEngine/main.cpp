@@ -25,7 +25,7 @@ int main()
         return -1;
     }
 
-    EthernalEngine::Input input{ &window, &scene.GetCamera() };
+    EthernalEngine::Input input{ &window, &scene };
 
     float deltaFrame = 0.0f;
     float lastFrame = 0.0f;

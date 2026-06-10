@@ -19,14 +19,14 @@ namespace EthernalEngine
 
 	Camera* Input::camera = nullptr;
 	Window* Input::window = nullptr;
+	Scene* Input::scene = nullptr;
 
 
-	Input::Input(Window* window, Camera* camera)
+	Input::Input(Window* window, Scene* scene)
 	{
 		Input::window = window;
-		Input::camera = camera;
-
-		//glfwSetCursorPosCallback(Input::window->GetGLFWwindow(), Mouse_Callback);
+		Input::scene = scene;
+		Input::camera = &(scene->GetCamera());
 
 		glfwSetScrollCallback(Input::window->GetGLFWwindow(), Scroll_Callback);
 	}
@@ -47,28 +47,31 @@ namespace EthernalEngine
 				return;
 			}
 
-			if (glfwGetKey(glfwWindow, GLFW_KEY_W)) forward = true;
-			if (glfwGetKey(glfwWindow, GLFW_KEY_S)) backward = true;
-			if (glfwGetKey(glfwWindow, GLFW_KEY_A)) left = true;
-			if (glfwGetKey(glfwWindow, GLFW_KEY_D)) right = true;
-
-			bool previousMouseState = isMouseLeftButtonDown;
+			bool previousMouseRightState = isMouseRightButtonDown;
+			bool previousMouseLeftState = isMouseLeftButtonDown;
 		    isMouseLeftButtonDown = glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 			isMouseRightButtonDown = glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 
+			if (isMouseLeftButtonDown || previousMouseLeftState)
+			{
+				if (glfwGetKey(glfwWindow, GLFW_KEY_W)) forward = true;
+				if (glfwGetKey(glfwWindow, GLFW_KEY_S)) backward = true;
+				if (glfwGetKey(glfwWindow, GLFW_KEY_A)) left = true;
+				if (glfwGetKey(glfwWindow, GLFW_KEY_D)) right = true;
+			}
+
 			camera->MoveCamera(forward, backward, right, left, deltatime);
 
-			if (isMouseLeftButtonDown && !previousMouseState) 
-			{
-				canSelectGameobject = true;
-				firstMouse = true;
-			}
-			if (!isMouseLeftButtonDown) firstMouse = false;
+			if (isMouseRightButtonDown && !previousMouseRightState) firstMouse = true;
+			if (!isMouseRightButtonDown) firstMouse = true;
+
+			if(isMouseLeftButtonDown && !previousMouseLeftState) canSelectGameobject = true;
+			if (!isMouseLeftButtonDown) canSelectGameobject = false;
 
 			double xpos = 0, ypos = 0;
 			glfwGetCursorPos(glfwWindow, &xpos, &ypos);
-			Mouse_Callback(xpos, ypos);
 			GameObjectSelection(window->GetWidth(), window->GetHeight(), xpos, ypos);
+			Mouse_Callback(xpos, ypos);
 		}
 	}
 
@@ -83,11 +86,12 @@ namespace EthernalEngine
 		glm::vec4 rayEye = glm::inverse(camera->GetProjectionMatrix()) * rayclip;
 		rayEye = { rayEye.x, rayEye.y, -1.0f, 0.0f };
 		glm::vec3 rayWorld = glm::normalize(glm::vec3(glm::inverse(camera->GetViewMatrix()) * rayEye));
+		scene->SelectGameObject(rayWorld);
 	}
 
 	void Input::Mouse_Callback(double xpos, double ypos)
 	{
-		if (isMouseLeftButtonDown == false)
+		if (isMouseRightButtonDown == false)
 		{
 			return;
 		}

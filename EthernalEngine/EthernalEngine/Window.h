@@ -38,6 +38,6 @@ namespace EthernalEngine
         static void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
         void SetIcon();
         GLFWwindow* m_window = nullptr;
-        static int m_width, m_height;
+        int m_width, m_height;
     };
 }
