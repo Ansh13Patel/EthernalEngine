@@ -5,11 +5,9 @@
 
 namespace EthernalEngine
 {
-	Camera::Camera(float screenWidth, float screenHeight)
+	Camera::Camera(Window* window)
 	{
-		this->screenWidth = screenWidth;
-		this->screenHeight = screenHeight;
-
+		this->m_window = window;
 		cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 		cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 		cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -59,7 +57,7 @@ namespace EthernalEngine
 
 	glm::mat4 Camera::GetProjectionMatrix() const
 	{
-		return glm::perspective(glm::radians(fov), 800.0f / 600.0f, 0.1f, 100.0f);
+		return glm::perspective(glm::radians(fov), (float)m_window->GetWidth() / (float)m_window->GetHeight(), 0.1f, 100.0f);
 	}
 
 	Camera::~Camera()

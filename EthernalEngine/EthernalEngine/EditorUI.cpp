@@ -1,7 +1,10 @@
 #include "EditorUI.h"
+#include "Helper.h"
 
 #include <windows.h>
 #include <commdlg.h>
+
+#include <iostream>
 
 namespace EthernalEngine
 {
@@ -54,6 +57,18 @@ namespace EthernalEngine
 				if (ImGui::MenuItem("Cube"))
 				{
 					scene->AddGameObject(scene->CreateCubeGameObject("NewCube"));
+				}
+				if (ImGui::MenuItem("Import"))
+				{
+					std::string filepath = Helper::OpenFileDialog("Model Files\0*.obj;*.fbx;*.gltf;*.glb\0All Files\0*.*\0");
+					if (!filepath.empty())
+					{
+						scene->AddGameObject(scene->CreateGameObjectWithCustomModel("NewObject", filepath));
+					}
+					else
+					{
+						std::cout << "Model filepath is invalid" << std::endl;
+					}
 				}
 				ImGui::EndMenu();
 			}
@@ -112,19 +127,15 @@ namespace EthernalEngine
 			ImGui::SameLine();
 			if (ImGui::Button("Select Texture"))
 			{
-				char filename[MAX_PATH] = "";
-				
-				OPENFILENAMEA ofn = {};
-				ofn.lStructSize = sizeof(ofn);
-				ofn.hwndOwner = nullptr;
-				ofn.lpstrFilter = "Image Files\0*.png;*.jpg;*.jpeg\0";
-				ofn.lpstrFile = filename;
-				ofn.nMaxFile = MAX_PATH;
-				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+				std::string filepath = Helper::OpenFileDialog("Image Files\0*.png;*.jpg;*.jpeg\0");
 
-				if (GetOpenFileNameA(&ofn))
+				if (!filepath.empty())
 				{
-					gameObject->GetTexture()->LoadTexture(filename);
+					gameObject->GetTexture()->LoadTexture(filepath.c_str());
+				}
+				else
+				{
+					std::cout << "Texture filepath is invalid" << std::endl;
 				}
 			}
 			ImGui::SameLine();
@@ -138,8 +149,9 @@ namespace EthernalEngine
 		if (!selectedGameObject) return;
 
 		ImGuizmo::BeginFrame();
+		ImGuizmo::Enable(true);
 		ImGuizmo::SetOrthographic(false);
-		ImGuizmo::SetDrawlist();
+		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
 		ImGuizmo::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
 		
 		glm::mat4 view = camera->GetViewMatrix();
@@ -149,8 +161,14 @@ namespace EthernalEngine
 		ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), currentOperation, 
 			ImGuizmo::LOCAL, glm::value_ptr(model));
 
-		if (ImGuizmo::IsUsing)
+		if (ImGuizmo::IsOver())
 		{
+			std::cout << "Over Gizmo" << std::endl;
+		}
+
+		if (ImGuizmo::IsUsing())
+		{
+			std::cout << "Gizmo using " << std::endl;
 			glm::vec3 position;
 			glm::vec3 rotation;
 			glm::vec3 scale;

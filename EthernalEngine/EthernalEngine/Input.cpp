@@ -4,6 +4,8 @@
 #include <imgui/backends/imgui_impl_glfw.h>
 #include <imgui/backends/imgui_impl_opengl3.h>
 
+#include "ImGuizmo.h"
+
 #include <iostream>
 
 namespace EthernalEngine
@@ -39,7 +41,7 @@ namespace EthernalEngine
 			GLFWwindow* glfwWindow = window->GetGLFWwindow();
 
 			ImGuiIO& io = ImGui::GetIO();
-			if (io.WantCaptureKeyboard || io.WantCaptureMouse)
+			if (io.WantCaptureKeyboard || (io.WantCaptureMouse && !ImGuizmo::IsOver()))
 			{
 				isMouseLeftButtonDown = false;
 				isMouseRightButtonDown = false;

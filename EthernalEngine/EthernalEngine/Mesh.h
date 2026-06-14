@@ -2,15 +2,23 @@
 
 #include <vector>
 #include <glad/glad.h>
+#include <glm/glm.hpp>
 
 namespace EthernalEngine
 {
+    struct Vertex
+    {
+        glm::vec3 position;
+        glm::vec3 normal;
+        glm::vec2 texCoord;
+    };
+
     class Mesh
     {
     public:
-        Mesh() = default;
-        virtual ~Mesh();
-        virtual void Draw() = 0;
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+        ~Mesh();
+        virtual void Draw();
 
     protected:
 
@@ -20,7 +28,7 @@ namespace EthernalEngine
         unsigned int VBO = 0;
         unsigned int EBO = 0;
 
-        std::vector<float> vertices;
+        std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
     };
 }

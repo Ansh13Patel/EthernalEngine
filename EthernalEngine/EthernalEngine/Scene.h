@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Renderer.h"
 #include "CubeMesh.h"
+#include "Window.h"
 #include <vector>
 
 namespace EthernalEngine
@@ -11,7 +12,7 @@ namespace EthernalEngine
 	class Scene
 	{
 	public:
-		Scene() = default;
+		Scene(Window* window):m_window(window),camera(window) { }
 		~Scene() = default;
 		void Update(float deltaTime);
 		void AddGameObject(GameObject* gameObject);
@@ -20,19 +21,21 @@ namespace EthernalEngine
 		void SelectGameObject(glm::vec3& rayDir);
 		Camera& GetCamera() { return camera; }
 		GameObject* CreateCubeGameObject(std::string name);
+		GameObject* CreateGameObjectWithCustomModel(std::string name, std::string path);
 		GameObject* GetSelectedGameObject();
 		void SetSelectedGameObject(GameObject* gameObject);
 		CubeMesh* GetCubeMesh() { return cubeMesh; }
-		Shader* GetCubeShader() { return cubeShader; }
+		Shader* GetCubeShader() { return defaultShader; }
 
 	private:
 		bool RayAABB(const glm::vec3& rayOrgin, const glm::vec3& rayDir, const glm::vec3& minBounds,
 			const glm::vec3& maxBounds, float& hitDistance);
 	private:
 		std::vector<GameObject*> gameObjects;
+		Window* m_window = nullptr;
 		GameObject* selectedGameObject = nullptr;
-		Camera camera{ 800.0f, 600.0f };
+		Camera camera;
 		CubeMesh* cubeMesh = nullptr;
-		Shader* cubeShader = nullptr;
+		Shader* defaultShader = nullptr;
 	};
 }

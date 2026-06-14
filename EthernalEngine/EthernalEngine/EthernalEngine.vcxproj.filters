@@ -43,6 +43,12 @@
     <Filter Include="Source Files\ThirdParty">
       <UniqueIdentifier>{30f17fe3-b2b1-4a66-9783-a86b1546c6b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Helper">
+      <UniqueIdentifier>{ca974ddc-9249-465b-ade8-148c458bc6ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Helper">
+      <UniqueIdentifier>{003bed2c-085f-4270-bdb3-fcb113654b70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -114,6 +120,12 @@
     <ClCompile Include="..\..\..\..\..\Users\Ansh\Downloads\ImGuizmo-1.10\ImGuizmo-1.10\src\ImGuizmo.cpp">
       <Filter>Source Files\ThirdParty</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Helper.cpp">
+      <Filter>Source Files\Helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -151,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper.h">
+      <Filter>Header Files\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,13 +1,14 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "Window.h"
 
 namespace EthernalEngine
 {
 	class Camera
 	{
 	public:
-		Camera(float screenWidth, float screenHeight);
+		Camera(Window* window);
 		~Camera();
 		void Update(float deltaTime);
 		void UpdateCameraRotation(float xOffset, float yOffset);
@@ -17,9 +18,7 @@ namespace EthernalEngine
 		glm::mat4 GetProjectionMatrix() const;
 
 	private:
-		float screenWidth;
-		float screenHeight;
-
+		Window* m_window = nullptr;
 		float cameraSpeed = 3.0f;	
 
 	public:

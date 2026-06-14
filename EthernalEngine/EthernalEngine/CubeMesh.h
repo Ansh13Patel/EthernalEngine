@@ -8,7 +8,6 @@ namespace EthernalEngine
 	{
 	public:
 		CubeMesh();
-		~CubeMesh() override = default;
-		void Draw() override;
+		~CubeMesh() = default;
 	};
 }

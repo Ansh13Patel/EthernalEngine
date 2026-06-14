@@ -4,10 +4,10 @@ namespace EthernalEngine
 {
 	void GameObject::Draw()
 	{
-        if (!mesh || !shader)
+        if ((!mesh && !model) || !shader)
             return;
 
-        shader->Use();
+        //shader->Use();
 
         shader->SetMat4("model", transform.GetModelMatrix());
 
@@ -18,12 +18,24 @@ namespace EthernalEngine
             texture->Bind();
         }
 
-        mesh->Draw();
+        if (model) 
+        {
+            model->Draw();
+        }
+        else if (mesh)
+        {
+            mesh->Draw();
+        }
 	}
 
     void GameObject::SetMesh(Mesh* newMesh)
     {
         mesh = newMesh;
+    }
+
+    void GameObject::SetModel(Model* newModel)
+    {
+        model = newModel;
     }
 
     void GameObject::SetShader(Shader* newShader)

@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Model.h"
 
 #include<string>
 
@@ -23,9 +24,13 @@ namespace EthernalEngine
 
         void SetTexture(Texture* newTexture);
 
+        void SetModel(Model* newModel);
+
         Shader* GetShader() { return shader; }
 
         Mesh* GetMesh() { return mesh; }
+
+        Model* GetModel() { return model; }
 
         Texture* GetTexture() { return texture; }
 
@@ -42,6 +47,7 @@ namespace EthernalEngine
     private:
 
         Mesh* mesh = nullptr;
+        Model* model = nullptr;
 		Shader* shader = nullptr;
 		Texture* texture = nullptr;
     };

@@ -1,5 +1,6 @@
 
 #include"Scene.h"
+#include "Model.h"
 
 #include<iostream>
 
@@ -38,21 +39,44 @@ namespace EthernalEngine
 		{
 			cubeMesh = new CubeMesh();
 		}
-		if (cubeShader == nullptr)
+		if (defaultShader == nullptr)
 		{
-			cubeShader = new Shader();
+			defaultShader = new Shader();
+			defaultShader->LoadFromFile("Shader.vert", "Shader.frag");
 		}
 
 		Texture* cubeTexture = new Texture();
 
-		cubeShader->LoadFromFile("Shader.vert", "Shader.frag");
+		defaultShader->LoadFromFile("Shader.vert", "Shader.frag");
 		cubeTexture->LoadTexture("Textures/White.png");
 
 		newCube->SetMesh(cubeMesh);
-		newCube->SetShader(cubeShader);
+		newCube->SetShader(defaultShader);
 		newCube->SetTexture(cubeTexture);
 
 		return newCube;
+	}
+
+	GameObject* Scene::CreateGameObjectWithCustomModel(std::string name, std::string path)
+	{
+		GameObject* newObject = new GameObject(name);
+		
+		Model* newModel = new Model(path);
+		Texture* newTexture = new Texture();
+
+		if (defaultShader == nullptr)
+		{
+			defaultShader = new Shader();
+			defaultShader->LoadFromFile("Shader.vert", "Shader.frag");
+		}
+
+		newTexture->LoadTexture("Textures/White.png");
+
+		newObject->SetModel(newModel);
+		newObject->SetShader(defaultShader);
+		newObject->SetTexture(newTexture);
+
+		return newObject;
 	}
 
 	void Scene::SelectGameObject(glm::vec3& rayDir)

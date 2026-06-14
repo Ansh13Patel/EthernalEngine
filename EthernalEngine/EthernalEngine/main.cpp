@@ -17,7 +17,6 @@ int main()
 	EthernalEngine::EditorUI editorUI;
     EthernalEngine::Window window;
 	EthernalEngine::Renderer renderer;
-	EthernalEngine::Scene scene;
 
     if (!SetupAndInitialize(&window, &editorUI, true))
     {
@@ -25,6 +24,7 @@ int main()
         return -1;
     }
 
+    EthernalEngine::Scene scene{ &window };
     EthernalEngine::Input input{ &window, &scene };
 
     float deltaFrame = 0.0f;
