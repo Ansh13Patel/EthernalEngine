@@ -5,6 +5,7 @@
 #include <commdlg.h>
 
 #include <iostream>
+#include <filesystem>
 
 namespace EthernalEngine
 {
@@ -63,7 +64,9 @@ namespace EthernalEngine
 					std::string filepath = Helper::OpenFileDialog("Model Files\0*.obj;*.fbx;*.gltf;*.glb\0All Files\0*.*\0");
 					if (!filepath.empty())
 					{
-						scene->AddGameObject(scene->CreateGameObjectWithCustomModel("NewObject", filepath));
+						std::string gameobjectname = Helper::GetFileName(filepath);
+						if (gameobjectname == "") gameobjectname = "NewObject";
+						scene->AddGameObject(scene->CreateGameObjectWithCustomModel(gameobjectname, filepath));
 					}
 					else
 					{
@@ -121,9 +124,9 @@ namespace EthernalEngine
 			ImGui::SameLine();
 			ImGui::ColorEdit3("##Color", &gameObject->color[0]);
 
-			ImGui::Separator();
+			//ImGui::Separator();
 
-			ImGui::Text("Texture");
+			/*ImGui::Text("Texture");
 			ImGui::SameLine();
 			if (ImGui::Button("Select Texture"))
 			{
@@ -131,7 +134,7 @@ namespace EthernalEngine
 
 				if (!filepath.empty())
 				{
-					gameObject->GetTexture()->LoadTexture(filepath.c_str());
+					gameObject->GetTexture()->LoadTextureFromPath(filepath.c_str());
 				}
 				else
 				{
@@ -139,7 +142,7 @@ namespace EthernalEngine
 				}
 			}
 			ImGui::SameLine();
-			ImGui::Image((ImTextureID)gameObject->GetTexture()->GetTextureID(), ImVec2(25, 25));
+			ImGui::Image((ImTextureID)gameObject->GetTexture()->GetTextureID(), ImVec2(25, 25));*/
 		}
 		ImGui::End();
 	}

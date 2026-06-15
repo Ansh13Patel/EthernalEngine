@@ -37,7 +37,10 @@ namespace EthernalEngine
 		GameObject* newCube = new GameObject(name);
 		if (cubeMesh == nullptr) 
 		{
-			cubeMesh = new CubeMesh();
+			std::shared_ptr<Texture> texture;
+			texture = std::make_shared<Texture>();
+			texture->LoadTextureFromPath("Textures/White.png");
+			cubeMesh = new CubeMesh(texture);
 		}
 		if (defaultShader == nullptr)
 		{
@@ -45,14 +48,10 @@ namespace EthernalEngine
 			defaultShader->LoadFromFile("Shader.vert", "Shader.frag");
 		}
 
-		Texture* cubeTexture = new Texture();
-
 		defaultShader->LoadFromFile("Shader.vert", "Shader.frag");
-		cubeTexture->LoadTexture("Textures/White.png");
 
 		newCube->SetMesh(cubeMesh);
 		newCube->SetShader(defaultShader);
-		newCube->SetTexture(cubeTexture);
 
 		return newCube;
 	}
@@ -70,12 +69,8 @@ namespace EthernalEngine
 			defaultShader->LoadFromFile("Shader.vert", "Shader.frag");
 		}
 
-		newTexture->LoadTexture("Textures/White.png");
-
 		newObject->SetModel(newModel);
 		newObject->SetShader(defaultShader);
-		newObject->SetTexture(newTexture);
-
 		return newObject;
 	}
 

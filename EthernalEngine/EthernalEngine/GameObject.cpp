@@ -7,16 +7,9 @@ namespace EthernalEngine
         if ((!mesh && !model) || !shader)
             return;
 
-        //shader->Use();
-
         shader->SetMat4("model", transform.GetModelMatrix());
 
         shader->SetFloat3("colorMultiplier", color);
-
-        if (texture)
-        {
-            texture->Bind();
-        }
 
         if (model) 
         {
@@ -41,10 +34,5 @@ namespace EthernalEngine
     void GameObject::SetShader(Shader* newShader)
     {
         shader = newShader;
-    }
-
-    void GameObject::SetTexture(Texture* newTexture)
-    {
-        texture = newTexture;
     }
 }

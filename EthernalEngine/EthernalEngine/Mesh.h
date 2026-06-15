@@ -1,8 +1,13 @@
 #pragma once
 
+#include "Texture.h"
+
 #include <vector>
+#include <memory>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <string>
+#include <assimp/texture.h>
 
 namespace EthernalEngine
 {
@@ -16,7 +21,8 @@ namespace EthernalEngine
     class Mesh
     {
     public:
-        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, 
+            std::shared_ptr<Texture> texture);
         ~Mesh();
         virtual void Draw();
 
@@ -30,5 +36,6 @@ namespace EthernalEngine
 
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
+        std::shared_ptr<Texture> texture;
     };
 }

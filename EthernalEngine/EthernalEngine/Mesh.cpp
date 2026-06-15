@@ -3,10 +3,12 @@
 
 namespace EthernalEngine {
 
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
+	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices,
+		std::shared_ptr<Texture> texture)
 	{
 		this->vertices = vertices;
 		this->indices = indices;
+		this->texture = texture;
 
 		SetupMesh();
 	}
@@ -20,6 +22,11 @@ namespace EthernalEngine {
 
 	void Mesh::Draw()
 	{
+		if (texture)
+		{
+			texture->Bind();
+		}
+
 		glBindVertexArray(VAO);
 
 		if (!indices.empty())

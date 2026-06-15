@@ -36,6 +36,7 @@ namespace EthernalEngine
 	{
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
+		std::string texturePath;
 
 		for (unsigned int i = 0; i < mesh->mNumVertices; i++) 
 		{
@@ -78,7 +79,33 @@ namespace EthernalEngine
 			}
 		}
 
-		return  std::make_unique<Mesh>(vertices, indices);
+		std::shared_ptr<Texture> texture;
+		texture = std::make_shared<Texture>();
+
+		if (mesh->mMaterialIndex >= 0)
+		{
+			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+			aiString path;
+			if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &path) == AI_SUCCESS) 
+			{
+				texturePath = path.C_Str();
+				std::cout << "Texture : " << texturePath << std::endl;
+
+				const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texturePath.c_str());
+				if (embeddedTexture)
+				{
+					texture->LoadTextureFromMemory(reinterpret_cast<unsigned char*>(embeddedTexture->pcData), 
+						embeddedTexture->mWidth);
+				}
+				else
+				{
+					texture->LoadTextureFromPath(texturePath.c_str());
+					std::cout << "External Texture" << std::endl;
+				}
+			}
+		}
+
+		return  std::make_unique<Mesh>(vertices, indices, texture);
 	}
 
 	void Model::ProcessNode(aiNode* node, const aiScene* scene)

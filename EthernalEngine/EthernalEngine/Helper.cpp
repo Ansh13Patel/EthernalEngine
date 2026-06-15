@@ -1,6 +1,7 @@
 #include "Helper.h"
 #include <windows.h>
 #include <commdlg.h>
+#include <filesystem>
 
 
 namespace EthernalEngine
@@ -23,5 +24,19 @@ namespace EthernalEngine
 		}
 
 		return "";
+	}
+
+	std::string Helper::GetFileName(std::string& path)
+	{
+		std::filesystem::path filepath{ path };
+		
+		return filepath.stem().string();
+	}
+
+	std::string Helper::GetFileExtension(std::string& path)
+	{
+		std::filesystem::path filepath{ path };
+
+		return filepath.extension().string();
 	}
 }

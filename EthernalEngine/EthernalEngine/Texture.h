@@ -12,7 +12,8 @@ namespace EthernalEngine
 	public:
 		Texture();
 		~Texture();
-		bool LoadTexture(const char* filePath);
+		bool LoadTextureFromPath(const char* filePath);
+		bool LoadTextureFromMemory(unsigned char* data, unsigned int size);
 		void Bind() const
 		{
 			glBindTexture(GL_TEXTURE_2D, m_textureID);

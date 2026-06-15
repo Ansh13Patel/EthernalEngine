@@ -22,8 +22,6 @@ namespace EthernalEngine
 
         void SetShader(Shader* newShader);
 
-        void SetTexture(Texture* newTexture);
-
         void SetModel(Model* newModel);
 
         Shader* GetShader() { return shader; }
@@ -31,8 +29,6 @@ namespace EthernalEngine
         Mesh* GetMesh() { return mesh; }
 
         Model* GetModel() { return model; }
-
-        Texture* GetTexture() { return texture; }
 
         virtual void Update(
             float deltaTime
@@ -49,6 +45,5 @@ namespace EthernalEngine
         Mesh* mesh = nullptr;
         Model* model = nullptr;
 		Shader* shader = nullptr;
-		Texture* texture = nullptr;
     };
 }
