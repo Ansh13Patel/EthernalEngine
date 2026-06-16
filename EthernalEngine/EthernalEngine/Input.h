@@ -26,12 +26,14 @@ namespace EthernalEngine
 
 		static bool isMouseLeftButtonDown;
 		static bool isMouseRightButtonDown;
+		static bool isMouseMiddleButtonDown;
 		static bool canSelectGameobject;
 
 		static float lastX;
 		static float lastY;
 
 		static bool firstMouse;
+		static bool canMoveCamera;
 
 		static Camera* camera;
 		static Window* window;

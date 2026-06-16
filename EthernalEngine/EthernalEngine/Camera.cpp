@@ -34,11 +34,10 @@ namespace EthernalEngine
 
 	void Camera::UpdateCameraFov(float yScrollOffset)
 	{
-		fov -= yScrollOffset;
-		fov = glm::clamp(fov, 1.0f, 45.0f);
+		cameraPos += cameraFront * cameraScrollSpeed * yScrollOffset;
 	}
 
-	void Camera::MoveCamera(bool forward, bool backward, bool right, bool left, float deltatime)
+	void Camera::MoveCamera(bool forward, bool backward, bool right, bool left,bool up, bool down, float deltatime)
 	{
 		if (forward)
 			cameraPos += cameraFront * cameraSpeed * deltatime;
@@ -48,6 +47,14 @@ namespace EthernalEngine
 			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltatime;
 		if (left)
 			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltatime;
+	}
+
+	void Camera::MoveCamera(float xOffset, float yOffset)
+	{
+		glm::vec3 right = glm::normalize(glm::cross(cameraFront, cameraUp));
+
+		cameraPos -= right * xOffset * cameraPanSpeed;
+		cameraPos -= cameraUp * yOffset * cameraPanSpeed;
 	}
 
 	glm::mat4 Camera::GetViewMatrix() const

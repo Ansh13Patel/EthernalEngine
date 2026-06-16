@@ -12,12 +12,14 @@ namespace EthernalEngine
 {
 	bool Input::isMouseLeftButtonDown = false;
 	bool Input::isMouseRightButtonDown = false;
+	bool Input::isMouseMiddleButtonDown = false;
 	bool Input::canSelectGameobject = false;
 
 	float Input::lastX = 400.0f;
 	float Input::lastY = 300.0f;
 
 	bool Input::firstMouse = true;
+	bool Input::canMoveCamera = false;
 
 	Camera* Input::camera = nullptr;
 	Window* Input::window = nullptr;
@@ -45,16 +47,19 @@ namespace EthernalEngine
 			{
 				isMouseLeftButtonDown = false;
 				isMouseRightButtonDown = false;
-				firstMouse = true;
+				isMouseMiddleButtonDown = false;
 				return;
 			}
 
 			bool previousMouseRightState = isMouseRightButtonDown;
 			bool previousMouseLeftState = isMouseLeftButtonDown;
+			bool previousMouseMiddleState = isMouseMiddleButtonDown;
+
 		    isMouseLeftButtonDown = glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 			isMouseRightButtonDown = glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
+			isMouseMiddleButtonDown = glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
 
-			if (isMouseLeftButtonDown || previousMouseLeftState)
+			if (isMouseRightButtonDown || previousMouseRightState)
 			{
 				if (glfwGetKey(glfwWindow, GLFW_KEY_W)) forward = true;
 				if (glfwGetKey(glfwWindow, GLFW_KEY_S)) backward = true;
@@ -62,11 +67,14 @@ namespace EthernalEngine
 				if (glfwGetKey(glfwWindow, GLFW_KEY_D)) right = true;
 			}
 
-			camera->MoveCamera(forward, backward, right, left, deltatime);
+			camera->MoveCamera(forward, backward, right, left, false, false, deltatime);
 
-			if (isMouseRightButtonDown && !previousMouseRightState) firstMouse = true;
-			if (!isMouseRightButtonDown) firstMouse = true;
-
+			if ((isMouseRightButtonDown && !previousMouseRightState) ||
+				(isMouseMiddleButtonDown && !previousMouseMiddleState))
+			{
+				firstMouse = true;
+			}
+			
 			if(isMouseLeftButtonDown && !previousMouseLeftState) canSelectGameobject = true;
 			if (!isMouseLeftButtonDown) canSelectGameobject = false;
 
@@ -93,37 +101,39 @@ namespace EthernalEngine
 
 	void Input::Mouse_Callback(double xpos, double ypos)
 	{
-		if (isMouseRightButtonDown == false)
+		if (isMouseRightButtonDown || isMouseMiddleButtonDown)
 		{
-			return;
-		}
 
-		if (firstMouse)
-		{
+			if (firstMouse)
+			{
+				lastX = static_cast<float>(xpos);
+
+				lastY = static_cast<float>(ypos);
+
+				firstMouse = false;
+			}
+
+			float xoffset = static_cast<float>(xpos) - lastX;
+
+			float yoffset = lastY - static_cast<float>(ypos);
+
 			lastX = static_cast<float>(xpos);
 
 			lastY = static_cast<float>(ypos);
 
-			firstMouse = false;
-		}
+			float sensitivity = 0.1f;
 
-		float xoffset = static_cast<float>(xpos) - lastX;
+			xoffset *= sensitivity;
 
-		float yoffset = lastY - static_cast<float>(ypos);
+			yoffset *= sensitivity;
 
-		lastX = static_cast<float>(xpos);
-
-		lastY = static_cast<float>(ypos);
-
-		float sensitivity = 0.1f;
-
-		xoffset *= sensitivity;
-
-		yoffset *= sensitivity;
-
-		if (camera)
-		{
-			camera->UpdateCameraRotation(xoffset, yoffset);
+			if (camera)
+			{
+				if (isMouseMiddleButtonDown)
+					camera->MoveCamera(xoffset, yoffset);
+				else if (isMouseRightButtonDown)
+					camera->UpdateCameraRotation(xoffset, yoffset);
+			}
 		}
 	}
 

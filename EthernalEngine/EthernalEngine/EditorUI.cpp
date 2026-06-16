@@ -200,7 +200,7 @@ namespace EthernalEngine
 
 	void EditorUI::UpdateGizmoOperation()
 	{
-		if (ImGui::IsMouseDown(ImGuiMouseButton_Left)) return;
+		if (ImGui::IsMouseDown(ImGuiMouseButton_Right)) return;
 
 		if (ImGui::IsKeyPressed(ImGuiKey_W)) currentOperation = ImGuizmo::TRANSLATE;
 		if (ImGui::IsKeyPressed(ImGuiKey_E)) currentOperation = ImGuizmo::ROTATE;
