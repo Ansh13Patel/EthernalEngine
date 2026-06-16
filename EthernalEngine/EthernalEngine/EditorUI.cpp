@@ -99,53 +99,69 @@ namespace EthernalEngine
 		ImGui::End();
 	}
 
-	void EditorUI::Inspector(GameObject* gameObject)
-	{
-		ImGui::Begin("Inspector");
-		if (gameObject)
-		{
-			ImGui::Text(gameObject->name.c_str());
-			ImGui::Separator();
+    void EditorUI::Inspector(GameObject* gameObject)
+    {
+        ImGui::Begin("Inspector");
+        if (gameObject)
+        {
+            static char gameobjectname[128];
+            // Copy the name from the GameObject to the buffer only if the object changes
+            static const GameObject* lastGameObject = nullptr;
+            if (lastGameObject != gameObject)
+            {
+                strncpy_s(gameobjectname, gameObject->name.c_str(), sizeof(gameobjectname) - 1);
+                gameobjectname[sizeof(gameobjectname) - 1] = '\0';
+                lastGameObject = gameObject;
+            }
+            if (ImGui::InputText("##objectname", gameobjectname, IM_ARRAYSIZE(gameobjectname)))
+            {
+				gameObject->name = gameobjectname;
+            }
+            ImGui::Separator();
 
-			Transform& transform = gameObject->transform;
-			ImGui::Text("Position");
-			ImGui::SameLine();
-			ImGui::DragFloat3("##Position", &transform.position.x, 0.1f, -1000.0f, 1000.0f, "%.3f");
-			ImGui::Text("Rotation");
-			ImGui::SameLine();
-			ImGui::DragFloat3("##Rotation", &transform.rotation.x, 0.1f, -360.f, 360.f, "%.3f");
-			ImGui::Text("Scale");
-			ImGui::SameLine();
-			ImGui::DragFloat3("##Scale", &transform.scale.x, 0.1f, 0.0f, 1000.0f, "%.3f");
-
-			ImGui::Separator();
-
-			ImGui::Text("Color");
-			ImGui::SameLine();
-			ImGui::ColorEdit3("##Color", &gameObject->color[0]);
-
-			//ImGui::Separator();
-
-			/*ImGui::Text("Texture");
-			ImGui::SameLine();
-			if (ImGui::Button("Select Texture"))
+            Transform& transform = gameObject->transform;
+			glm::vec3 rotationEuler = glm::degrees(glm::eulerAngles(gameObject->transform.rotation));
+            ImGui::Text("Position");
+            ImGui::SameLine();
+            ImGui::DragFloat3("##Position", &transform.position.x, 0.1f, -1000.0f, 1000.0f, "%.3f");
+            ImGui::Text("Rotation");
+            ImGui::SameLine();
+			if (ImGui::DragFloat3("##Rotation", glm::value_ptr(rotationEuler), 0.1f))
 			{
-				std::string filepath = Helper::OpenFileDialog("Image Files\0*.png;*.jpg;*.jpeg\0");
-
-				if (!filepath.empty())
-				{
-					gameObject->GetTexture()->LoadTextureFromPath(filepath.c_str());
-				}
-				else
-				{
-					std::cout << "Texture filepath is invalid" << std::endl;
-				}
+				transform.rotation = glm::quat(glm::radians(rotationEuler));
 			}
-			ImGui::SameLine();
-			ImGui::Image((ImTextureID)gameObject->GetTexture()->GetTextureID(), ImVec2(25, 25));*/
-		}
-		ImGui::End();
-	}
+            ImGui::Text("Scale");
+            ImGui::SameLine();
+            ImGui::DragFloat3("##Scale", &transform.scale.x, 0.1f, 0.0f, 1000.0f, "%.3f");
+
+            ImGui::Separator();
+
+            ImGui::Text("Color");
+            ImGui::SameLine();
+            ImGui::ColorEdit3("##Color", &gameObject->color[0]);
+
+            //ImGui::Separator();
+
+            /*ImGui::Text("Texture");
+            ImGui::SameLine();
+            if (ImGui::Button("Select Texture"))
+            {
+                std::string filepath = Helper::OpenFileDialog("Image Files\0*.png;*.jpg;*.jpeg\0");
+
+                if (!filepath.empty())
+                {
+                    gameObject->GetTexture()->LoadTextureFromPath(filepath.c_str());
+                }
+                else
+                {
+                    std::cout << "Texture filepath is invalid" << std::endl;
+                }
+            }
+            ImGui::SameLine();
+            ImGui::Image((ImTextureID)gameObject->GetTexture()->GetTextureID(), ImVec2(25, 25));*/
+        }
+        ImGui::End();
+    }
 
 	void EditorUI::DrawGizmo(GameObject* selectedGameObject, Camera* camera)
 	{
@@ -154,32 +170,30 @@ namespace EthernalEngine
 		ImGuizmo::BeginFrame();
 		ImGuizmo::Enable(true);
 		ImGuizmo::SetOrthographic(false);
-		ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
+
+		ImGuizmo::SetDrawlist(ImGui::GetForegroundDrawList());
+
 		ImGuizmo::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
-		
+
 		glm::mat4 view = camera->GetViewMatrix();
 		glm::mat4 projection = camera->GetProjectionMatrix();
+
 		glm::mat4 model = selectedGameObject->transform.GetModelMatrix();
-
-		ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), currentOperation, 
+		
+		ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), currentOperation,
 			ImGuizmo::LOCAL, glm::value_ptr(model));
-
-		if (ImGuizmo::IsOver())
-		{
-			std::cout << "Over Gizmo" << std::endl;
-		}
 
 		if (ImGuizmo::IsUsing())
 		{
-			std::cout << "Gizmo using " << std::endl;
 			glm::vec3 position;
-			glm::vec3 rotation;
+			glm::vec3 rotationEuler;
 			glm::vec3 scale;
 
-			ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(model), &position.x, &rotation.x, &scale.x);
+			ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(model), &position.x, &rotationEuler.x, &scale.x);
 
+			// Update the actual components immediately
 			selectedGameObject->transform.position = position;
-			selectedGameObject->transform.rotation = rotation;
+			selectedGameObject->transform.rotation = glm::quat(glm::radians(rotationEuler));
 			selectedGameObject->transform.scale = scale;
 		}
 	}

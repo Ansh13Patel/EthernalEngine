@@ -89,7 +89,6 @@ namespace EthernalEngine
 			if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &path) == AI_SUCCESS) 
 			{
 				texturePath = path.C_Str();
-				std::cout << "Texture : " << texturePath << std::endl;
 
 				const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texturePath.c_str());
 				if (embeddedTexture)
@@ -100,7 +99,6 @@ namespace EthernalEngine
 				else
 				{
 					texture->LoadTextureFromPath(texturePath.c_str());
-					std::cout << "External Texture" << std::endl;
 				}
 			}
 		}
