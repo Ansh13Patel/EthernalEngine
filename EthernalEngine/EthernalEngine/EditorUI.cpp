@@ -86,15 +86,7 @@ namespace EthernalEngine
 		ImGui::Begin("Hierarchy");
 		for (int i = 0; i < scene->GetGameObjectCount(); i++)
 		{
-			ImGui::PushID(i);
-			GameObject* obj = objects[i];
-			bool isSelected = (scene->GetSelectedGameObject() == obj);
-
-			if (ImGui::Selectable(obj->name.c_str(), isSelected))
-			{
-				scene->SetSelectedGameObject(obj);
-			}
-			ImGui::PopID();
+			ShowGameObjectInHierachy(scene->GetGameObjects()[i], scene);
 		}
 		ImGui::End();
 	}
@@ -140,25 +132,28 @@ namespace EthernalEngine
             ImGui::SameLine();
             ImGui::ColorEdit3("##Color", &gameObject->color[0]);
 
-            //ImGui::Separator();
+			if (gameObject->GetMesh() != nullptr)
+			{
+				ImGui::Separator();
 
-            /*ImGui::Text("Texture");
-            ImGui::SameLine();
-            if (ImGui::Button("Select Texture"))
-            {
-                std::string filepath = Helper::OpenFileDialog("Image Files\0*.png;*.jpg;*.jpeg\0");
+				ImGui::Text("Texture");
+				ImGui::SameLine();
+				if (ImGui::Button("Select Texture"))
+				{
+					std::string filepath = Helper::OpenFileDialog("Image Files\0*.png;*.jpg;*.jpeg\0");
 
-                if (!filepath.empty())
-                {
-                    gameObject->GetTexture()->LoadTextureFromPath(filepath.c_str());
-                }
-                else
-                {
-                    std::cout << "Texture filepath is invalid" << std::endl;
-                }
-            }
-            ImGui::SameLine();
-            ImGui::Image((ImTextureID)gameObject->GetTexture()->GetTextureID(), ImVec2(25, 25));*/
+					if (!filepath.empty())
+					{
+						gameObject->GetMesh()->GetTexture()->LoadTextureFromPath(filepath.c_str());
+					}
+					else
+					{
+						std::cout << "Texture filepath is invalid" << std::endl;
+					}
+				}
+				ImGui::SameLine();
+				ImGui::Image((ImTextureID)gameObject->GetMesh()->GetTexture()->GetTextureID(), ImVec2(25, 25));
+			}
         }
         ImGui::End();
     }
@@ -205,5 +200,38 @@ namespace EthernalEngine
 		if (ImGui::IsKeyPressed(ImGuiKey_W)) currentOperation = ImGuizmo::TRANSLATE;
 		if (ImGui::IsKeyPressed(ImGuiKey_E)) currentOperation = ImGuizmo::ROTATE;
 		if (ImGui::IsKeyPressed(ImGuiKey_R)) currentOperation = ImGuizmo::SCALE;
+	}
+
+	void EditorUI::ShowGameObjectInHierachy(GameObject* obj, Scene* scene)
+	{
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+		bool isSelected = scene->GetSelectedGameObject() == obj;
+
+		if (isSelected)
+		{
+			flags |= ImGuiTreeNodeFlags_Selected;
+		}
+
+		if (obj->GetChildObjectCount() <= 0)
+		{
+			flags |= ImGuiTreeNodeFlags_Leaf;
+		}
+
+		bool opened = ImGui::TreeNodeEx((void *)obj, flags, "%s", obj->name.c_str());
+
+		if (ImGui::IsItemClicked())
+		{
+			scene->SetSelectedGameObject(obj);
+		}
+
+		if (opened)
+		{
+			for (GameObject* child : obj->childObjects)
+			{
+				ShowGameObjectInHierachy(child, scene);
+			}
+			ImGui::TreePop();
+		}
 	}
 }

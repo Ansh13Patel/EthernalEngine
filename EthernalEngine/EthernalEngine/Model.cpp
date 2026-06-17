@@ -1,11 +1,13 @@
 #include "Model.h"
+#include "GameObject.h"
+
 #include <iostream>
 
 namespace EthernalEngine
 {
-	Model::Model(const std::string& path)
+	Model::Model(const std::string& path, GameObject* parent)
 	{
-		LoadModel(path);
+		LoadModel(path, parent);
 	}
 
 	void Model::Draw()
@@ -16,7 +18,7 @@ namespace EthernalEngine
 		}
 	}
 
-	void Model::LoadModel(const std::string& path)
+	void Model::LoadModel(const std::string& path, GameObject* parent)
 	{
 		Assimp::Importer importer;
 
@@ -29,10 +31,10 @@ namespace EthernalEngine
 			return;
 		}
 
-		ProcessNode(scene->mRootNode, scene);
+		ProcessRootNode(scene->mRootNode, scene, parent);
 	}
 
-	std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+	std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* mesh, const aiScene* scene, GameObject* parent)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
@@ -103,20 +105,73 @@ namespace EthernalEngine
 			}
 		}
 
-		return  std::make_unique<Mesh>(vertices, indices, texture);
+		std::unique_ptr<Mesh> meshobj = std::make_unique<Mesh>(vertices, indices, texture);
+
+		GameObject* childMesh = new GameObject(mesh->mName.C_Str());
+		childMesh->SetMesh(meshobj.get());
+		parent->childObjects.push_back(childMesh);
+	
+		return meshobj;
 	}
 
-	void Model::ProcessNode(aiNode* node, const aiScene* scene)
+	void Model::ProcessRootNode(aiNode* node, const aiScene* scene, GameObject* parent)
 	{
+		parent->name = node->mName.C_Str();
+		SetTransform(parent, node);
+
+		for (unsigned int i = 0; i < node->mNumMeshes; i++)
+		{
+			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+			meshes.push_back(ProcessMesh(mesh, scene, parent));
+		}
+
+		for (unsigned int i = 0; i < node->mNumChildren; i++)
+		{
+			ProcessNode(node->mChildren[i], scene, parent);
+		}
+	}
+
+	void Model::ProcessNode(aiNode* node, const aiScene* scene, GameObject* parent)
+	{
+		GameObject* childNode = new GameObject(node->mName.C_Str());
+		SetTransform(childNode, node);
+		parent->childObjects.push_back(childNode);
+
 		for (unsigned int i = 0; i < node->mNumMeshes; i++) 
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			meshes.push_back(ProcessMesh(mesh, scene));
+			meshes.push_back(ProcessMesh(mesh, scene, childNode));
 		}
 
 		for (unsigned int i = 0; i < node->mNumChildren; i++) 
 		{
-			ProcessNode(node->mChildren[i], scene);
+			ProcessNode(node->mChildren[i], scene, childNode);
 		}
+	}
+
+	void Model::SetTransform(GameObject* obj, aiNode* node)
+	{
+		aiVector3D position, scale;
+		aiQuaternion rotation;
+
+		node->mTransformation.Decompose(scale, rotation, position);
+
+		obj->transform.position =
+		{
+			position.x,
+			position.y,
+			position.z
+		};
+
+		obj->transform.scale =
+		{
+			scale.x,
+			scale.y,
+			scale.z
+		};
+
+		glm::quat rotQuat(rotation.w, rotation.x, rotation.y, rotation.z);
+
+		obj->transform.rotation = glm::degrees(glm::eulerAngles(rotQuat));
 	}
 }

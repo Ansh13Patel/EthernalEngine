@@ -12,10 +12,12 @@
 
 namespace EthernalEngine
 {
+	class GameObject;
+
 	class Model
 	{
 	public:
-		Model(const std::string& path);
+		Model(const std::string& path, GameObject* parent);
 		~Model() = delete;
 
 		void Draw();
@@ -24,8 +26,10 @@ namespace EthernalEngine
 		std::vector<std::unique_ptr<Mesh>> meshes;
 
 	private:
-		void LoadModel(const std::string& path);
-		void ProcessNode(aiNode* node, const aiScene* scene);
-        std::unique_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene);
+		void LoadModel(const std::string& path, GameObject* parent);
+		void ProcessRootNode(aiNode* node, const aiScene* scene, GameObject* parent);
+		void ProcessNode(aiNode* node, const aiScene* scene, GameObject* parent);
+        std::unique_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene, GameObject* parent);
+		void SetTransform(GameObject* obj, aiNode* node);
 	};
 }

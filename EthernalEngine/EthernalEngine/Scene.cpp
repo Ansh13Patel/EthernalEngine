@@ -60,7 +60,7 @@ namespace EthernalEngine
 	{
 		GameObject* newObject = new GameObject(name);
 		
-		Model* newModel = new Model(path);
+		Model* newModel = new Model(path, newObject);
 		Texture* newTexture = new Texture();
 
 		if (defaultShader == nullptr)

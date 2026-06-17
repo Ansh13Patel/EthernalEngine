@@ -6,7 +6,7 @@
 #include "Texture.h"
 #include "Model.h"
 
-#include<string>
+#include <string>
 
 namespace EthernalEngine
 {
@@ -30,6 +30,8 @@ namespace EthernalEngine
 
         Model* GetModel() { return model; }
 
+        unsigned int GetChildObjectCount() { return childObjects.size(); }
+
         virtual void Update(
             float deltaTime
         ){  }
@@ -39,11 +41,13 @@ namespace EthernalEngine
         Transform transform;
         float color[3]{ 1.0f,1.0f,1.0f };
         std::string name;
+        std::vector<GameObject*> childObjects;
 
     private:
 
         Mesh* mesh = nullptr;
         Model* model = nullptr;
 		Shader* shader = nullptr;
+
     };
 }

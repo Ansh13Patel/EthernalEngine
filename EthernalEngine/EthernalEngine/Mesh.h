@@ -25,6 +25,7 @@ namespace EthernalEngine
             std::shared_ptr<Texture> texture);
         ~Mesh();
         virtual void Draw();
+        std::shared_ptr<Texture> GetTexture() { return texture; }
 
     protected:
 

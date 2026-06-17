@@ -24,6 +24,7 @@ namespace EthernalEngine
 		void Inspector(GameObject* gameObject);
 		void DrawGizmo(GameObject* selectedGameObject, Camera* camera);
 		void UpdateGizmoOperation();
+		void ShowGameObjectInHierachy(GameObject* obj, Scene* scene);
 
 	public:
 		ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;
