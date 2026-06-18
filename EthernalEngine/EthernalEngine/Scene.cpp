@@ -6,6 +6,16 @@
 
 namespace EthernalEngine
 {
+	Scene::Scene(Window* window) :m_window(window), camera(window)
+	{
+		directionalLight = new DirectionalLight();
+	}
+
+	Scene::~Scene()
+	{
+		delete directionalLight;
+	}
+
 	void Scene::AddGameObject(GameObject* gameObject)
 	{
 		gameObjects.push_back(gameObject);

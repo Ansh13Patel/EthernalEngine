@@ -22,6 +22,7 @@ namespace EthernalEngine
 		void MainMenuBar(Scene* scene);
 		void Hierarchy(Scene* scene);
 		void Inspector(GameObject* gameObject);
+		void LightingSetting(DirectionalLight* dirLight);
 		void DrawGizmo(GameObject* selectedGameObject, Camera* camera);
 		void UpdateGizmoOperation();
 		void ShowGameObjectInHierachy(GameObject* obj, Scene* scene);

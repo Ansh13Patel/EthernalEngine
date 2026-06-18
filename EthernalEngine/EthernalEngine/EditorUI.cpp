@@ -39,6 +39,7 @@ namespace EthernalEngine
 		MainMenuBar(scene);
 		Hierarchy(scene);
 		Inspector(scene->GetSelectedGameObject());
+		LightingSetting(scene->GetDirectionalLight());
 		UpdateGizmoOperation();
 		DrawGizmo(scene->GetSelectedGameObject(), &scene->GetCamera());
 	}
@@ -233,5 +234,28 @@ namespace EthernalEngine
 			}
 			ImGui::TreePop();
 		}
+	}
+
+	void EditorUI::LightingSetting(DirectionalLight* dirLight)
+	{
+		ImGui::Begin("Directional Light Settings");
+
+		ImGui::Text("Ambient Strength");
+		ImGui::SameLine();
+		ImGui::SliderFloat("##AmbientStrength", &dirLight->ambientStrength, 0.0f, 1.0f);
+
+		ImGui::Text("Specular Strength");
+		ImGui::SameLine();
+		ImGui::SliderFloat("##SpecularStrength", &dirLight->specularStrength, 0.0f, 1.0f);
+
+		ImGui::Text("Intensity");
+		ImGui::SameLine();
+		ImGui::SliderFloat("##Intensity", &dirLight->intensity, 0.1f, 5.0f);
+
+		ImGui::Text("Color");
+		ImGui::SameLine();
+		ImGui::ColorEdit3("##Color", &dirLight->lightColor[0]);
+
+		ImGui::End();
 	}
 }
