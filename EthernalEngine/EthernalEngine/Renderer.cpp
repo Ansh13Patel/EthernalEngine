@@ -27,7 +27,7 @@ namespace EthernalEngine
 					obj->GetShader()->SetMat4("projection", camera->GetProjectionMatrix());
 					if (dirLight != nullptr && dirLight->useLight)
 					{
-						obj->GetShader()->SetFloat3("lightDirection", std::vector<float>{-0.2f, -1.0f, -0.3f}.data());
+						obj->GetShader()->SetFloat3("lightDirection", std::vector<float>{dirLight->direction.x, dirLight->direction.y, dirLight->direction.z}.data());
 						obj->GetShader()->SetFloat("ambientStrength", dirLight->ambientStrength);
 						obj->GetShader()->SetFloat("specularStrength", dirLight->specularStrength);
 						obj->GetShader()->SetFloat("intensity", dirLight->intensity);

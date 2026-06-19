@@ -9,7 +9,7 @@ namespace EthernalEngine
 		DirectionalLight();
 		~DirectionalLight() = default;
 
-		Transform tranform;
+		glm::vec3 direction;
 		float lightColor[3]{ 1.0f,1.0f,1.0f };
 		float ambientStrength;
 		float specularStrength;

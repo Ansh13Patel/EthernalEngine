@@ -196,7 +196,8 @@ namespace EthernalEngine
 
 	void EditorUI::UpdateGizmoOperation()
 	{
-		if (ImGui::IsMouseDown(ImGuiMouseButton_Right)) return;
+		ImGuiIO& io = ImGui::GetIO();
+		if (ImGui::IsMouseDown(ImGuiMouseButton_Right) || io.WantCaptureKeyboard) return;
 
 		if (ImGui::IsKeyPressed(ImGuiKey_W)) currentOperation = ImGuizmo::TRANSLATE;
 		if (ImGui::IsKeyPressed(ImGuiKey_E)) currentOperation = ImGuizmo::ROTATE;
@@ -239,6 +240,10 @@ namespace EthernalEngine
 	void EditorUI::LightingSetting(DirectionalLight* dirLight)
 	{
 		ImGui::Begin("Directional Light Settings");
+
+		ImGui::Text("Direction");
+		ImGui::SameLine();
+		ImGui::DragFloat3("##Direction", &dirLight->direction.x, 0.01f, -1.0f, 1.0f, "%.3f");
 
 		ImGui::Text("Ambient Strength");
 		ImGui::SameLine();

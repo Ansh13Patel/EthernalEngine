@@ -8,5 +8,6 @@ namespace EthernalEngine
 		specularStrength = 0.5f;
 		intensity = 1.0f;
 		useLight = true;
+		direction = glm::vec3(-0.2f, -1.0f, -0.3f);
 	}
 }

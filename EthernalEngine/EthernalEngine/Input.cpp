@@ -55,7 +55,7 @@ namespace EthernalEngine
 			bool previousMouseLeftState = isMouseLeftButtonDown;
 			bool previousMouseMiddleState = isMouseMiddleButtonDown;
 
-		    isMouseLeftButtonDown = glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
+			isMouseLeftButtonDown = glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 			isMouseRightButtonDown = glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
 			isMouseMiddleButtonDown = glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_MIDDLE) == GLFW_PRESS;
 
@@ -74,13 +74,16 @@ namespace EthernalEngine
 			{
 				firstMouse = true;
 			}
-			
-			if(isMouseLeftButtonDown && !previousMouseLeftState) canSelectGameobject = true;
+
+			if (isMouseLeftButtonDown && !previousMouseLeftState) canSelectGameobject = true;
 			if (!isMouseLeftButtonDown) canSelectGameobject = false;
 
 			double xpos = 0, ypos = 0;
 			glfwGetCursorPos(glfwWindow, &xpos, &ypos);
-			GameObjectSelection(window->GetWidth(), window->GetHeight(), xpos, ypos);
+			if (!ImGuizmo::IsOver())
+			{
+				GameObjectSelection(window->GetWidth(), window->GetHeight(), xpos, ypos);
+			}
 			Mouse_Callback(xpos, ypos);
 		}
 	}
