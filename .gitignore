@@ -3,6 +3,9 @@
 # ==========================
 
 .vs/
+*.sln          
+*.vcxproj      
+*.filters      
 *.VC.db
 *.VC.opendb
 *.suo
@@ -110,3 +113,11 @@ vcpkg_installed/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Ignore the entire CMake build output folder
+/build/
+
+# Ignore local CMake configuration files if generated in root
+CMakeFiles/
+CMakeCache.txt
+CMakeUserPresets.json
