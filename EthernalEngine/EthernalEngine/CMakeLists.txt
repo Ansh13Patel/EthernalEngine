@@ -12,8 +12,12 @@ Source/main.cpp
 
 Source/Core/Input.cpp
 Source/Core/Window.cpp
+Source/Core/EngineCamera.cpp
 
 Source/Editor/EditorUI.cpp
+Source/Editor/DirectionalLightEditorUI.cpp
+Source/Editor/PointLightEditorUI.cpp
+Source/Editor/MeshEditorUI.cpp
 
 Source/Helper/Helper.cpp
 
@@ -25,8 +29,9 @@ Source/Rendering/Shader.cpp
 Source/Rendering/stb_image.cpp
 Source/Rendering/Texture.cpp
 
-Source/Scene/DirectionalLight.cpp
-Source/Scene/Camera.cpp
+Source/Components/DirectionalLight.cpp
+Source/Components/PointLight.cpp
+
 Source/Scene/GameObject.cpp
 Source/Scene/Scene.cpp
 Source/Scene/Transform.cpp

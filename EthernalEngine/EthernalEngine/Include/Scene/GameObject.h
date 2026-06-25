@@ -5,6 +5,7 @@
 #include "Rendering/Shader.h"
 #include "Rendering/Texture.h"
 #include "Rendering/Model.h"
+#include <Components/Component.h>
 
 #include <string>
 
@@ -42,6 +43,8 @@ namespace EthernalEngine
         float color[3]{ 1.0f,1.0f,1.0f };
         std::string name;
         std::vector<GameObject*> childObjects;
+
+        std::vector<Component*> components;
 
     private:
 

@@ -6,6 +6,9 @@
 
 #include "Scene/Scene.h"
 #include "ImGuizmo.h"
+#include "Editor/DirectionalLightEditorUI.h"
+#include "Editor/PointLightEditorUI.h"
+#include "Editor/MeshEditorUI.h"
 
 namespace EthernalEngine
 {
@@ -22,12 +25,16 @@ namespace EthernalEngine
 		void MainMenuBar(Scene* scene);
 		void Hierarchy(Scene* scene);
 		void Inspector(GameObject* gameObject);
-		void LightingSetting(DirectionalLight* dirLight);
-		void DrawGizmo(GameObject* selectedGameObject, Camera* camera);
+		void DrawGizmo(GameObject* selectedGameObject, EngineCamera* EngineCamera);
 		void UpdateGizmoOperation();
 		void ShowGameObjectInHierachy(GameObject* obj, Scene* scene);
 
 	public:
 		ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;
+
+	private:
+		DirectionalLightEditorUI dlEditorUI;
+		PointLightEditorUI plEditorUI;
+		MeshEditorUI meshEditorUI;
 	};
 }

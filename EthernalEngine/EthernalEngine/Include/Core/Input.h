@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Window.h"
-#include "Scene/Camera.h"
+#include "Core/EngineCamera.h"
 #include "Scene/Scene.h"
 
 namespace EthernalEngine
@@ -35,7 +35,7 @@ namespace EthernalEngine
 		static bool firstMouse;
 		static bool canMoveCamera;
 
-		static Camera* camera;
+		static EngineCamera* EngineCamera;
 		static Window* window;
 		static Scene* scene;
 	};

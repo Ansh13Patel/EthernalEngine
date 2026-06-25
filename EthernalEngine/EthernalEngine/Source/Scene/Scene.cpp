@@ -5,9 +5,9 @@
 
 namespace EthernalEngine
 {
-	Scene::Scene(Window* window) :m_window(window), camera(window)
+	Scene::Scene(Window* window) :m_window(window), EngineCamera(window)
 	{
-		directionalLight = new DirectionalLight();
+		directionalLight = nullptr;
 	}
 
 	Scene::~Scene()
@@ -18,6 +18,19 @@ namespace EthernalEngine
 	void Scene::AddGameObject(GameObject* gameObject)
 	{
 		gameObjects.push_back(gameObject);
+	}
+
+	void Scene::AddDirectionalLight(DirectionalLight* directionalLight)
+	{
+		if (this->directionalLight == nullptr)
+		{
+			this->directionalLight = directionalLight;
+		}
+	}
+
+	void Scene::AddPointLight(PointLight* pointLight)
+	{
+		this->pointLights.push_back(pointLight);
 	}
 
 	void Scene::Update(float deltaTime)
@@ -81,6 +94,28 @@ namespace EthernalEngine
 		return newObject;
 	}
 
+	DirectionalLight* Scene::CreateGameObjectWithDirectionalLight()
+	{
+		GameObject* dirLightObj = new GameObject("Directional Light");
+		DirectionalLight* dirLight = new DirectionalLight(dirLightObj);
+		dirLightObj->components.push_back(dirLight);
+
+		AddGameObject(dirLightObj);
+
+		return dirLight;
+	}
+
+	PointLight* Scene::CreateGameObjectWithPointLight()
+	{
+		GameObject* pointLightObj = new GameObject("Point Light");
+		PointLight* pointLight = new PointLight(pointLightObj);
+		pointLightObj->components.push_back(pointLight);
+
+		AddGameObject(pointLightObj);
+
+		return pointLight;
+	}
+
 	void Scene::SelectGameObject(glm::vec3& rayDir)
 	{
 		float closetHitDistance = FLT_MAX;
@@ -92,7 +127,7 @@ namespace EthernalEngine
 			glm::vec3 minBounds = transform.position - (transform.scale * 0.5f);
 			glm::vec3 maxBounds = transform.position + (transform.scale * 0.5f);
 			float hitDistance;
-			if (RayAABB(camera.cameraPos, rayDir, minBounds, maxBounds, hitDistance)) 
+			if (RayAABB(EngineCamera.cameraPos, rayDir, minBounds, maxBounds, hitDistance)) 
 			{
 				if (hitDistance < closetHitDistance)
 				{

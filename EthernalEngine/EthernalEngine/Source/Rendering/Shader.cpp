@@ -151,6 +151,11 @@ namespace EthernalEngine
 		glUniform3fv(glGetUniformLocation(shaderProgram, name.c_str()), 1, value);
 	}
 
+	void Shader::SetFloat4(const std::string& name, float value[4])
+	{
+		glUniform4fv(glGetUniformLocation(shaderProgram, name.c_str()), 1, value);
+	}
+
 	void Shader::SetInt(const std::string& name, int value)
 	{
 		glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()),value);

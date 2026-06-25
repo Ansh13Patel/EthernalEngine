@@ -21,7 +21,7 @@ namespace EthernalEngine
 	bool Input::firstMouse = true;
 	bool Input::canMoveCamera = false;
 
-	Camera* Input::camera = nullptr;
+	EngineCamera* Input::EngineCamera = nullptr;
 	Window* Input::window = nullptr;
 	Scene* Input::scene = nullptr;
 
@@ -30,7 +30,7 @@ namespace EthernalEngine
 	{
 		Input::window = window;
 		Input::scene = scene;
-		Input::camera = &(scene->GetCamera());
+		Input::EngineCamera = &(scene->GetCamera());
 
 		glfwSetScrollCallback(Input::window->GetGLFWwindow(), Scroll_Callback);
 	}
@@ -67,7 +67,7 @@ namespace EthernalEngine
 				if (glfwGetKey(glfwWindow, GLFW_KEY_D)) right = true;
 			}
 
-			camera->MoveCamera(forward, backward, right, left, false, false, deltatime);
+			EngineCamera->MoveCamera(forward, backward, right, left, false, false, deltatime);
 
 			if ((isMouseRightButtonDown && !previousMouseRightState) ||
 				(isMouseMiddleButtonDown && !previousMouseMiddleState))
@@ -96,9 +96,9 @@ namespace EthernalEngine
 		float x = (2.0f * xpos) / width - 1.0f;
 		float y = 1.0f - (2.0f * ypos) / height;
 		glm::vec4 rayclip = { x,y,-1.0f,1.0f };
-		glm::vec4 rayEye = glm::inverse(camera->GetProjectionMatrix()) * rayclip;
+		glm::vec4 rayEye = glm::inverse(EngineCamera->GetProjectionMatrix()) * rayclip;
 		rayEye = { rayEye.x, rayEye.y, -1.0f, 0.0f };
-		glm::vec3 rayWorld = glm::normalize(glm::vec3(glm::inverse(camera->GetViewMatrix()) * rayEye));
+		glm::vec3 rayWorld = glm::normalize(glm::vec3(glm::inverse(EngineCamera->GetViewMatrix()) * rayEye));
 		scene->SelectGameObject(rayWorld);
 	}
 
@@ -130,21 +130,21 @@ namespace EthernalEngine
 
 			yoffset *= sensitivity;
 
-			if (camera)
+			if (EngineCamera)
 			{
 				if (isMouseMiddleButtonDown)
-					camera->MoveCamera(xoffset, yoffset);
+					EngineCamera->MoveCamera(xoffset, yoffset);
 				else if (isMouseRightButtonDown)
-					camera->UpdateCameraRotation(xoffset, yoffset);
+					EngineCamera->UpdateCameraRotation(xoffset, yoffset);
 			}
 		}
 	}
 
 	void Input::Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
 	{
-		if (camera)
+		if (EngineCamera)
 		{
-			camera->UpdateCameraFov(static_cast<float>(yoffset));
+			EngineCamera->UpdateCameraFov(static_cast<float>(yoffset));
 		}
 	}
 }

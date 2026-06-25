@@ -5,11 +5,11 @@
 
 namespace EthernalEngine
 {
-	class Camera
+	class EngineCamera
 	{
 	public:
-		Camera(Window* window);
-		~Camera();
+		EngineCamera(Window* window);
+		~EngineCamera() = default;
 		void Update(float deltaTime);
 		void UpdateCameraRotation(float xOffset, float yOffset);
 		void UpdateCameraFov(float yScrollOffset);

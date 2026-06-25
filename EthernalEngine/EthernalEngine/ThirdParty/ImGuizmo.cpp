@@ -865,14 +865,14 @@ namespace IMGUIZMO_NAMESPACE
       vec_t startOfSegment = start;
       const matrix_t& mvp = localCoordinates ? gContext.mMVPLocal : gContext.mMVP;
       startOfSegment.TransformPoint(mvp);
-      if (fabsf(startOfSegment.w) > FLT_EPSILON) // check for axis aligned with camera direction
+      if (fabsf(startOfSegment.w) > FLT_EPSILON) // check for axis aligned with EngineCamera direction
       {
          startOfSegment *= 1.f / startOfSegment.w;
       }
 
       vec_t endOfSegment = end;
       endOfSegment.TransformPoint(mvp);
-      if (fabsf(endOfSegment.w) > FLT_EPSILON) // check for axis aligned with camera direction
+      if (fabsf(endOfSegment.w) > FLT_EPSILON) // check for axis aligned with EngineCamera direction
       {
          endOfSegment *= 1.f / endOfSegment.w;
       }
@@ -892,7 +892,7 @@ namespace IMGUIZMO_NAMESPACE
       for (unsigned int i = 0; i < 3; i++)
       {
          pts[i].TransformPoint(gContext.mMVP);
-         if (fabsf(pts[i].w) > FLT_EPSILON) // check for axis aligned with camera direction
+         if (fabsf(pts[i].w) > FLT_EPSILON) // check for axis aligned with EngineCamera direction
          {
             pts[i] *= 1.f / pts[i].w;
          }
@@ -1118,7 +1118,7 @@ namespace IMGUIZMO_NAMESPACE
 
        gContext.mReversed = (nearPos.z/nearPos.w) > (farPos.z / farPos.w);
 
-      // compute scale from the size of camera right vector projected on screen at the matrix position
+      // compute scale from the size of EngineCamera right vector projected on screen at the matrix position
       vec_t pointRight = viewInverse.v.right;
       pointRight.TransformPoint(gContext.mViewProjection);
 
@@ -1303,7 +1303,7 @@ namespace IMGUIZMO_NAMESPACE
       else
       {
          // In left-handed view matrices, mCameraDir points toward the scene instead of
-         // toward the camera; negate it so we always get the "toward camera" direction,
+         // toward the EngineCamera; negate it so we always get the "toward EngineCamera" direction,
          // which selects the correct front-facing half of each rotation ring.
          viewInverse.Inverse(*(matrix_t*)&gContext.mViewMat);
          const float handSign = (Dot(Cross(viewInverse.v.right, viewInverse.v.up), viewInverse.v.dir) >= 0.f) ? 1.f : -1.f;
@@ -2690,7 +2690,7 @@ namespace IMGUIZMO_NAMESPACE
          ((matrix_t*)deltaMatrix)->SetToIdentity();
       }
 
-      // behind camera
+      // behind EngineCamera
       vec_t camSpacePosition;
       camSpacePosition.TransformPoint(makeVect(0.f, 0.f, 0.f), gContext.mMVP);
       if (!gContext.mIsOrthographic && camSpacePosition.z < 0.001f && !gContext.mbUsing)
@@ -2837,7 +2837,7 @@ namespace IMGUIZMO_NAMESPACE
                ImVec2 p0 = worldToPos(vec_t(0.f, 0.f, 0.f), mvp);
                ImVec2 p1 = worldToPos(endLocal, mvp);
 
-               // reject behind camera (clip space)
+               // reject behind EngineCamera (clip space)
                vec_t clip0, clip1;
                clip0.TransformPoint(vec_t(0.f, 0.f, 0.f), mvp);
                clip1.TransformPoint(endLocal, mvp);

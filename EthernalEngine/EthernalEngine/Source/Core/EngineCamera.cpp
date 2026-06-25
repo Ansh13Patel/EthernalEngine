@@ -1,11 +1,11 @@
-#include "Scene/Camera.h"
+#include "Core/EngineCamera.h"
 
 #include<glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
 namespace EthernalEngine
 {
-	Camera::Camera(Window* window)
+	EngineCamera::EngineCamera(Window* window)
 	{
 		this->m_window = window;
 		cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
@@ -17,7 +17,7 @@ namespace EthernalEngine
 		fov = 45.0f;
 	}
 
-	void Camera::UpdateCameraRotation(float xOffset, float yOffset)
+	void EngineCamera::UpdateCameraRotation(float xOffset, float yOffset)
 	{
 		yaw += xOffset;
 		pitch += yOffset;
@@ -32,12 +32,12 @@ namespace EthernalEngine
 		cameraFront = glm::normalize(direction);
 	}
 
-	void Camera::UpdateCameraFov(float yScrollOffset)
+	void EngineCamera::UpdateCameraFov(float yScrollOffset)
 	{
 		cameraPos += cameraFront * cameraScrollSpeed * yScrollOffset;
 	}
 
-	void Camera::MoveCamera(bool forward, bool backward, bool right, bool left,bool up, bool down, float deltatime)
+	void EngineCamera::MoveCamera(bool forward, bool backward, bool right, bool left,bool up, bool down, float deltatime)
 	{
 		if (forward)
 			cameraPos += cameraFront * cameraSpeed * deltatime;
@@ -49,7 +49,7 @@ namespace EthernalEngine
 			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltatime;
 	}
 
-	void Camera::MoveCamera(float xOffset, float yOffset)
+	void EngineCamera::MoveCamera(float xOffset, float yOffset)
 	{
 		glm::vec3 right = glm::normalize(glm::cross(cameraFront, cameraUp));
 
@@ -57,17 +57,13 @@ namespace EthernalEngine
 		cameraPos -= cameraUp * yOffset * cameraPanSpeed;
 	}
 
-	glm::mat4 Camera::GetViewMatrix() const
+	glm::mat4 EngineCamera::GetViewMatrix() const
 	{
 		return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 	}
 
-	glm::mat4 Camera::GetProjectionMatrix() const
+	glm::mat4 EngineCamera::GetProjectionMatrix() const
 	{
 		return glm::perspective(glm::radians(fov), (float)m_window->GetWidth() / (float)m_window->GetHeight(), 0.1f, 100.0f);
-	}
-
-	Camera::~Camera()
-	{
 	}
 }

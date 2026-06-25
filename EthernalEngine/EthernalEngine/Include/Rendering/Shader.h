@@ -29,6 +29,8 @@ namespace EthernalEngine
 		void SetFloat(const std::string& name, float value);
 
 		void SetFloat3(const std::string& name, float value[3]);
+		
+		void SetFloat4(const std::string& name, float value[4]);
 
 		void SetInt(const std::string& name, int value);
 

@@ -39,7 +39,6 @@ namespace EthernalEngine
 		MainMenuBar(scene);
 		Hierarchy(scene);
 		Inspector(scene->GetSelectedGameObject());
-		LightingSetting(scene->GetDirectionalLight());
 		UpdateGizmoOperation();
 		DrawGizmo(scene->GetSelectedGameObject(), &scene->GetCamera());
 	}
@@ -59,6 +58,18 @@ namespace EthernalEngine
 				if (ImGui::MenuItem("Cube"))
 				{
 					scene->AddGameObject(scene->CreateCubeGameObject("NewCube"));
+				}
+				if (ImGui::BeginMenu("Light"))
+				{
+					if (ImGui::MenuItem("Directional"))
+					{
+						scene->AddDirectionalLight(scene->CreateGameObjectWithDirectionalLight());
+					}
+					if (ImGui::MenuItem("Point"))
+					{
+						scene->AddPointLight(scene->CreateGameObjectWithPointLight());
+					}
+					ImGui::EndMenu();
 				}
 				if (ImGui::MenuItem("Import"))
 				{
@@ -127,39 +138,37 @@ namespace EthernalEngine
             ImGui::SameLine();
             ImGui::DragFloat3("##Scale", &transform.scale.x, 0.1f, 0.0f, 1000.0f, "%.3f");
 
-            ImGui::Separator();
-
-            ImGui::Text("Color");
-            ImGui::SameLine();
-            ImGui::ColorEdit3("##Color", &gameObject->color[0]);
-
 			if (gameObject->GetMesh() != nullptr)
 			{
 				ImGui::Separator();
 
-				ImGui::Text("Texture");
+				ImGui::Text("Color");
 				ImGui::SameLine();
-				if (ImGui::Button("Select Texture"))
-				{
-					std::string filepath = Helper::OpenFileDialog("Image Files\0*.png;*.jpg;*.jpeg\0");
+				ImGui::ColorEdit3("##Color", &gameObject->color[0]);
 
-					if (!filepath.empty())
-					{
-						gameObject->GetMesh()->GetTexture()->LoadTextureFromPath(filepath.c_str());
-					}
-					else
-					{
-						std::cout << "Texture filepath is invalid" << std::endl;
-					}
+				ImGui::Separator();
+
+				meshEditorUI.ShowMeshParameters(gameObject->GetMesh());
+			}
+
+			for (int i = 0; i < gameObject->components.size(); i++)
+			{
+				Component* component = gameObject->components[i];
+
+				if (dynamic_cast<DirectionalLight*>(component))
+				{
+					dlEditorUI.ShowDirectionalLightParameters(dynamic_cast<DirectionalLight*>(component));
 				}
-				ImGui::SameLine();
-				ImGui::Image((ImTextureID)gameObject->GetMesh()->GetTexture()->GetTextureID(), ImVec2(25, 25));
+				else if (dynamic_cast<PointLight*>(component))
+				{
+					plEditorUI.ShowPointLightParameters(dynamic_cast<PointLight*>(component));
+				}
 			}
         }
         ImGui::End();
     }
 
-	void EditorUI::DrawGizmo(GameObject* selectedGameObject, Camera* camera)
+	void EditorUI::DrawGizmo(GameObject* selectedGameObject, EngineCamera* EngineCamera)
 	{
 		if (!selectedGameObject) return;
 
@@ -171,8 +180,8 @@ namespace EthernalEngine
 
 		ImGuizmo::SetRect(0, 0, ImGui::GetIO().DisplaySize.x, ImGui::GetIO().DisplaySize.y);
 
-		glm::mat4 view = camera->GetViewMatrix();
-		glm::mat4 projection = camera->GetProjectionMatrix();
+		glm::mat4 view = EngineCamera->GetViewMatrix();
+		glm::mat4 projection = EngineCamera->GetProjectionMatrix();
 
 		glm::mat4 model = selectedGameObject->transform.GetModelMatrix();
 		
@@ -235,32 +244,5 @@ namespace EthernalEngine
 			}
 			ImGui::TreePop();
 		}
-	}
-
-	void EditorUI::LightingSetting(DirectionalLight* dirLight)
-	{
-		ImGui::Begin("Directional Light Settings");
-
-		ImGui::Text("Direction");
-		ImGui::SameLine();
-		ImGui::DragFloat3("##Direction", &dirLight->direction.x, 0.01f, -1.0f, 1.0f, "%.3f");
-
-		ImGui::Text("Ambient Strength");
-		ImGui::SameLine();
-		ImGui::SliderFloat("##AmbientStrength", &dirLight->ambientStrength, 0.0f, 1.0f);
-
-		ImGui::Text("Specular Strength");
-		ImGui::SameLine();
-		ImGui::SliderFloat("##SpecularStrength", &dirLight->specularStrength, 0.0f, 1.0f);
-
-		ImGui::Text("Intensity");
-		ImGui::SameLine();
-		ImGui::SliderFloat("##Intensity", &dirLight->intensity, 0.1f, 5.0f);
-
-		ImGui::Text("Color");
-		ImGui::SameLine();
-		ImGui::ColorEdit3("##Color", &dirLight->lightColor[0]);
-
-		ImGui::End();
 	}
 }
