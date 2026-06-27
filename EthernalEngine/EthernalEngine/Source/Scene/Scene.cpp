@@ -33,6 +33,11 @@ namespace EthernalEngine
 		this->pointLights.push_back(pointLight);
 	}
 
+	void Scene::AddSpotLight(SpotLight* spotLight)
+	{
+		this->spotLights.push_back(spotLight);
+	}
+
 	void Scene::Update(float deltaTime)
 	{
 		for (GameObject* obj : gameObjects)
@@ -114,6 +119,17 @@ namespace EthernalEngine
 		AddGameObject(pointLightObj);
 
 		return pointLight;
+	}
+
+	SpotLight* Scene::CreateGameObjectWithSpotLight()
+	{
+		GameObject* spotLightObj = new GameObject("Spot Light");
+		SpotLight* spotLight = new SpotLight(spotLightObj);
+		spotLightObj->components.push_back(spotLight);
+
+		AddGameObject(spotLightObj);
+
+		return spotLight;
 	}
 
 	void Scene::SelectGameObject(glm::vec3& rayDir)

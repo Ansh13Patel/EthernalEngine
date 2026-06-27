@@ -45,7 +45,7 @@ ThirdParty/imgui_impl_opengl3.cpp
 ThirdParty/imgui_tables.cpp
 ThirdParty/imgui_widgets.cpp
 ThirdParty/ImGuizmo.cpp
-)
+ "Include/Components/SpotLight.h" "Source/Components/SpotLight.cpp" "Include/Editor/SpotLightEditorUI.h" "Source/Editor/SpotLightEditorUI.cpp")
 
 add_subdirectory(../Dependencies/Assimp assimp-build)
 add_subdirectory(../Dependencies/GLFW/glfw glfw-build)

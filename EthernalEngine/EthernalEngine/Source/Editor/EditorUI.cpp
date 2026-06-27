@@ -69,6 +69,10 @@ namespace EthernalEngine
 					{
 						scene->AddPointLight(scene->CreateGameObjectWithPointLight());
 					}
+					if (ImGui::MenuItem("Spot"))
+					{
+						scene->AddSpotLight(scene->CreateGameObjectWithSpotLight());
+					}
 					ImGui::EndMenu();
 				}
 				if (ImGui::MenuItem("Import"))
@@ -162,6 +166,10 @@ namespace EthernalEngine
 				else if (dynamic_cast<PointLight*>(component))
 				{
 					plEditorUI.ShowPointLightParameters(dynamic_cast<PointLight*>(component));
+				}
+				else if (dynamic_cast<SpotLight*>(component))
+				{
+					slEditorUI.ShowSpotLightParameters(dynamic_cast<SpotLight*>(component));
 				}
 			}
         }

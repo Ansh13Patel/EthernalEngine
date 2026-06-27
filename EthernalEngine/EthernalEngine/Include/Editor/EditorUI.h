@@ -8,6 +8,7 @@
 #include "ImGuizmo.h"
 #include "Editor/DirectionalLightEditorUI.h"
 #include "Editor/PointLightEditorUI.h"
+#include "Editor/SpotLightEditorUI.h"
 #include "Editor/MeshEditorUI.h"
 
 namespace EthernalEngine
@@ -35,6 +36,7 @@ namespace EthernalEngine
 	private:
 		DirectionalLightEditorUI dlEditorUI;
 		PointLightEditorUI plEditorUI;
+		SpotLightEditorUI slEditorUI;
 		MeshEditorUI meshEditorUI;
 	};
 }

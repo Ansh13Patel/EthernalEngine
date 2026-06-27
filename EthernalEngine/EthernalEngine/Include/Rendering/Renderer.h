@@ -16,5 +16,10 @@ namespace EthernalEngine
 		~Renderer() = default;
 		void Clear();
 		void Draw(Scene* scene);
+
+	private:
+		void UpdateDirectionalLightOnObject(Scene* scene, GameObject* obj);
+		void UpdatePointLightsOnObject(Scene* scene, GameObject* obj);
+		void UpdateSpotLightsOnObject(Scene* scene, GameObject* obj);
 	};
 }
