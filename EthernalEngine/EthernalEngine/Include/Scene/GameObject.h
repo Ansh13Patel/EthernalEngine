@@ -31,6 +31,10 @@ namespace EthernalEngine
 
         Model* GetModel() { return model; }
 
+        void SetIsSelected(bool selected) { isSelected = selected; }
+
+        bool GetIsSelected() { return isSelected; }
+
         unsigned int GetChildObjectCount() { return childObjects.size(); }
 
         virtual void Update(
@@ -51,6 +55,7 @@ namespace EthernalEngine
         Mesh* mesh = nullptr;
         Model* model = nullptr;
 		Shader* shader = nullptr;
+        bool isSelected = false;
 
     };
 }

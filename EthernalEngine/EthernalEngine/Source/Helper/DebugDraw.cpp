@@ -1,5 +1,9 @@
 #include "Helper/DebugDraw.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 namespace EthernalEngine
 {
 	std::vector<DebugVertex> DebugDraw::vertices{};
@@ -40,7 +44,7 @@ namespace EthernalEngine
 		vertices.push_back(DebugVertex(endpos, color));
 	}
 
-	void DebugDraw::DrawCircle(glm::vec3 centerPos, float radius, glm::vec4 color, bool xy, bool xz, bool yz)
+	void DebugDraw::DrawCircle(glm::vec3 centerPos, float radius, glm::vec4 color, CirclePlane plane)
 	{
 		for (int i = 0; i < segments; i++)
 		{
@@ -50,20 +54,22 @@ namespace EthernalEngine
 			glm::vec3 p0 = glm::vec3(0.0f);
 			glm::vec3 p1 = glm::vec3(0.0f);
 
-			if (xy)
-			{
+			switch (plane)
+			{		
+			case CirclePlane::XY:
 				p0 = centerPos + glm::vec3(cos(a0), sin(a0), 0) * radius;
 				p1 = centerPos + glm::vec3(cos(a1), sin(a1), 0) * radius;
-			}
-			else if (xz)
-			{
+				break;
+			case CirclePlane::XZ:
 				p0 = centerPos + glm::vec3(cos(a0), 0, sin(a0)) * radius;
 				p1 = centerPos + glm::vec3(cos(a1), 0, sin(a1)) * radius;
-			}
-			else if (yz)
-			{
+				break;
+			case CirclePlane::YZ:
 				p0 = centerPos + glm::vec3(0, sin(a0), cos(a0)) * radius;
 				p1 = centerPos + glm::vec3(0, sin(a1), cos(a1)) * radius;
+				break;
+			default:
+				break;
 			}
 			
 			DrawLine(p0, p1, color);
@@ -72,14 +78,43 @@ namespace EthernalEngine
 
 	void DebugDraw::DrawSphere(glm::vec3 centerPos, float radius, glm::vec4 color)
 	{
-		DrawCircle(centerPos, radius, color, true, false, false);
-		DrawCircle(centerPos, radius, color, false, true, false);
-		DrawCircle(centerPos, radius, color, false, false, true);
+		DrawCircle(centerPos, radius, color, CirclePlane::XY);
+		DrawCircle(centerPos, radius, color, CirclePlane::XZ);
+		DrawCircle(centerPos, radius, color, CirclePlane::YZ);
 	}
 
-	void DebugDraw::DrawCone()
+	void DebugDraw::DrawCone(glm::vec3 tipPos, glm::vec3 forwardDir, float angle, float height, glm::vec4 color)
 	{
+		glm::vec3 baseCenter = tipPos + forwardDir * height;
+		float radius = tan(glm::radians(angle * 0.5f)) * height;
 
+		glm::quat rotation = glm::rotation(glm::vec3(0, 0, -1), forwardDir);
+
+		for (int i = 0; i < segments; i++)
+		{
+			float a0 = i * glm::two_pi<float>() / segments;
+			float a1 = (i + 1) * glm::two_pi<float>() / segments;
+
+			glm::vec3 local0(cos(a0) * radius, sin(a0) * radius, 0.0f);
+
+			glm::vec3 local1(cos(a1) * radius, sin(a1) * radius, 0.0f);
+
+			glm::vec3 p0 = baseCenter + rotation * local0;
+			glm::vec3 p1 = baseCenter + rotation * local1;
+
+			DrawLine(p0, p1, color);
+		}
+
+		for (int i = 0; i < segments; i += 8)
+		{
+			float angle = i * glm::two_pi<float>() / segments;
+
+			glm::vec3 local(cos(angle) * radius, sin(angle) * radius, 0);
+
+			glm::vec3 edgePos = baseCenter + rotation * local;
+
+			DrawLine(tipPos, edgePos, color);
+		}
 	}
 
 	void DebugDraw::Clear()

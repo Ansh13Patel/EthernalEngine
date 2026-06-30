@@ -33,6 +33,13 @@ namespace EthernalEngine
 			color[3] = lineColor.a;
 		}
 	};
+	enum CirclePlane
+	{
+		XY,
+		XZ,
+		YZ
+	};
+
 	class DebugDraw
 	{
 	public:
@@ -40,10 +47,9 @@ namespace EthernalEngine
 		~DebugDraw() = default;
 		static void Init();
         static void DrawLine(glm::vec3 startPos, glm::vec3 endpos, glm::vec4 color);
-		static void DrawCircle(glm:: vec3 centerPos, float radius, glm::vec4 color, 
-			bool xy = true, bool xz = false, bool yz = false);
+		static void DrawCircle(glm:: vec3 centerPos, float radius, glm::vec4 color, CirclePlane plane = CirclePlane::XY);
 		static void DrawSphere(glm::vec3 centerPos, float radius, glm::vec4 color);
-		static void DrawCone();
+		static void DrawCone(glm::vec3 tipPos, glm::vec3 forwardDir, float angle, float height, glm::vec4 color);
 		static void Draw(Scene& scene);
 		static void Clear();
 

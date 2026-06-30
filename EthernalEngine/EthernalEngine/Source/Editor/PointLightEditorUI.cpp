@@ -6,15 +6,15 @@ namespace EthernalEngine
 	{
 		ImGui::Text("Radius");
 		ImGui::SameLine();
-		ImGui::DragFloat("##Radius", &pointLight->radius, 0.0f, 100.0f);
+		ImGui::SliderFloat("##Radius", &pointLight->radius, 0.0f, 100.0f);
 
 		ImGui::Text("Specular Strength");
 		ImGui::SameLine();
-		ImGui::DragFloat("##SpecularStrength", &pointLight->specularStrength, 0.0f, 1.0f);
+		ImGui::SliderFloat("##SpecularStrength", &pointLight->specularStrength, 0.0f, 1.0f);
 
 		ImGui::Text("Intensity");
 		ImGui::SameLine();
-		ImGui::DragFloat("##Intensity", &pointLight->intensity, 0.1f, 5.0f);
+		ImGui::SliderFloat("##Intensity", &pointLight->intensity, 0.1f, 5.0f);
 
 		ImGui::Text("Color");
 		ImGui::SameLine();

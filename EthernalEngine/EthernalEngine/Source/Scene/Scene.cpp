@@ -53,7 +53,16 @@ namespace EthernalEngine
 
 	void Scene::SetSelectedGameObject(GameObject* gameObject)
 	{
-		this->selectedGameObject = gameObject;
+		if (this->selectedGameObject != gameObject)
+		{
+			if(this->selectedGameObject != nullptr)
+				this->selectedGameObject->SetIsSelected(false);
+
+			this->selectedGameObject = gameObject;
+
+			if (this->selectedGameObject != nullptr)
+				this->selectedGameObject->SetIsSelected(true);
+		}
 	}
 
 	GameObject* Scene::GetSelectedGameObject()
@@ -131,6 +140,8 @@ namespace EthernalEngine
 
 		AddGameObject(spotLightObj);
 
+		spotLightObj->transform.rotation = glm::quat(glm::radians(glm::vec3(-90.0f, 0.0f, 0.0f)));
+
 		return spotLight;
 	}
 
@@ -161,7 +172,7 @@ namespace EthernalEngine
 		}
 		else
 		{
-			selectedGameObject = nullptr;
+			SetSelectedGameObject(nullptr);
 		}
 	}
 
