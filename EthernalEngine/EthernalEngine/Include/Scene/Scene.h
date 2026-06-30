@@ -39,6 +39,8 @@ namespace EthernalEngine
 		void SetSelectedGameObject(GameObject* gameObject);
 		CubeMesh* GetCubeMesh() { return cubeMesh; }
 		Shader* GetCubeShader() { return defaultShader; }
+		float* GetAmbientColor() { return ambientColor; }
+		float GetIntensity() { return intensity; }
 
 	private:
 		bool RayAABB(const glm::vec3& rayOrgin, const glm::vec3& rayDir, const glm::vec3& minBounds,
@@ -53,5 +55,7 @@ namespace EthernalEngine
 		EngineCamera EngineCamera;
 		CubeMesh* cubeMesh = nullptr;
 		Shader* defaultShader = nullptr;
+		float ambientColor[4]{ 1.0f,1.0f,1.0f,1.0f };
+		float intensity = 0.2f;
 	};
 }

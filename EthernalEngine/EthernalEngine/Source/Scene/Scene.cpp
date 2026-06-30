@@ -1,5 +1,6 @@
-#include"Scene/Scene.h"
+#include "Scene/Scene.h"
 #include "Rendering/Model.h"
+#include "Helper/DebugDraw.h"
 
 #include<iostream>
 
@@ -8,6 +9,7 @@ namespace EthernalEngine
 	Scene::Scene(Window* window) :m_window(window), EngineCamera(window)
 	{
 		directionalLight = nullptr;
+		DebugDraw::Init();
 	}
 
 	Scene::~Scene()

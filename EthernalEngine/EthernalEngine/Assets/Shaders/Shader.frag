@@ -41,12 +41,15 @@ out vec4 FragColor;
 
 uniform sampler2D image;
 uniform vec3 viewPos;
+uniform vec4 sceneAmbientColor;
+uniform float sceneintensity;
 uniform DirectionalLight directionalLight;
 uniform PointLight pointLights[MAX_POINT_LIGHTS];
 uniform int pointLightCount;
 uniform SpotLight spotLights[MAX_SPOT_LIGHTS];
 uniform int spotLightCount;
 
+vec3 CalculateSceneAmbient();
 vec3 CalculateDirectionalLight();
 vec3 CalculatePointLights();
 vec3 CalculateSpotLights();
@@ -55,10 +58,15 @@ void main()
 {
     vec3 texColor = texture(image, TexCoords).rgb;
 
-    vec3 lighting = CalculateDirectionalLight() + CalculatePointLights() + CalculateSpotLights();
+    vec3 lighting = CalculateSceneAmbient() + CalculateDirectionalLight() + CalculatePointLights() + CalculateSpotLights();
     vec3 finalColor = lighting * texColor;
 
     FragColor = vertexColor * vec4(finalColor, 1.0);
+}
+
+vec3 CalculateSceneAmbient()
+{
+    return (sceneintensity * sceneAmbientColor.rgb);
 }
 
 vec3 CalculateDirectionalLight()

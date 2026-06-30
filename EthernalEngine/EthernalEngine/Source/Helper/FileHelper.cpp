@@ -1,4 +1,4 @@
-#include "Helper/Helper.h"
+#include "Helper/FileHelper.h"
 #include <windows.h>
 #include <commdlg.h>
 #include <filesystem>
@@ -6,7 +6,7 @@
 
 namespace EthernalEngine
 {
-	std::string Helper::OpenFileDialog(const char* filter)
+	std::string FileHelper::OpenFileDialog(const char* filter)
 	{
 		char filename[MAX_PATH] = "";
 
@@ -26,14 +26,14 @@ namespace EthernalEngine
 		return "";
 	}
 
-	std::string Helper::GetFileName(std::string& path)
+	std::string FileHelper::GetFileName(std::string& path)
 	{
 		std::filesystem::path filepath{ path };
 		
 		return filepath.stem().string();
 	}
 
-	std::string Helper::GetFileExtension(std::string& path)
+	std::string FileHelper::GetFileExtension(std::string& path)
 	{
 		std::filesystem::path filepath{ path };
 

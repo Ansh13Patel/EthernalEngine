@@ -6,19 +6,19 @@ namespace EthernalEngine
 	{
 		ImGui::Text("Spot Angle");
 		ImGui::SameLine();
-		ImGui::SliderFloat("##SpotAngle", &spotLight->spotAngle, 0.0f, 179.0f);
+		ImGui::DragFloat("##SpotAngle", &spotLight->spotAngle, 0.0f, 100.0f);
 
 		ImGui::Text("Range");
 		ImGui::SameLine();
-		ImGui::SliderFloat("##Range", &spotLight->range, 0.0f, 100.0f);
+		ImGui::DragFloat("##Range", &spotLight->range, 0.0f, 100.0f);
 
 		ImGui::Text("Specular Strength");
 		ImGui::SameLine();
-		ImGui::SliderFloat("##SpecularStrength", &spotLight->specularStrength, 0.0f, 1.0f);
+		ImGui::DragFloat("##SpecularStrength", &spotLight->specularStrength, 0.0f, 1.0f);
 
 		ImGui::Text("Intensity");
 		ImGui::SameLine();
-		ImGui::SliderFloat("##Intensity", &spotLight->intensity, 0.1f, 5.0f);
+		ImGui::DragFloat("##Intensity", &spotLight->intensity, 0.1f, 5.0f);
 
 		ImGui::Text("Color");
 		ImGui::SameLine();

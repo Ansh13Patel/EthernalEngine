@@ -1,5 +1,5 @@
 #include "Editor/MeshEditorUI.h"
-#include "Helper/Helper.h"
+#include "Helper/FileHelper.h"
 
 #include <iostream>
 
@@ -11,7 +11,7 @@ namespace EthernalEngine
 		ImGui::SameLine();
 		if (ImGui::Button("Select Texture"))
 		{
-			std::string filepath = Helper::OpenFileDialog("Image Files\0*.png;*.jpg;*.jpeg\0");
+			std::string filepath = FileHelper::OpenFileDialog("Image Files\0*.png;*.jpg;*.jpeg\0");
 
 			if (!filepath.empty())
 			{

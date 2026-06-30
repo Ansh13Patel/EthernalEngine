@@ -18,15 +18,13 @@ namespace EthernalEngine
 
 	glm::vec3 Transform::GetForward()
 	{
-		float pitch = rotation.x;
-		float yaw = rotation.y;
+		glm::vec3 forward = rotation * glm::vec3(0.0f, 0.0f, -1.0f);
+		return glm::normalize(forward);
+	}
 
-		glm::vec3 forward;
-
-		forward.x = cos(yaw) * cos(pitch);
-		forward.y = sin(pitch);
-		forward.z = sin(yaw) * cos(pitch);
-
+	glm::vec3 Transform::GetRight()
+	{
+		glm::vec3 forward = rotation * glm::vec3(1.0f, 0.0f, 0.0f);
 		return glm::normalize(forward);
 	}
 }

@@ -10,6 +10,7 @@ namespace EthernalEngine
 	public:
 		PointLight(GameObject* gameobject);
 		~PointLight() = default;
+		void Draw() override;
 
 	public:
 		float radius;

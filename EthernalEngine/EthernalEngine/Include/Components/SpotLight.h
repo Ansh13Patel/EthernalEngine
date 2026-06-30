@@ -10,6 +10,7 @@ namespace EthernalEngine
 	public:
 		SpotLight(GameObject* gameobject);
 		~SpotLight() = default;
+		void Draw() override;
 
 	public:
 		float spotAngle;

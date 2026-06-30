@@ -1,5 +1,6 @@
 #include "Rendering/Renderer.h"
 #include "Scene/Scene.h"
+#include "Helper/DebugDraw.h"
 
 #include <iostream>
 namespace EthernalEngine
@@ -10,12 +11,10 @@ namespace EthernalEngine
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void Renderer::Draw(Scene* scene)
+	void Renderer::Draw(Scene& scene)
 	{
-		std::vector<GameObject*>& gameobjects = scene->GetGameObjects();
-		EngineCamera* EngineCamera = &scene->GetCamera();
-		DirectionalLight* dirLight = scene->GetDirectionalLight();
-		std::vector<PointLight*> plLights = scene->GetPointLights();
+		std::vector<GameObject*>& gameobjects = scene.GetGameObjects();
+		EngineCamera EngineCamera = scene.GetCamera();
 
 		Shader* currentShader = nullptr;
 		for (GameObject* obj : gameobjects)
@@ -23,27 +22,31 @@ namespace EthernalEngine
 			if (obj)
 			{
 				Shader* objShader = obj->GetShader();
-				if (objShader != nullptr && objShader != currentShader && EngineCamera != nullptr)
+				if (objShader != nullptr && objShader != currentShader)
 				{
 					obj->GetShader()->Use();
-					obj->GetShader()->SetMat4("view", EngineCamera->GetViewMatrix());
-					obj->GetShader()->SetMat4("projection", EngineCamera->GetProjectionMatrix());
+					obj->GetShader()->SetMat4("view", EngineCamera.GetViewMatrix());
+					obj->GetShader()->SetMat4("projection", EngineCamera.GetProjectionMatrix());
+					obj->GetShader()->SetFloat4("sceneAmbientColor", scene.GetAmbientColor());
+					obj->GetShader()->SetFloat("sceneintensity", scene.GetIntensity());
 					UpdateDirectionalLightOnObject(scene, obj);
 					UpdatePointLightsOnObject(scene, obj);
 					UpdateSpotLightsOnObject(scene, obj);
 					obj->GetShader()->SetFloat3("viewPos",
-						std::vector<float>{EngineCamera->cameraPos.x, EngineCamera->cameraPos.y, EngineCamera->cameraPos.z}.data());
+						std::vector<float>{EngineCamera.cameraPos.x, EngineCamera.cameraPos.y, EngineCamera.cameraPos.z}.data());
 
 					currentShader = obj->GetShader();
 				}
 				obj->Draw();
 			}
 		}
+		DrawLightDebugGizmo(scene);
+		DebugDraw::Draw(scene);
 	}
 
-	void Renderer::UpdateDirectionalLightOnObject(Scene* scene,GameObject* obj)
+	void Renderer::UpdateDirectionalLightOnObject(Scene& scene,GameObject* obj)
 	{
-		DirectionalLight* dirLight = scene->GetDirectionalLight();
+		DirectionalLight* dirLight = scene.GetDirectionalLight();
 		if (dirLight != nullptr && dirLight->enable)
 		{
 			glm::vec3 forwardDir = dirLight->gameobject->transform.GetForward();
@@ -55,9 +58,9 @@ namespace EthernalEngine
 		}
 	}
 
-	void Renderer::UpdatePointLightsOnObject(Scene* scene, GameObject* obj)
+	void Renderer::UpdatePointLightsOnObject(Scene& scene, GameObject* obj)
 	{
-		std::vector<PointLight*> plLights = scene->GetPointLights();
+		std::vector<PointLight*> plLights = scene.GetPointLights();
 
 		for (int i = 0; i < plLights.size(); i++)
 		{
@@ -72,9 +75,9 @@ namespace EthernalEngine
 		obj->GetShader()->SetInt("pointLightCount", plLights.size());
 	}
 
-	void Renderer::UpdateSpotLightsOnObject(Scene* scene, GameObject* obj)
+	void Renderer::UpdateSpotLightsOnObject(Scene& scene, GameObject* obj)
 	{
-		std::vector<SpotLight*> slLights = scene->GetSpotLights();
+		std::vector<SpotLight*> slLights = scene.GetSpotLights();
 
 		for (int i = 0; i < slLights.size(); i++)
 		{
@@ -90,5 +93,28 @@ namespace EthernalEngine
 			obj->GetShader()->SetFloat4(("spotLights[" + std::to_string(i) + "].color").c_str(), sl->lightColor);
 		}
 		obj->GetShader()->SetInt("spotLightCount", slLights.size());
+	}
+
+	void Renderer::DrawLightDebugGizmo(Scene& scene)
+	{
+		DirectionalLight* dl = scene.GetDirectionalLight();
+		if(dl != nullptr)
+			scene.GetDirectionalLight()->Draw();
+
+		std::vector<PointLight*> plLights = scene.GetPointLights();
+		for (int i = 0; i < plLights.size(); i++)
+		{
+			PointLight* pl = plLights[i];
+			if(pl != nullptr)
+				pl->Draw();
+		}
+
+		std::vector<SpotLight*> slLights = scene.GetSpotLights();
+		for (int i = 0; i < slLights.size(); i++)
+		{
+			SpotLight* sl = slLights[i];
+			if(sl != nullptr)
+				sl->Draw();
+		}
 	}
 }

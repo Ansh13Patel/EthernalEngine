@@ -1,5 +1,5 @@
 #include "Editor/EditorUI.h"
-#include "Helper/Helper.h"
+#include "Helper/FileHelper.h"
 
 #include <windows.h>
 #include <commdlg.h>
@@ -77,10 +77,10 @@ namespace EthernalEngine
 				}
 				if (ImGui::MenuItem("Import"))
 				{
-					std::string filepath = Helper::OpenFileDialog("Model Files\0*.obj;*.fbx;*.gltf;*.glb\0All Files\0*.*\0");
+					std::string filepath = FileHelper::OpenFileDialog("Model Files\0*.obj;*.fbx;*.gltf;*.glb\0All Files\0*.*\0");
 					if (!filepath.empty())
 					{
-						std::string gameobjectname = Helper::GetFileName(filepath);
+						std::string gameobjectname = FileHelper::GetFileName(filepath);
 						if (gameobjectname == "") gameobjectname = "NewObject";
 						scene->AddGameObject(scene->CreateGameObjectWithCustomModel(gameobjectname, filepath));
 					}

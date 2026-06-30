@@ -9,6 +9,7 @@ namespace EthernalEngine
 	public:
 		DirectionalLight(GameObject* gameobject);
 		~DirectionalLight() = default;
+		void Draw() override;
 
 	public:
 		GameObject* gameobject;

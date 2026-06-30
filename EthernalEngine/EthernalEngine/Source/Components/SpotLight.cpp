@@ -10,4 +10,9 @@ namespace EthernalEngine
 		intensity = 1.0f;
 		this->gameobject = gameobject;
 	}
+
+	void SpotLight::Draw()
+	{
+
+	}
 }

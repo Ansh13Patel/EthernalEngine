@@ -45,7 +45,7 @@ int main()
         input.ProcessKeyAndMouseInput(deltaFrame);
 
         scene.Update(deltaFrame);
-        renderer.Draw(&scene);
+        renderer.Draw(scene);
 
 		editorUI.EndFrame();    
         window.SwapBuffers();

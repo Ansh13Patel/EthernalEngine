@@ -4,11 +4,11 @@
 
 namespace EthernalEngine
 {
-	class Helper
+	class FileHelper
 	{
 	public:
-		Helper() = default;
-		~Helper() = default;
+		FileHelper() = default;
+		~FileHelper() = default;
 		static std::string OpenFileDialog(const char* filter);
 		static std::string GetFileName(std::string& path);
 		static std::string GetFileExtension(std::string& path);

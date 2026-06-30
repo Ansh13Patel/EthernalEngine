@@ -18,8 +18,10 @@ Source/Editor/EditorUI.cpp
 Source/Editor/DirectionalLightEditorUI.cpp
 Source/Editor/PointLightEditorUI.cpp
 Source/Editor/MeshEditorUI.cpp
+Source/Editor/SpotLightEditorUI.cpp
 
-Source/Helper/Helper.cpp
+Source/Helper/FileHelper.cpp
+Source/Helper/DebugDraw.cpp
 
 Source/Rendering/CubeMesh.cpp
 Source/Rendering/Mesh.cpp
@@ -31,6 +33,7 @@ Source/Rendering/Texture.cpp
 
 Source/Components/DirectionalLight.cpp
 Source/Components/PointLight.cpp
+Source/Components/SpotLight.cpp
 
 Source/Scene/GameObject.cpp
 Source/Scene/Scene.cpp
@@ -45,7 +48,7 @@ ThirdParty/imgui_impl_opengl3.cpp
 ThirdParty/imgui_tables.cpp
 ThirdParty/imgui_widgets.cpp
 ThirdParty/ImGuizmo.cpp
- "Include/Components/SpotLight.h" "Source/Components/SpotLight.cpp" "Include/Editor/SpotLightEditorUI.h" "Source/Editor/SpotLightEditorUI.cpp")
+)
 
 add_subdirectory(../Dependencies/Assimp assimp-build)
 add_subdirectory(../Dependencies/GLFW/glfw glfw-build)

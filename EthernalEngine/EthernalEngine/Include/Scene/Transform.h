@@ -12,6 +12,7 @@ namespace EthernalEngine
 		Transform() = default;
 		~Transform() = default;
 		glm::vec3 GetForward();
+		glm::vec3 GetRight();
 		glm::mat4 GetModelMatrix();
 
 	public:
