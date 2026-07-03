@@ -4,6 +4,7 @@
 #include "Core/EngineCamera.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/CubeMesh.h"
+#include "Rendering/Material.h"
 #include "Core/Window.h"
 #include "Components/DirectionalLight.h"
 #include "Components/PointLight.h"
@@ -55,6 +56,7 @@ namespace EthernalEngine
 		EngineCamera EngineCamera;
 		CubeMesh* cubeMesh = nullptr;
 		Shader* defaultShader = nullptr;
+		Material* defaultMaterial = nullptr;
 		float ambientColor[4]{ 1.0f,1.0f,1.0f,1.0f };
 		float intensity = 0.2f;
 	};

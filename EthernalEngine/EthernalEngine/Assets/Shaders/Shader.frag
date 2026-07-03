@@ -41,6 +41,7 @@ out vec4 FragColor;
 
 uniform sampler2D image;
 uniform vec3 viewPos;
+uniform float shininess;
 uniform vec4 sceneAmbientColor;
 uniform float sceneintensity;
 uniform DirectionalLight directionalLight;
@@ -80,7 +81,7 @@ vec3 CalculateDirectionalLight()
 
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
     vec3 specular = directionalLight.specularStrength * spec * directionalLight.color.rgb;
 
     vec3 finalLightColor = (ambient + diffuse + specular) * directionalLight.intensity;
@@ -111,7 +112,7 @@ vec3 CalculatePointLights()
 
           vec3 viewDir = normalize(viewPos - FragPos);
           vec3 reflectDir = reflect(-lightDir, norm);
-          float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+          float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
           specularColor += (pl.specularStrength * spec * attenuation * pl.color.rgb * pl.intensity);
        }
     }
@@ -147,7 +148,7 @@ vec3 CalculateSpotLights()
 
           vec3 viewDir = normalize(viewPos - FragPos);
           vec3 reflectDir = reflect(-lightDir, norm);
-          float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+          float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
           specularColor += (sl.specularStrength * spec * attenuation * sl.color.rgb * sl.intensity);
        }
     }

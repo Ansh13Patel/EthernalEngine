@@ -9,7 +9,7 @@ namespace EthernalEngine
 	class CubeMesh : public Mesh
 	{
 	public:
-		CubeMesh(std::shared_ptr<Texture> texture);
+		CubeMesh();
 		~CubeMesh() = default;
 	};
 }

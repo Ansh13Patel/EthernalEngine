@@ -9,13 +9,16 @@ namespace EthernalEngine
 	class Transform
 	{
 	public:
-		Transform() = default;
+		Transform();
 		~Transform() = default;
 		glm::vec3 GetForward();
 		glm::vec3 GetRight();
-		glm::mat4 GetModelMatrix();
+		glm::mat4 GetLocalMatrix();
+		glm::mat4 GetWorldMatrix();
+		void SetParent(Transform* newParent) { parent = newParent; }
 
 	public:
+		Transform* parent = nullptr;
 		glm::vec3 position = glm::vec3(0.0f);
 		glm::quat rotation = glm::quat(glm::vec3(0.0f));
 		glm::vec3 scale = glm::vec3(1.0f);

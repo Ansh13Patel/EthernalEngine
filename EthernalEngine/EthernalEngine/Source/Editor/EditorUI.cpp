@@ -36,6 +36,7 @@ namespace EthernalEngine
 	}
 	void EditorUI::RenderUI(Scene* scene)
 	{
+		if (scene == nullptr) return;
 		MainMenuBar(scene);
 		Hierarchy(scene);
 		Inspector(scene->GetSelectedGameObject());
@@ -113,7 +114,6 @@ namespace EthernalEngine
         if (gameObject)
         {
             static char gameobjectname[128];
-            // Copy the name from the GameObject to the buffer only if the object changes
             static const GameObject* lastGameObject = nullptr;
             if (lastGameObject != gameObject)
             {
@@ -127,31 +127,28 @@ namespace EthernalEngine
             }
             ImGui::Separator();
 
-            Transform& transform = gameObject->transform;
-			glm::vec3 rotationEuler = glm::degrees(glm::eulerAngles(gameObject->transform.rotation));
+            Transform* transform = gameObject->transform;
+			glm::vec3 rotationEuler = glm::degrees(glm::eulerAngles(transform->rotation));
             ImGui::Text("Position");
             ImGui::SameLine();
-            ImGui::DragFloat3("##Position", &transform.position.x, 0.1f, -1000.0f, 1000.0f, "%.3f");
+            ImGui::DragFloat3("##Position", &transform->position.x, 0.1f, -1000.0f, 1000.0f, "%.3f");
             ImGui::Text("Rotation");
             ImGui::SameLine();
 			if (ImGui::DragFloat3("##Rotation", glm::value_ptr(rotationEuler), 0.1f))
 			{
-				transform.rotation = glm::quat(glm::radians(rotationEuler));
+				transform->rotation = glm::quat(glm::radians(rotationEuler));
 			}
             ImGui::Text("Scale");
             ImGui::SameLine();
-            ImGui::DragFloat3("##Scale", &transform.scale.x, 0.1f, 0.0f, 1000.0f, "%.3f");
+            ImGui::DragFloat3("##Scale", &transform->scale.x, 0.1f, 0.0f, 1000.0f, "%.3f");
 
-			if (gameObject->GetMesh() != nullptr)
+			if (gameObject->GetMaterial() != nullptr)
 			{
-				ImGui::Separator();
+				materialEditorUI.ShowMaterialParameters(gameObject->GetMaterial());
+			}
 
-				ImGui::Text("Color");
-				ImGui::SameLine();
-				ImGui::ColorEdit3("##Color", &gameObject->color[0]);
-
-				ImGui::Separator();
-
+			if(gameObject->GetMesh() != nullptr)
+			{
 				meshEditorUI.ShowMeshParameters(gameObject->GetMesh());
 			}
 
@@ -191,7 +188,7 @@ namespace EthernalEngine
 		glm::mat4 view = EngineCamera->GetViewMatrix();
 		glm::mat4 projection = EngineCamera->GetProjectionMatrix();
 
-		glm::mat4 model = selectedGameObject->transform.GetModelMatrix();
+		glm::mat4 model = selectedGameObject->transform->GetLocalMatrix();
 		
 		ImGuizmo::Manipulate(glm::value_ptr(view), glm::value_ptr(projection), currentOperation,
 			ImGuizmo::LOCAL, glm::value_ptr(model));
@@ -205,9 +202,9 @@ namespace EthernalEngine
 			ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(model), &position.x, &rotationEuler.x, &scale.x);
 
 			// Update the actual components immediately
-			selectedGameObject->transform.position = position;
-			selectedGameObject->transform.rotation = glm::quat(glm::radians(rotationEuler));
-			selectedGameObject->transform.scale = scale;
+			selectedGameObject->transform->position = position;
+			selectedGameObject->transform->rotation = glm::quat(glm::radians(rotationEuler));
+			selectedGameObject->transform->scale = scale;
 		}
 	}
 

@@ -15,7 +15,7 @@ namespace EthernalEngine
 	{
 		if (gameobject->GetIsSelected())
 		{
-			glm::vec3 centerPos = gameobject->transform.position;
+			glm::vec3 centerPos = gameobject->transform->position;
 			DebugDraw::DrawSphere(centerPos, radius, glm::vec4(lightColor[0], lightColor[1], lightColor[2], lightColor[3]));
 		}
 	}

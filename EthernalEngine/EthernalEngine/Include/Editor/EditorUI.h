@@ -10,6 +10,7 @@
 #include "Editor/PointLightEditorUI.h"
 #include "Editor/SpotLightEditorUI.h"
 #include "Editor/MeshEditorUI.h"
+#include "Editor/MaterialEditorUI.h"
 
 namespace EthernalEngine
 {
@@ -38,5 +39,6 @@ namespace EthernalEngine
 		PointLightEditorUI plEditorUI;
 		SpotLightEditorUI slEditorUI;
 		MeshEditorUI meshEditorUI;
+		MaterialEditorUI materialEditorUI;
 	};
 }

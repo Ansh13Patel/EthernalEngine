@@ -16,8 +16,8 @@ namespace EthernalEngine
 	{
 		if (gameobject->GetIsSelected())
 		{
-			glm::vec3 startPos = gameobject->transform.position;
-			glm::vec3 endPos = gameobject->transform.position + (gameobject->transform.GetForward() * 0.25f);
+			glm::vec3 startPos = gameobject->transform->position;
+			glm::vec3 endPos = gameobject->transform->position + (gameobject->transform->GetForward() * 0.25f);
 
 			DebugDraw::DrawLine(startPos, endPos, glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 		}

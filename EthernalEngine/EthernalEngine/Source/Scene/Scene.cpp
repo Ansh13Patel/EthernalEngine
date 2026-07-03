@@ -75,19 +75,24 @@ namespace EthernalEngine
 		GameObject* newCube = new GameObject(name);
 		if (cubeMesh == nullptr) 
 		{
-			std::shared_ptr<Texture> texture;
-			texture = std::make_shared<Texture>();
-			texture->LoadTextureFromPath("Textures/White.png");
-			cubeMesh = new CubeMesh(texture);
+			cubeMesh = new CubeMesh();
 		}
 		if (defaultShader == nullptr)
 		{
 			defaultShader = new Shader();
 			defaultShader->LoadFromFile("Shaders/Shader.vert", "Shaders/Shader.frag");
 		}
+		if(defaultMaterial == nullptr)
+		{
+			std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+			texture->LoadTextureFromPath("Textures/White.png");
+			defaultMaterial = new Material();
+			defaultMaterial->SetShader(defaultShader);
+			defaultMaterial->SetBaseTexture(texture);
+		}
 
 		newCube->SetMesh(cubeMesh);
-		newCube->SetShader(defaultShader);
+		newCube->SetMaterial(defaultMaterial);
 
 		return newCube;
 	}
@@ -96,17 +101,14 @@ namespace EthernalEngine
 	{
 		GameObject* newObject = new GameObject(name);
 		
-		Model* newModel = new Model(path, newObject);
-		Texture* newTexture = new Texture();
-
 		if (defaultShader == nullptr)
 		{
 			defaultShader = new Shader();
 			defaultShader->LoadFromFile("Shaders/Shader.vert", "Shaders/Shader.frag");
 		}
 
-		newObject->SetModel(newModel);
-		newObject->SetShader(defaultShader);
+		Model* newModel = new Model(path, newObject, defaultShader);
+
 		return newObject;
 	}
 
@@ -140,7 +142,7 @@ namespace EthernalEngine
 
 		AddGameObject(spotLightObj);
 
-		spotLightObj->transform.rotation = glm::quat(glm::radians(glm::vec3(-90.0f, 0.0f, 0.0f)));
+		spotLightObj->transform->rotation = glm::quat(glm::radians(glm::vec3(-90.0f, 0.0f, 0.0f)));
 
 		return spotLight;
 	}
@@ -152,9 +154,9 @@ namespace EthernalEngine
 
 		for (int i = 0; i < GetGameObjectCount(); i++)
 		{
-			Transform transform = gameObjects[i]->transform;
-			glm::vec3 minBounds = transform.position - (transform.scale * 0.5f);
-			glm::vec3 maxBounds = transform.position + (transform.scale * 0.5f);
+			Transform* transform = gameObjects[i]->transform;
+			glm::vec3 minBounds = transform->position - (transform->scale * 0.5f);
+			glm::vec3 maxBounds = transform->position + (transform->scale * 0.5f);
 			float hitDistance;
 			if (RayAABB(EngineCamera.cameraPos, rayDir, minBounds, maxBounds, hitDistance)) 
 			{

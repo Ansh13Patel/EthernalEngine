@@ -21,11 +21,9 @@ namespace EthernalEngine
     class Mesh
     {
     public:
-        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices, 
-            std::shared_ptr<Texture> texture);
+        Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
         ~Mesh();
         virtual void Draw();
-        std::shared_ptr<Texture> GetTexture() { return texture; }
 
     protected:
 
@@ -37,6 +35,5 @@ namespace EthernalEngine
 
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
-        std::shared_ptr<Texture> texture;
     };
 }

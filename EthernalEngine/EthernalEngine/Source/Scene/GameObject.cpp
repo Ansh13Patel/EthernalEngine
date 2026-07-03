@@ -4,18 +4,7 @@ namespace EthernalEngine
 {
 	void GameObject::Draw()
 	{
-        if ((!mesh && !model) || !shader)
-            return;
-
-        shader->SetMat4("model", transform.GetModelMatrix());
-
-        shader->SetFloat3("colorMultiplier", color);
-
-        if (model) 
-        {
-            model->Draw();
-        }
-        else if (mesh)
+        if (mesh && material)
         {
             mesh->Draw();
         }
@@ -26,14 +15,45 @@ namespace EthernalEngine
         mesh = newMesh;
     }
 
-    void GameObject::SetModel(Model* newModel)
+    void GameObject::SetMaterial(Material* newMaterial)
     {
-        model = newModel;
+		material = newMaterial;
     }
 
-    void GameObject::SetShader(Shader* newShader)
+    void GameObject::AddComponent(Component* component)
     {
-        shader = newShader;
+        if (component != nullptr)
+        {
+            components.push_back(component);
+        }
+	}
+
+    template<typename T>
+    T* GameObject::GetComponent()
+    {
+        for (Component* component : components)
+        {
+            T* castedComponent = dynamic_cast<T*>(component);
+            if (castedComponent != nullptr)
+            {
+                return castedComponent;
+            }
+        }
+        return nullptr;
     }
 
+    void GameObject::SetParentObject(GameObject* newParent) 
+    {
+        parent = newParent; 
+        transform->SetParent(newParent ? newParent->transform : nullptr);
+    }
+
+    void GameObject::AddChildObject(GameObject* child)
+    {
+        if (child != nullptr)
+        {
+			child->SetParentObject(this);
+            childObjects.push_back(child);
+        }
+    }
 }

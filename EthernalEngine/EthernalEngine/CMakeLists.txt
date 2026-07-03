@@ -19,6 +19,7 @@ Source/Editor/DirectionalLightEditorUI.cpp
 Source/Editor/PointLightEditorUI.cpp
 Source/Editor/MeshEditorUI.cpp
 Source/Editor/SpotLightEditorUI.cpp
+Source/Editor/MaterialEditorUI.cpp
 
 Source/Helper/FileHelper.cpp
 Source/Helper/DebugDraw.cpp
@@ -30,6 +31,7 @@ Source/Rendering/Renderer.cpp
 Source/Rendering/Shader.cpp
 Source/Rendering/stb_image.cpp
 Source/Rendering/Texture.cpp
+Source/Rendering/Material.cpp
 
 Source/Components/DirectionalLight.cpp
 Source/Components/PointLight.cpp

@@ -5,42 +5,34 @@
 
 namespace EthernalEngine
 {
-	Model::Model(const std::string& path, GameObject* parent)
+	Model::Model(const std::string& path, GameObject* parent, Shader* defaultShader)
 	{
-		LoadModel(path, parent);
+		LoadModel(path, parent, defaultShader);
 	}
 
-	void Model::Draw()
-	{
-		for (auto& mesh : meshes)
-		{
-			mesh->Draw();
-		}
-	}
-
-	void Model::LoadModel(const std::string& path, GameObject* parent)
+	void Model::LoadModel(const std::string& path, GameObject* parent, Shader* defaultShader)
 	{
 		Assimp::Importer importer;
 
-		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals 
+		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals
 			| aiProcess_JoinIdenticalVertices);
-		
+
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
 			std::cout << importer.GetErrorString() << std::endl;
 			return;
 		}
 
-		ProcessRootNode(scene->mRootNode, scene, parent);
+		ProcessRootNode(scene->mRootNode, scene, parent, defaultShader);
 	}
 
-	std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* mesh, const aiScene* scene, GameObject* parent)
+	std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* mesh, const aiScene* scene, GameObject* obj, Shader* defaultShader)
 	{
 		std::vector<Vertex> vertices;
 		std::vector<unsigned int> indices;
 		std::string texturePath;
 
-		for (unsigned int i = 0; i < mesh->mNumVertices; i++) 
+		for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 		{
 			Vertex vertex;
 
@@ -88,14 +80,14 @@ namespace EthernalEngine
 		{
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 			aiString path;
-			if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &path) == AI_SUCCESS) 
+			if (material->GetTexture(aiTextureType_BASE_COLOR, 0, &path) == AI_SUCCESS)
 			{
 				texturePath = path.C_Str();
 
 				const aiTexture* embeddedTexture = scene->GetEmbeddedTexture(texturePath.c_str());
 				if (embeddedTexture)
 				{
-					texture->LoadTextureFromMemory(reinterpret_cast<unsigned char*>(embeddedTexture->pcData), 
+					texture->LoadTextureFromMemory(reinterpret_cast<unsigned char*>(embeddedTexture->pcData),
 						embeddedTexture->mWidth);
 				}
 				else
@@ -103,18 +95,24 @@ namespace EthernalEngine
 					texture->LoadTextureFromPath(texturePath.c_str());
 				}
 			}
+			else
+			{
+				texture->LoadTextureFromPath("Textures/White.png");
+			}
 		}
 
-		std::unique_ptr<Mesh> meshobj = std::make_unique<Mesh>(vertices, indices, texture);
+		std::unique_ptr<Mesh> meshobj = std::make_unique<Mesh>(vertices, indices);
+		Material* material = new Material();
+		material->SetBaseTexture(texture);
+		material->SetShader(defaultShader);
 
-		GameObject* childMesh = new GameObject(mesh->mName.C_Str());
-		childMesh->SetMesh(meshobj.get());
-		parent->childObjects.push_back(childMesh);
-	
+		obj->SetMesh(meshobj.get());
+		obj->SetMaterial(material);
+
 		return meshobj;
 	}
 
-	void Model::ProcessRootNode(aiNode* node, const aiScene* scene, GameObject* parent)
+	void Model::ProcessRootNode(aiNode* node, const aiScene* scene, GameObject* parent, Shader* defaultShader)
 	{
 		parent->name = node->mName.C_Str();
 		SetTransform(parent, node);
@@ -122,30 +120,30 @@ namespace EthernalEngine
 		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			meshes.push_back(ProcessMesh(mesh, scene, parent));
+			meshes.push_back(ProcessMesh(mesh, scene, parent, defaultShader));
 		}
 
 		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
-			ProcessNode(node->mChildren[i], scene, parent);
+			ProcessNode(node->mChildren[i], scene, parent, defaultShader);
 		}
 	}
 
-	void Model::ProcessNode(aiNode* node, const aiScene* scene, GameObject* parent)
+	void Model::ProcessNode(aiNode* node, const aiScene* scene, GameObject* parent, Shader* defaultShader)
 	{
 		GameObject* childNode = new GameObject(node->mName.C_Str());
 		SetTransform(childNode, node);
-		parent->childObjects.push_back(childNode);
+		parent->AddChildObject(childNode);
 
-		for (unsigned int i = 0; i < node->mNumMeshes; i++) 
+		for (unsigned int i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			meshes.push_back(ProcessMesh(mesh, scene, childNode));
+			meshes.push_back(ProcessMesh(mesh, scene, childNode, defaultShader));
 		}
 
-		for (unsigned int i = 0; i < node->mNumChildren; i++) 
+		for (unsigned int i = 0; i < node->mNumChildren; i++)
 		{
-			ProcessNode(node->mChildren[i], scene, childNode);
+			ProcessNode(node->mChildren[i], scene, childNode, defaultShader);
 		}
 	}
 
@@ -156,14 +154,14 @@ namespace EthernalEngine
 
 		node->mTransformation.Decompose(scale, rotation, position);
 
-		obj->transform.position =
+		obj->transform->position =
 		{
 			position.x,
 			position.y,
 			position.z
 		};
 
-		obj->transform.scale =
+		obj->transform->scale =
 		{
 			scale.x,
 			scale.y,
@@ -172,6 +170,6 @@ namespace EthernalEngine
 
 		glm::quat rotQuat(rotation.w, rotation.x, rotation.y, rotation.z);
 
-		obj->transform.rotation = glm::degrees(glm::eulerAngles(rotQuat));
+		obj->transform->rotation = rotQuat;
 	}
 }

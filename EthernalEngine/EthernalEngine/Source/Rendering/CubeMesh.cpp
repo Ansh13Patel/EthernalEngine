@@ -2,7 +2,7 @@
 
 namespace EthernalEngine
 {
-	CubeMesh::CubeMesh(const std::shared_ptr<Texture> texture) : Mesh(
+	CubeMesh::CubeMesh() : Mesh(
 		{
 			// Front
 			{{ 0.5f,  0.5f, 0.5f }, {0,0,1}, {1.0f, 1.0f}},
@@ -57,6 +57,6 @@ namespace EthernalEngine
 			{{-0.5f,  0.5f, -0.5f }, {-1,0,0}, {1,1}},
 			{{-0.5f, -0.5f,  0.5f }, {-1,0,0}, {0,0}},
 			{{-0.5f,  0.5f,  0.5f }, {-1,0,0}, {1,0}}
-		}, {}, texture) {
+		}, {}) {
 	}
 }
