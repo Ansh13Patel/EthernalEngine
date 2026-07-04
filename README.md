@@ -2,6 +2,9 @@
 
 EthernalEngine is a lightweight, modular OpenGL-based game engine and editor written in modern C++. This README documents the project's features, architecture, build instructions, workflows, and contribution guidelines so contributors and users can quickly get started.
 
+
+<img width="1275" height="692" alt="image" src="https://github.com/user-attachments/assets/4bd772a0-7ca7-46db-a8f6-60b95709438c" />
+
 ---
 
 ## Table of Contents
@@ -128,19 +131,3 @@ Notes:
 
 - Start the executable from the build folder (or run from IDE). The engine should initialize OpenGL context and load default resources.
 - The sample scene typically creates a `Cube` using `CreateCubeGameObject` with the default material and texture. Use the scene UI to add lights, import models, and inspect object transforms.
-
-## Debugging & Common Issues
-
-- **Black objects / no lighting**:
-- Ensure `Material::Update` is called before `GameObject::Draw` for each object. Renderer should traverse and call `mat->Update(scene, *obj)` per object.
-- Confirm `Shader` is active (`shader->Use()`) when setting uniforms.
-- Ensure `colorMultiplier` uniform type matches (vertex shader expects `vec3 colorMultiplier`, so set via `SetFloat3`).
-- Confirm textures are bound to `GL_TEXTURE0` and that shader sampler `image` is set to 0.
-- Verify meshes have valid normals and UVs; Assimp flag `aiProcess_GenSmoothNormals` can generate normals.
-
-- **Model not visible after import**:
-- Confirm imported model root `GameObject` is added to `Scene` root via `AddGameObject` or included in scene graph.
-- Check that `Model::ProcessMesh` creates child `GameObject`s and assigns `Material` to them.
-- Confirm `Renderer` recursively traverses and updates/draws child `GameObject`s.
-
-- **Uniform location -1**: If `glGetUniformLocation` returns -1, uniform is either optimized out (unused in shader) or name mismatch. Ensure uniform names match exactly.
