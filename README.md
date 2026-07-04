@@ -1,5 +1,3 @@
-Here's the improved `README.md` file, incorporating the new content while preserving the existing structure and information:
-
 # EthernalEngine
 
 EthernalEngine is a lightweight, modular OpenGL-based game engine and editor written in modern C++. This README documents the project's features, architecture, build instructions, workflows, and contribution guidelines so contributors and users can quickly get started.
@@ -47,10 +45,10 @@ This repository contains the engine sources, asset shaders, third-party dependen
 
 The code is organized into clear subsystems. Primary directories and responsibilities:
 
-- `Include/` — Public engine headers (Rendering, Scene, Components, Core, etc.)
-- `Source/` — Engine implementations corresponding to headers
-- `Assets/` — Shaders, textures, and sample assets
-- `Dependencies/` — Bundled third-party libs (Assimp, GLAD, GLFW, stb_image, ImGui, etc.)
+- `Include/` â€” Public engine headers (Rendering, Scene, Components, Core, etc.)
+- `Source/` â€” Engine implementations corresponding to headers
+- `Assets/` â€” Shaders, textures, and sample assets
+- `Dependencies/` â€” Bundled third-party libs (Assimp, GLAD, GLFW, stb_image, ImGui, etc.)
 
 Core concepts:
 
@@ -92,12 +90,12 @@ Design notes:
 ## Assets & Shaders
 
 Key shader files:
-- `Assets/Shaders/Shader.vert` — Vertex shader: outputs `TexCoords`, `vertexColor`, `Normal`, `FragPos`.
-- `Assets/Shaders/Shader.frag` — Fragment shader: lighting calculations for directional/point/spot lights and texture sampling.
-- `Assets/Shaders/DebugShader.frag` — Simple debug fragment shader writing vertex color.
+- `Assets/Shaders/Shader.vert` â€” Vertex shader: outputs `TexCoords`, `vertexColor`, `Normal`, `FragPos`.
+- `Assets/Shaders/Shader.frag` â€” Fragment shader: lighting calculations for directional/point/spot lights and texture sampling.
+- `Assets/Shaders/DebugShader.frag` â€” Simple debug fragment shader writing vertex color.
 
 Textures:
-- `Textures/White.png` — Default white texture used by `CreateCubeGameObject`.
+- `Textures/White.png` â€” Default white texture used by `CreateCubeGameObject`.
 
 Model import notes:
 - The `Model` loader uses Assimp with post-process flags: `aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices`.
