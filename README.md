@@ -17,11 +17,6 @@ EthernalEngine is a lightweight, modular OpenGL-based game engine and editor wri
 - [Assets & Shaders](#assets--shaders)
 - [How to Build (Windows / Visual Studio 2022 + Ninja)](#how-to-build-windows--visual-studio-2022--ninja)
 - [Running the Editor / Sample](#running-the-editor--sample)
-- [Debugging & Common Issues](#debugging--common-issues)
-- [Coding Standards & Project Conventions](#coding-standards--project-conventions)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
 
 ---
 
