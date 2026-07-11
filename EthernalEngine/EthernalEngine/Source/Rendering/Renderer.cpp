@@ -34,7 +34,12 @@ namespace EthernalEngine
 	{
 		std::vector<GameObject*>& gameobjects = scene.GetGameObjects();
 		EngineCamera EngineCamera = scene.GetCamera();
+		Skybox* skybox = scene.GetSkybox();
 
+		if (skybox != NULL)
+		{
+			skybox->Draw(EngineCamera);
+		}
 		for (GameObject* obj : gameobjects)
 		{
 			if (obj)

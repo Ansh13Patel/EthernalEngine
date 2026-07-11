@@ -5,6 +5,7 @@
 #include "Rendering/Renderer.h"
 #include "Rendering/CubeMesh.h"
 #include "Rendering/Material.h"
+#include "Rendering/Skybox.h"
 #include "Core/Window.h"
 #include "Components/DirectionalLight.h"
 #include "Components/PointLight.h"
@@ -37,6 +38,7 @@ namespace EthernalEngine
 		PointLight* CreateGameObjectWithPointLight();
 		SpotLight* CreateGameObjectWithSpotLight();
 		GameObject* GetSelectedGameObject();
+		Skybox* GetSkybox() { return skybox; }	
 		void SetSelectedGameObject(GameObject* gameObject);
 		CubeMesh* GetCubeMesh() { return cubeMesh; }
 		Shader* GetCubeShader() { return defaultShader; }
@@ -54,6 +56,7 @@ namespace EthernalEngine
 		Window* m_window = nullptr;
 		GameObject* selectedGameObject = nullptr;
 		EngineCamera EngineCamera;
+		Skybox* skybox = nullptr;
 		CubeMesh* cubeMesh = nullptr;
 		Shader* defaultShader = nullptr;
 		Material* defaultMaterial = nullptr;

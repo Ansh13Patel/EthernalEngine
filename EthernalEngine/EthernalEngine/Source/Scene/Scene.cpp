@@ -9,6 +9,15 @@ namespace EthernalEngine
 	Scene::Scene(Window* window) :m_window(window), EngineCamera(window)
 	{
 		directionalLight = nullptr;
+		skybox = new Skybox();
+		skybox->SetupSkybox({
+			"Textures/Skybox/right.png",
+			"Textures/Skybox/left.png",
+			"Textures/Skybox/top.png",
+			"Textures/Skybox/bottom.png",
+			"Textures/Skybox/front.png",
+			"Textures/Skybox/back.png"
+		});
 		DebugDraw::Init();
 	}
 

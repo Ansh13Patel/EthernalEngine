@@ -32,6 +32,8 @@ Source/Rendering/Shader.cpp
 Source/Rendering/stb_image.cpp
 Source/Rendering/Texture.cpp
 Source/Rendering/Material.cpp
+Source/Rendering/Skybox.cpp
+Source/Rendering/CubeMap.cpp
 
 Source/Components/DirectionalLight.cpp
 Source/Components/PointLight.cpp
