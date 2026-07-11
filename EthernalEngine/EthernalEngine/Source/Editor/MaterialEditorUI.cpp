@@ -31,6 +31,14 @@ namespace EthernalEngine
 		ImGui::SameLine();
 		ImGui::SliderFloat("##Shininess", &material->shininess, 1.0f, 128.0f);
 
+		ImGui::Text("Metallic");
+		ImGui::SameLine();
+		ImGui::SliderFloat("##Metallic", &material->metallic, 0.0f, 1.0f);
+
+		ImGui::Text("Transparency");
+		ImGui::SameLine();
+		ImGui::SliderFloat("##Transparency", &material->transparency, 0.0f, 1.0f);
+
 		ImGui::Text("Color");
 		ImGui::SameLine();
 		ImGui::ColorEdit3("##Color", material->GetColor());

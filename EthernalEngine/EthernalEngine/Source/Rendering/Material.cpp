@@ -25,7 +25,9 @@ namespace EthernalEngine
 			shader->SetFloat("sceneintensity", scene.GetIntensity());
 			shader->SetFloat3("colorMultiplier", GetColor());
 			shader->SetFloat("shininess", shininess);
-			UpdateDirectionalLightOnObject(scene);
+			shader->SetFloat("metallic", metallic);
+			shader->SetFloat("transparency", transparency);
+		    UpdateDirectionalLightOnObject(scene);
 			UpdatePointLightsOnObject(scene);
 			UpdateSpotLightsOnObject(scene);
 			shader->SetFloat3("viewPos",

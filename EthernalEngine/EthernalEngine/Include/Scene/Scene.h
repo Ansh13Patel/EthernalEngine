@@ -59,7 +59,6 @@ namespace EthernalEngine
 		Skybox* skybox = nullptr;
 		CubeMesh* cubeMesh = nullptr;
 		Shader* defaultShader = nullptr;
-		Material* defaultMaterial = nullptr;
 		float ambientColor[4]{ 1.0f,1.0f,1.0f,1.0f };
 		float intensity = 0.2f;
 	};

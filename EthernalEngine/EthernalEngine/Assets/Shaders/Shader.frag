@@ -40,8 +40,12 @@ in vec3 FragPos;
 out vec4 FragColor;
 
 uniform sampler2D image;
+uniform samplerCube skybox;
 uniform vec3 viewPos;
 uniform float shininess;
+uniform float metallic;
+uniform float roughness;
+uniform float transparency;
 uniform vec4 sceneAmbientColor;
 uniform float sceneintensity;
 uniform DirectionalLight directionalLight;
@@ -54,15 +58,39 @@ vec3 CalculateSceneAmbient();
 vec3 CalculateDirectionalLight();
 vec3 CalculatePointLights();
 vec3 CalculateSpotLights();
+vec3 CalculateReflectionColor();
+vec3 CalculateRefractionColor();
 
 void main()
 {
     vec3 texColor = texture(image, TexCoords).rgb;
 
     vec3 lighting = CalculateSceneAmbient() + CalculateDirectionalLight() + CalculatePointLights() + CalculateSpotLights();
-    vec3 finalColor = lighting * texColor;
+    vec3 reflection = CalculateReflectionColor();
+    vec3 refraction = CalculateRefractionColor();
+    vec3 surface = lighting * texColor;
+
+    vec3 env = mix(reflection, refraction, transparency);
+
+    vec3 finalColor = mix(surface, env, metallic);
 
     FragColor = vertexColor * vec4(finalColor, 1.0);
+}
+
+vec3 CalculateReflectionColor()
+{
+    vec3 I = normalize(FragPos - viewPos);
+    vec3 R = reflect(I, normalize(Normal));
+    
+    return texture(skybox, R).rgb;
+}
+
+vec3 CalculateRefractionColor()
+{
+    vec3 I = normalize(FragPos - viewPos);
+    vec3 R = refract(I, normalize(Normal), 1.0/1.52);
+
+    return texture(skybox, R).rgb;
 }
 
 vec3 CalculateSceneAmbient()

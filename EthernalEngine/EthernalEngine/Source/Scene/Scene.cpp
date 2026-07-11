@@ -91,17 +91,16 @@ namespace EthernalEngine
 			defaultShader = new Shader();
 			defaultShader->LoadFromFile("Shaders/Shader.vert", "Shaders/Shader.frag");
 		}
-		if(defaultMaterial == nullptr)
-		{
-			std::shared_ptr<Texture> texture = std::make_shared<Texture>();
-			texture->LoadTextureFromPath("Textures/White.png");
-			defaultMaterial = new Material();
-			defaultMaterial->SetShader(defaultShader);
-			defaultMaterial->SetBaseTexture(texture);
-		}
+
+		std::shared_ptr<Texture> texture = std::make_shared<Texture>();
+		texture->LoadTextureFromPath("Textures/White.png");
+		Material* mat = nullptr;
+		mat = new Material();
+		mat->SetShader(defaultShader);
+		mat->SetBaseTexture(texture);
 
 		newCube->SetMesh(cubeMesh);
-		newCube->SetMaterial(defaultMaterial);
+		newCube->SetMaterial(mat);
 
 		return newCube;
 	}

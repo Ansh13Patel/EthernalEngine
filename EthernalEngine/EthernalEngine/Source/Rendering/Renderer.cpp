@@ -36,16 +36,16 @@ namespace EthernalEngine
 		EngineCamera EngineCamera = scene.GetCamera();
 		Skybox* skybox = scene.GetSkybox();
 
-		if (skybox != NULL)
-		{
-			skybox->Draw(EngineCamera);
-		}
 		for (GameObject* obj : gameobjects)
 		{
 			if (obj)
 			{
 				DrawGameObjectRecursive(obj, scene);
 			}
+		}
+		if (skybox != NULL)
+		{
+			skybox->Draw(EngineCamera);
 		}
 		DrawLightDebugGizmo(scene);
 		DebugDraw::Draw(scene);

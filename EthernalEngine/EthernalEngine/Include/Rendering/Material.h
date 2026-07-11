@@ -32,6 +32,8 @@ namespace EthernalEngine
 		std::shared_ptr<Texture> baseTexture;
 		float color[3]{ 1.0f,1.0f,1.0f};
 		float shininess = 32.0f;
-
+		float metallic = 0.5f;
+		float transparency = 0.5f;
+		float roughness = 0.0f;
 	};
 }
