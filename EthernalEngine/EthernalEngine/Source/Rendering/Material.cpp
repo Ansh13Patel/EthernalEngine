@@ -23,10 +23,12 @@ namespace EthernalEngine
 			if(gameobject != nullptr) shader->SetMat4("model", gameobject->transform->GetWorldMatrix());
 			shader->SetFloat4("sceneAmbientColor", scene.GetAmbientColor());
 			shader->SetFloat("sceneintensity", scene.GetIntensity());
-			shader->SetFloat3("colorMultiplier", GetColor());
+			shader->SetFloat3("baseColor", GetColor());
 			shader->SetFloat("shininess", shininess);
 			shader->SetFloat("metallic", metallic);
 			shader->SetFloat("transparency", transparency);
+			shader->SetFloat("ior", ior);
+			shader->SetFloat("roughness", roughness);	
 		    UpdateDirectionalLightOnObject(scene);
 			UpdatePointLightsOnObject(scene);
 			UpdateSpotLightsOnObject(scene);

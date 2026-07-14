@@ -33,7 +33,7 @@ struct SpotLight
 };
 
 in vec2 TexCoords;
-in vec4 vertexColor;
+in vec4 BaseColor;
 in vec3 Normal;
 in vec3 FragPos;
 
@@ -46,6 +46,7 @@ uniform float shininess;
 uniform float metallic;
 uniform float roughness;
 uniform float transparency;
+uniform float ior;
 uniform vec4 sceneAmbientColor;
 uniform float sceneintensity;
 uniform DirectionalLight directionalLight;
@@ -70,11 +71,17 @@ void main()
     vec3 refraction = CalculateRefractionColor();
     vec3 surface = lighting * texColor;
 
-    vec3 env = mix(reflection, refraction, transparency);
+    reflection = mix(reflection, surface, roughness);
 
-    vec3 finalColor = mix(surface, env, metallic);
+    float fresnel = pow(1.0 - max(dot(normalize(Normal), normalize(viewPos - FragPos)), 0.0), 5.0);
 
-    FragColor = vertexColor * vec4(finalColor, 1.0);
+    vec3 opaqueColor = mix(surface, reflection, metallic);
+    vec3 glass = mix(refraction * texColor, reflection, fresnel);
+    glass += surface * 0.1;
+
+    vec3 finalColor = mix(opaqueColor, glass, transparency);
+
+    FragColor = BaseColor * vec4(finalColor, 1.0);
 }
 
 vec3 CalculateReflectionColor()
@@ -88,7 +95,7 @@ vec3 CalculateReflectionColor()
 vec3 CalculateRefractionColor()
 {
     vec3 I = normalize(FragPos - viewPos);
-    vec3 R = refract(I, normalize(Normal), 1.0/1.52);
+    vec3 R = refract(I, normalize(Normal), 1.0/ior);
 
     return texture(skybox, R).rgb;
 }

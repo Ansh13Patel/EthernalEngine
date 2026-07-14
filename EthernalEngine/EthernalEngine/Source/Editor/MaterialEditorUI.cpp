@@ -27,9 +27,17 @@ namespace EthernalEngine
 		ImGui::SameLine();
 		ImGui::Image((ImTextureID)material->GetBaseTexture()->GetTextureID(), ImVec2(25, 25));
 
+		ImGui::Text("Color");
+		ImGui::SameLine();
+		ImGui::ColorEdit3("##Color", material->GetColor());
+
 		ImGui::Text("Shininess");
 		ImGui::SameLine();
 		ImGui::SliderFloat("##Shininess", &material->shininess, 1.0f, 128.0f);
+
+		ImGui::Text("Roughness");
+		ImGui::SameLine();
+		ImGui::SliderFloat("##Roughness", &material->roughness, 0.0f, 1.0f);
 
 		ImGui::Text("Metallic");
 		ImGui::SameLine();
@@ -39,8 +47,8 @@ namespace EthernalEngine
 		ImGui::SameLine();
 		ImGui::SliderFloat("##Transparency", &material->transparency, 0.0f, 1.0f);
 
-		ImGui::Text("Color");
+		ImGui::Text("Refractive Index");
 		ImGui::SameLine();
-		ImGui::ColorEdit3("##Color", material->GetColor());
+		ImGui::SliderFloat("##IOR", &material->ior, 1.0f, 2.5f);
 	}
 }

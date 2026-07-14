@@ -4,14 +4,14 @@ layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec3 aNormal;
 layout(location = 2) in vec2 aTexCoord;
 
-uniform vec3 colorMultiplier;
+uniform vec3 baseColor;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
 out vec2 TexCoords;
-out vec4 vertexColor;
+out vec4 BaseColor;
 out vec3 Normal;
 out vec3 FragPos;
 
@@ -27,5 +27,5 @@ void main()
 
     TexCoords = aTexCoord;
 
-    vertexColor = vec4( colorMultiplier, 1.0);
+    BaseColor = vec4( baseColor, 1.0);
 }

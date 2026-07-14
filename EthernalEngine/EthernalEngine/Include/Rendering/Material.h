@@ -35,5 +35,6 @@ namespace EthernalEngine
 		float metallic = 0.5f;
 		float transparency = 0.5f;
 		float roughness = 0.0f;
+		float ior = 1.52f;
 	};
 }
