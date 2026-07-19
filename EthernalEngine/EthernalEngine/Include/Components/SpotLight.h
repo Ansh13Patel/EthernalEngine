@@ -11,6 +11,8 @@ namespace EthernalEngine
 		SpotLight(GameObject* gameobject);
 		~SpotLight() = default;
 		void Draw() override;
+		json SerializeComponent() const override;
+		void DeserializeComponent(const json& componentJson) override;
 
 	public:
 		float spotAngle;

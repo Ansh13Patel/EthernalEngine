@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 
 #include <stb_image.h>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 namespace EthernalEngine
 {
@@ -19,6 +21,11 @@ namespace EthernalEngine
 			glBindTexture(GL_TEXTURE_2D, m_textureID);
 		}
 		unsigned int GetTextureID() const { return m_textureID; }
+		json SerializeTexture() const;
+		void DeserializeTexture(const json& textureJson);
+
+	public:
+		std::string path = "";
 
 	private:
 		unsigned int m_textureID;

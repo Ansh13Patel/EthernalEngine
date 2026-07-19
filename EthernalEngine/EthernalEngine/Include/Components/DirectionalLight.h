@@ -8,12 +8,13 @@ namespace EthernalEngine
 	{
 	public:
 		DirectionalLight(GameObject* gameobject);
-		~DirectionalLight() = default;
+		~DirectionalLight() override = default;
 		void Draw() override;
+		json SerializeComponent() const override;
+		void DeserializeComponent(const json& componentJson) override;
 
 	public:
 		GameObject* gameobject;
 		float ambientStrength;
-
 	};
 }

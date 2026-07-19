@@ -94,4 +94,56 @@ namespace EthernalEngine
 		shader->SetInt("spotLightCount", slLights.size());
 	}
 
+	json Material::SerializeMaterial() const
+	{
+		json materialJson;
+		if (baseTexture != nullptr)
+		{
+			materialJson["texture"] = baseTexture->SerializeTexture();
+		}
+		if (shader != nullptr)
+		{
+			materialJson["shader"] = shader->SerializeShader();
+		}
+		materialJson["color"] = { color[0], color[1], color[2] };
+		materialJson["shininess"] = shininess;
+		materialJson["metallic"] = metallic;
+		materialJson["transparency"] = transparency;
+		materialJson["roughness"] = roughness;
+		materialJson["ior"] = ior;
+		return materialJson;
+	}
+
+	void Material::DeserializeMaterial(const json& materialJson)
+	{
+		if (materialJson.contains("color") && materialJson["color"].is_array() && materialJson["color"].size() == 3)
+		{
+			color[0] = materialJson["color"][0].get<float>();
+			color[1] = materialJson["color"][1].get<float>();
+			color[2] = materialJson["color"][2].get<float>();
+		}
+		if (materialJson.contains("shininess")) shininess = materialJson["shininess"].get<float>();
+		if (materialJson.contains("metallic")) metallic = materialJson["metallic"].get<float>();
+		if (materialJson.contains("transparency")) transparency = materialJson["transparency"].get<float>();
+		if (materialJson.contains("roughness")) roughness = materialJson["roughness"].get<float>();
+		if (materialJson.contains("ior")) ior = materialJson["ior"].get<float>();
+		if (materialJson.contains("texture") && materialJson["texture"].is_object())
+		{
+			json textureJson = materialJson["texture"];
+			if (!textureJson.empty())
+			{
+				baseTexture = std::make_shared<Texture>();
+				baseTexture->DeserializeTexture(textureJson);
+			}
+		}
+		if(materialJson.contains("shader") && materialJson["shader"].is_object())
+		{
+			json shaderJson = materialJson["shader"];
+			if (!shaderJson.empty())
+			{
+				shader = new Shader();
+				shader->DeserializeShader(shaderJson);
+			}
+		}
+	}
 }

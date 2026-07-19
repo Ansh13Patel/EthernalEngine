@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+include(FetchContent)
 
 project(EthernalEngine)
 
@@ -6,6 +7,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(OpenGL REQUIRED)
+
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.12.0
+)
+
+FetchContent_MakeAvailable(nlohmann_json)
 
 add_executable(EthernalEngine 
 Source/main.cpp
@@ -20,6 +29,7 @@ Source/Editor/PointLightEditorUI.cpp
 Source/Editor/MeshEditorUI.cpp
 Source/Editor/SpotLightEditorUI.cpp
 Source/Editor/MaterialEditorUI.cpp
+Source/Editor/EditorPopup.cpp
 
 Source/Helper/FileHelper.cpp
 Source/Helper/DebugDraw.cpp
@@ -75,6 +85,7 @@ target_link_libraries(
     glfw
     OpenGL::GL
     assimp
+    nlohmann_json::nlohmann_json
 )
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT EthernalEngine)

@@ -9,6 +9,13 @@
 #include <string>
 #include <assimp/texture.h>
 
+enum DefaultMeshType
+{
+    None,
+    Cube,
+    Sphere,
+    Cylinder
+};
 namespace EthernalEngine
 {
     struct Vertex

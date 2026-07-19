@@ -12,6 +12,8 @@
 #include "Components/SpotLight.h"
 
 #include <vector>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 namespace EthernalEngine
 {
@@ -44,10 +46,18 @@ namespace EthernalEngine
 		Shader* GetCubeShader() { return defaultShader; }
 		float* GetAmbientColor() { return ambientColor; }
 		float GetIntensity() { return intensity; }
+		json SerializeScene() const;
+		void DeserializeScene(const json& sceneJson);
+		void LoadPendingScene();
+		bool pendingSceneLoad = false;
+		json pendingSceneData;
 
 	private:
 		bool RayAABB(const glm::vec3& rayOrgin, const glm::vec3& rayDir, const glm::vec3& minBounds,
 			const glm::vec3& maxBounds, float& hitDistance);
+		bool ClearScene();
+		void AddAllLights();
+
 	private:
 		std::vector<GameObject*> gameObjects;
 		DirectionalLight* directionalLight;

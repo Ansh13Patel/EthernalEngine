@@ -37,6 +37,7 @@ namespace EthernalEngine
 			std::cout << "Failed to load texture: " << filePath << std::endl;
 			return false;
 		}
+		path = filePath;
 
 		GLenum format;
 		if (nrChannels == 1) format = GL_RED;
@@ -71,5 +72,21 @@ namespace EthernalEngine
 
 		stbi_image_free(data);
 		return true;
+	}
+
+	json Texture::SerializeTexture() const
+	{
+		json textureJson;
+		textureJson["path"] = path;
+		return textureJson;
+	}
+
+	void Texture::DeserializeTexture(const json& textureJson)
+	{
+		if (textureJson.contains("path") && textureJson["path"].is_string())
+		{
+			path = textureJson["path"].get<std::string>();
+			LoadTextureFromPath(path.c_str());
+		}
 	}
 }

@@ -49,6 +49,11 @@ int main()
 
 		editorUI.EndFrame();    
         window.SwapBuffers();
+
+        if (scene.pendingSceneLoad)
+        {
+            scene.LoadPendingScene();
+        }
     }
 
 	editorUI.Shutdown();

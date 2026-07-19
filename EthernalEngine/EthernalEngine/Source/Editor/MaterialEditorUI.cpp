@@ -13,7 +13,7 @@ namespace EthernalEngine
 		ImGui::SameLine();
 		if (ImGui::Button("Select Texture"))
 		{
-			std::string filepath = FileHelper::OpenFileDialog("Image Files\0*.png;*.jpg;*.jpeg\0");
+			std::string filepath = FileHelper::OpenFilePick("Image Files\0*.png;*.jpg;*.jpeg\0");
 
 			if (!filepath.empty())
 			{

@@ -4,6 +4,8 @@
 
 #include <string>
 #include <glm/glm.hpp>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 namespace EthernalEngine
 {
@@ -33,6 +35,13 @@ namespace EthernalEngine
 		void SetFloat4(const std::string& name, float value[4]);
 
 		void SetInt(const std::string& name, int value);
+
+		json SerializeShader() const;
+		void DeserializeShader(const json& shaderJson);
+
+	public:
+		std::string vertexShaderPath = "";
+		std::string fragmentShaderPath = "";
 
 	private:
 

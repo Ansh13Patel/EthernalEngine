@@ -4,6 +4,8 @@
 #include "Rendering/Texture.h"
 
 #include <memory>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 namespace EthernalEngine
 {
@@ -21,6 +23,8 @@ namespace EthernalEngine
 		Shader* GetShader() const { return shader; }
 		std::shared_ptr<Texture> GetBaseTexture() { return baseTexture; }
 		float* GetColor() { return color; }
+		json SerializeMaterial() const;
+		void DeserializeMaterial(const json& materialJson);
 
 	private:
 		void UpdateDirectionalLightOnObject(Scene& scene);

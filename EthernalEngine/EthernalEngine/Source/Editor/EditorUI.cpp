@@ -1,11 +1,15 @@
 #include "Editor/EditorUI.h"
 #include "Helper/FileHelper.h"
+#include "Editor/EditorPopup.h"
+#include "IconsFontAwesome7.h"
 
 #include <windows.h>
 #include <commdlg.h>
 
 #include <iostream>
 #include <filesystem>
+#include <fstream>
+#include <sstream>
 
 namespace EthernalEngine
 {
@@ -15,7 +19,21 @@ namespace EthernalEngine
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 		ImGui::StyleColorsDark();
-		io.Fonts->AddFontDefault();
+
+		io.Fonts->AddFontFromFileTTF("Fonts/roboto-regular.ttf", 18.0f);
+		static const ImWchar icons_ranges[] =
+		{
+			ICON_MIN_FA,
+			ICON_MAX_16_FA,
+			0
+		};
+
+		ImFontConfig config;
+		config.MergeMode = true;
+		config.PixelSnapH = true;
+
+		io.Fonts->AddFontFromFileTTF("Fonts/fa-solid-900.otf", 18.0f, &config, icons_ranges);
+
 		ImGui::GetIO().FontGlobalScale = 1.2f;
 		ImGui::GetStyle().ScaleAllSizes(2.0f);
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -36,12 +54,13 @@ namespace EthernalEngine
 	}
 	void EditorUI::RenderUI(Scene* scene)
 	{
-		if (scene == nullptr) return;
+        if (scene == nullptr) return;
 		MainMenuBar(scene);
 		Hierarchy(scene);
 		Inspector(scene->GetSelectedGameObject());
 		UpdateGizmoOperation();
-		DrawGizmo(scene->GetSelectedGameObject(), &scene->GetCamera());
+        DrawGizmo(scene->GetSelectedGameObject(), &scene->GetCamera());
+		EditorPopup::Render();
 	}
 	void EditorUI::Shutdown()
 	{
@@ -54,11 +73,59 @@ namespace EthernalEngine
 	{
 		if (ImGui::BeginMainMenuBar())
 		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("Save Scene"))
+				{
+					const char* filter = "Ethernal Files(*.ethernal)\0 * .ethernal\0";
+					std::string sceneData = scene->SerializeScene().dump();
+					FileHelper::OpenFileSave(filter, sceneData);
+				}
+				if (ImGui::MenuItem("Load Scene"))
+				{
+					Popup popup = { PopupType::Confirmation, "Open Scene",
+						"Opening a new scene will discard all unsaved changes.\n\nDo you want to continue?",
+						[scene]() {
+							const char* filter = "Ethernal Files(*.ethernal)\0 * .ethernal\0";
+							std::string filepath = FileHelper::OpenFilePick(filter);
+							if (!filepath.empty())
+							{
+								std::ifstream file(filepath);
+								if (!file.is_open())
+								{
+									std::cout << "Failed to open file" << filepath << std::endl;
+									return;
+								}
+								std::stringstream buffer;
+								buffer << file.rdbuf();
+								std::string scenedata = buffer.str();
+								file.close();
+
+								try
+								{
+									json sceneJson = json::parse(scenedata);
+									scene->pendingSceneData = sceneJson;
+									scene->pendingSceneLoad = true;
+								}
+								catch (const json::parse_error& e)
+								{
+									std::cout << "Json Parse Error: " << e.what() << std::endl;
+								}
+							}
+						} };
+					EditorPopup::ShowPopup(popup);
+				}
+				ImGui::EndMenu();
+			}
 			if (ImGui::BeginMenu("GameObject"))
 			{
-				if (ImGui::MenuItem("Cube"))
+				if (ImGui::BeginMenu("3D"))
 				{
-					scene->AddGameObject(scene->CreateCubeGameObject("NewCube"));
+					if (ImGui::MenuItem("Cube"))
+					{
+						scene->AddGameObject(scene->CreateCubeGameObject("NewCube"));
+					}
+					ImGui::EndMenu();
 				}
 				if (ImGui::BeginMenu("Light"))
 				{
@@ -78,7 +145,7 @@ namespace EthernalEngine
 				}
 				if (ImGui::MenuItem("Import"))
 				{
-					std::string filepath = FileHelper::OpenFileDialog("Model Files\0*.obj;*.fbx;*.gltf;*.glb\0All Files\0*.*\0");
+					std::string filepath = FileHelper::OpenFilePick("Model Files\0*.obj;*.fbx;*.gltf;*.glb\0All Files\0*.*\0");
 					if (!filepath.empty())
 					{
 						std::string gameobjectname = FileHelper::GetFileName(filepath);

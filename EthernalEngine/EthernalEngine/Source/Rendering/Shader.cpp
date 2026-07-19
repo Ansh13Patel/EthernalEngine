@@ -39,10 +39,7 @@ namespace EthernalEngine
 		return stream.str();
 	}
 
-	bool Shader::LoadFromFile(
-		const char* vertexPath,
-		const char* fragmentPath
-	)
+	bool Shader::LoadFromFile(const char* vertexPath, const char* fragmentPath)
 	{
 		std::string vertexCode = ReadFile(vertexPath);
 
@@ -52,6 +49,9 @@ namespace EthernalEngine
 		{
 			return false;
 		}
+
+		vertexShaderPath = vertexPath;
+		fragmentShaderPath = fragmentPath;
 
 		const char* vertexShaderSource = vertexCode.c_str();
 
@@ -159,5 +159,26 @@ namespace EthernalEngine
 	void Shader::SetInt(const std::string& name, int value)
 	{
 		glUniform1i(glGetUniformLocation(shaderProgram, name.c_str()),value);
+	}
+
+	json Shader::SerializeShader() const
+	{
+		json shaderJson;
+		shaderJson["vertexShaderPath"] = vertexShaderPath;
+		shaderJson["fragmentShaderPath"] = fragmentShaderPath;
+		return shaderJson;
+	}
+
+	void Shader::DeserializeShader(const json& shaderJson)
+	{
+		if (shaderJson.contains("vertexShaderPath") && shaderJson["vertexShaderPath"].is_string())
+		{
+			vertexShaderPath = shaderJson["vertexShaderPath"].get<std::string>();
+		}
+		if (shaderJson.contains("fragmentShaderPath") && shaderJson["fragmentShaderPath"].is_string())
+		{
+			fragmentShaderPath = shaderJson["fragmentShaderPath"].get<std::string>();
+		}
+		LoadFromFile(vertexShaderPath.c_str(), fragmentShaderPath.c_str());
 	}
 }

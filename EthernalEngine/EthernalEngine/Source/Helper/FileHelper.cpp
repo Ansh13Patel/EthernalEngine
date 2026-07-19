@@ -2,27 +2,52 @@
 #include <windows.h>
 #include <commdlg.h>
 #include <filesystem>
-
+#include <fstream>
 
 namespace EthernalEngine
 {
-	std::string FileHelper::OpenFileDialog(const char* filter)
+	std::string FileHelper::OpenFilePick(const char* filter)
 	{
-		char filename[MAX_PATH] = "";
+		char filepath[MAX_PATH] = "";
 
 		OPENFILENAMEA ofn = {};
 		ofn.lStructSize = sizeof(ofn);
 		ofn.hwndOwner = nullptr;
 		ofn.lpstrFilter = filter;
-		ofn.lpstrFile = filename;
+		ofn.lpstrFile = filepath;
 		ofn.nMaxFile = MAX_PATH;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
 		if (GetOpenFileNameA(&ofn))
 		{
-			return filename;
+			return filepath;
 		}
 
+		return "";
+	}
+
+	std::string FileHelper::OpenFileSave(const char* filter, std::string sceneData)
+	{
+		char filepath[MAX_PATH] = "";
+		OPENFILENAMEA ofn = {};
+		ofn.lStructSize = sizeof(ofn);
+		ofn.hwndOwner = nullptr;
+		ofn.lpstrFilter = filter;
+		ofn.lpstrFile = filepath;
+		ofn.nMaxFile = MAX_PATH;
+		ofn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+		ofn.lpstrDefExt = "ethernal";
+		if (GetSaveFileNameA(&ofn))
+		{
+			std::ofstream newScene(filepath);
+			if (newScene)
+			{
+				newScene << sceneData;
+				newScene.close();
+
+				return filepath;
+			}
+		}
 		return "";
 	}
 

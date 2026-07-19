@@ -9,6 +9,8 @@
 #include "Components/Component.h"
 
 #include <string>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 namespace EthernalEngine
 {
@@ -18,7 +20,7 @@ namespace EthernalEngine
 
         GameObject(std::string name) : name(std::move(name)) { transform = new Transform(); }
 
-        virtual ~GameObject() = default;
+        virtual ~GameObject();
 
         void SetMesh(Mesh* newMesh);
 
@@ -44,6 +46,9 @@ namespace EthernalEngine
 
         void AddComponent(Component* component);
 
+		json SerializeGameObject() const;
+		void DeserializeGameObject(const json& gameObjectJson);
+
         template<typename T>
         T* GetComponent();
         
@@ -56,15 +61,15 @@ namespace EthernalEngine
         Transform* transform;
         GameObject* parent = nullptr;
         std::vector<GameObject*> childObjects;
-        float color[3]{ 1.0f,1.0f,1.0f };
         std::string name;
         std::vector<Component*> components;
+        std::string modelPath = "";
+		DefaultMeshType defaultMeshType = DefaultMeshType::None;
 
     private:
 
         Mesh* mesh = nullptr;
 		Material* material = nullptr;
         bool isSelected = false;
-
     };
 }

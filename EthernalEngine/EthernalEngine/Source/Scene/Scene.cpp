@@ -4,10 +4,12 @@
 
 #include<iostream>
 
+
 namespace EthernalEngine
 {
 	Scene::Scene(Window* window) :m_window(window), EngineCamera(window)
 	{
+		pendingSceneLoad = false;
 		directionalLight = nullptr;
 		skybox = new Skybox();
 		skybox->SetupSkybox({
@@ -17,13 +19,22 @@ namespace EthernalEngine
 			"Textures/Skybox/bottom.png",
 			"Textures/Skybox/front.png",
 			"Textures/Skybox/back.png"
-		});
+			});
+		if (defaultShader == nullptr)
+		{
+			defaultShader = new Shader();
+			defaultShader->LoadFromFile("Shaders/Shader.vert", "Shaders/Shader.frag");
+		}
+		if (cubeMesh == nullptr)
+		{
+			cubeMesh = new CubeMesh();
+		}
 		DebugDraw::Init();
 	}
 
 	Scene::~Scene()
 	{
-		delete directionalLight;
+		ClearScene();
 	}
 
 	void Scene::AddGameObject(GameObject* gameObject)
@@ -64,7 +75,7 @@ namespace EthernalEngine
 	{
 		if (this->selectedGameObject != gameObject)
 		{
-			if(this->selectedGameObject != nullptr)
+			if (this->selectedGameObject != nullptr)
 				this->selectedGameObject->SetIsSelected(false);
 
 			this->selectedGameObject = gameObject;
@@ -82,15 +93,7 @@ namespace EthernalEngine
 	GameObject* Scene::CreateCubeGameObject(std::string name)
 	{
 		GameObject* newCube = new GameObject(name);
-		if (cubeMesh == nullptr) 
-		{
-			cubeMesh = new CubeMesh();
-		}
-		if (defaultShader == nullptr)
-		{
-			defaultShader = new Shader();
-			defaultShader->LoadFromFile("Shaders/Shader.vert", "Shaders/Shader.frag");
-		}
+		newCube->defaultMeshType = DefaultMeshType::Cube;
 
 		std::shared_ptr<Texture> texture = std::make_shared<Texture>();
 		texture->LoadTextureFromPath("Textures/White.png");
@@ -108,12 +111,7 @@ namespace EthernalEngine
 	GameObject* Scene::CreateGameObjectWithCustomModel(std::string name, std::string path)
 	{
 		GameObject* newObject = new GameObject(name);
-		
-		if (defaultShader == nullptr)
-		{
-			defaultShader = new Shader();
-			defaultShader->LoadFromFile("Shaders/Shader.vert", "Shaders/Shader.frag");
-		}
+		newObject->modelPath = path;
 
 		Model* newModel = new Model(path, newObject, defaultShader);
 
@@ -166,7 +164,7 @@ namespace EthernalEngine
 			glm::vec3 minBounds = transform->position - (transform->scale * 0.5f);
 			glm::vec3 maxBounds = transform->position + (transform->scale * 0.5f);
 			float hitDistance;
-			if (RayAABB(EngineCamera.cameraPos, rayDir, minBounds, maxBounds, hitDistance)) 
+			if (RayAABB(EngineCamera.cameraPos, rayDir, minBounds, maxBounds, hitDistance))
 			{
 				if (hitDistance < closetHitDistance)
 				{
@@ -194,7 +192,7 @@ namespace EthernalEngine
 		float txMin = (minBounds.x - rayOrgin.x) * invDir.x;
 		float txMax = (maxBounds.x - rayOrgin.x) * invDir.x;
 
-		if(txMin > txMax)
+		if (txMin > txMax)
 		{
 			std::swap(txMin, txMax);
 		}
@@ -228,4 +226,120 @@ namespace EthernalEngine
 
 		return true;
 	}
+
+	json Scene::SerializeScene() const
+	{
+		json sceneJson;
+		sceneJson["ambientColor"] = { ambientColor[0], ambientColor[1], ambientColor[2], ambientColor[3] };
+		sceneJson["intensity"] = intensity;
+		if (!gameObjects.empty())
+		{
+			sceneJson["gameObjects"] = json::array();
+		}
+		for (const auto& gameObject : gameObjects)
+		{
+			sceneJson["gameObjects"].push_back(gameObject->SerializeGameObject());
+		}
+		return sceneJson;
+	}
+
+	void Scene::DeserializeScene(const json& sceneJson)
+	{
+		selectedGameObject = nullptr;
+		if (sceneJson.contains("ambientColor"))
+		{
+			auto col = sceneJson["ambientColor"];
+			ambientColor[0] = col[0];
+			ambientColor[1] = col[1];
+			ambientColor[2] = col[2];
+			ambientColor[3] = col[3];
+		}
+		if (sceneJson.contains("intensity"))
+		{
+			intensity = sceneJson["intensity"].get<float>();
+		}
+		if (sceneJson.contains("gameObjects"))
+		{
+			for (const auto& gameObjectJson : sceneJson["gameObjects"])
+			{
+				GameObject* newGameObject = new GameObject("Deserialized Object");
+				newGameObject->DeserializeGameObject(gameObjectJson);
+				if (newGameObject->modelPath != "")
+				{
+					Model* newModel = new Model(newGameObject->modelPath, newGameObject, defaultShader);
+				}
+				else
+				{
+					switch (newGameObject->defaultMeshType)
+					{
+					case DefaultMeshType::Cube:
+						newGameObject->SetMesh(cubeMesh);
+						break;
+					default:
+						break;
+					}
+				}
+				AddGameObject(newGameObject);
+			}
+		}
+
+		AddAllLights();
+	}
+
+	void Scene::LoadPendingScene()
+	{
+		ClearScene();
+		DeserializeScene(pendingSceneData);
+		pendingSceneLoad = false;
+	}
+
+	bool Scene::ClearScene()
+	{
+		for (GameObject* obj : gameObjects)
+		{
+			if (obj != nullptr)
+			{
+				delete obj;
+			}
+		}
+
+		directionalLight = nullptr;
+
+		gameObjects.clear();
+		pointLights.clear();
+		spotLights.clear();
+
+		return true;
+	}
+
+    void Scene::AddAllLights()
+    {
+        for (GameObject* obj : gameObjects)
+        {
+			if (obj != nullptr)
+			{
+				for (Component* comp : obj->components)
+				{
+					if (comp != nullptr)
+					{
+						if (auto* dir = dynamic_cast<DirectionalLight*>(comp))
+						{
+							if (dir != nullptr)
+								directionalLight = dir;
+						}
+						else if (auto* pl = dynamic_cast<PointLight*>(comp))
+						{
+							if (pl != nullptr)
+								pointLights.push_back(pl);
+						}
+						else if (auto* sl = dynamic_cast<SpotLight*>(comp))
+						{
+							if (sl != nullptr)
+								spotLights.push_back(sl);
+						}
+					}
+				}
+			}
+        }
+    }
 }
