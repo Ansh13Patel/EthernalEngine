@@ -3,6 +3,7 @@
 #include "Core/Window.h"
 #include "Core/EngineCamera.h"
 #include "Scene/Scene.h"
+#include <Editor/EditorUI.h>
 
 namespace EthernalEngine
 {
@@ -14,7 +15,7 @@ namespace EthernalEngine
 
 		~Input() = default;
 
-		void ProcessKeyAndMouseInput(float deltatime);
+		void ProcessKeyAndMouseInput(float deltatime, Viewport& viewport);
 
 	private:
 
@@ -34,6 +35,9 @@ namespace EthernalEngine
 
 		static bool firstMouse;
 		static bool canMoveCamera;
+
+		static bool viewportHovered;
+		static bool viewportFocused;
 
 		static EngineCamera* EngineCamera;
 		static Window* window;

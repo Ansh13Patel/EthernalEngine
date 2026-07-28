@@ -1,8 +1,8 @@
 #include "Core/Input.h"
 
-#include <imgui/imgui.h>
-#include <imgui/backends/imgui_impl_glfw.h>
-#include <imgui/backends/imgui_impl_opengl3.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 #include "ImGuizmo.h"
 
@@ -21,6 +21,9 @@ namespace EthernalEngine
 	bool Input::firstMouse = true;
 	bool Input::canMoveCamera = false;
 
+	bool Input::viewportFocused = false;
+	bool Input::viewportHovered = false;
+
 	EngineCamera* Input::EngineCamera = nullptr;
 	Window* Input::window = nullptr;
 	Scene* Input::scene = nullptr;
@@ -35,21 +38,14 @@ namespace EthernalEngine
 		glfwSetScrollCallback(Input::window->GetGLFWwindow(), Scroll_Callback);
 	}
 
-	void Input::ProcessKeyAndMouseInput(float deltatime)
+	void Input::ProcessKeyAndMouseInput(float deltatime, Viewport& viewport)
 	{
-		if (window)
+		viewportFocused = viewport.viewportFocused;
+		viewportHovered = viewport.viewportHovered;
+		if (window && viewport.viewportHovered /*&& viewport.viewportFocused*/)
 		{
 			bool forward = false, backward = false, right = false, left = false;
 			GLFWwindow* glfwWindow = window->GetGLFWwindow();
-
-			ImGuiIO& io = ImGui::GetIO();
-			if (io.WantCaptureKeyboard || (io.WantCaptureMouse && !ImGuizmo::IsOver()))
-			{
-				isMouseLeftButtonDown = false;
-				isMouseRightButtonDown = false;
-				isMouseMiddleButtonDown = false;
-				return;
-			}
 
 			bool previousMouseRightState = isMouseRightButtonDown;
 			bool previousMouseLeftState = isMouseLeftButtonDown;
@@ -78,13 +74,21 @@ namespace EthernalEngine
 			if (isMouseLeftButtonDown && !previousMouseLeftState) canSelectGameobject = true;
 			if (!isMouseLeftButtonDown) canSelectGameobject = false;
 
-			double xpos = 0, ypos = 0;
-			glfwGetCursorPos(glfwWindow, &xpos, &ypos);
+			ImVec2 mouse = ImGui::GetMousePos();
+			mouse.x -= viewport.viewportMin.x;
+			mouse.y -= viewport.viewportMin.y;
+
 			if (!ImGuizmo::IsOver())
 			{
-				GameObjectSelection(window->GetWidth(), window->GetHeight(), xpos, ypos);
+				GameObjectSelection(viewport.viewportSize.x, viewport.viewportSize.y, mouse.x, mouse.y);
 			}
-			Mouse_Callback(xpos, ypos);
+			Mouse_Callback(mouse.x, mouse.y);
+		}
+		else
+		{
+			isMouseLeftButtonDown = false;
+			isMouseRightButtonDown = false;
+			isMouseMiddleButtonDown = false;
 		}
 	}
 
@@ -142,7 +146,7 @@ namespace EthernalEngine
 
 	void Input::Scroll_Callback(GLFWwindow* window, double xoffset, double yoffset)
 	{
-		if (EngineCamera)
+		if (EngineCamera && viewportHovered)
 		{
 			EngineCamera->UpdateCameraFov(static_cast<float>(yoffset));
 		}

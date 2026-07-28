@@ -1,13 +1,14 @@
 #include "Scene/Scene.h"
 #include "Rendering/Model.h"
 #include "Helper/DebugDraw.h"
+#include "Editor/EditorUI.h"
 
 #include<iostream>
 
 
 namespace EthernalEngine
 {
-	Scene::Scene(Window* window) :m_window(window), EngineCamera(window)
+	Scene::Scene(Window* window, Viewport& viewport) : m_window(window), engineCam(viewport)
 	{
 		pendingSceneLoad = false;
 		directionalLight = nullptr;
@@ -29,6 +30,9 @@ namespace EthernalEngine
 		{
 			cubeMesh = new CubeMesh();
 		}
+
+		sceneBuffer = new FrameBuffer();
+		sceneBuffer->Create(window->GetWidth(), window->GetHeight());
 		DebugDraw::Init();
 	}
 
@@ -164,7 +168,7 @@ namespace EthernalEngine
 			glm::vec3 minBounds = transform->position - (transform->scale * 0.5f);
 			glm::vec3 maxBounds = transform->position + (transform->scale * 0.5f);
 			float hitDistance;
-			if (RayAABB(EngineCamera.cameraPos, rayDir, minBounds, maxBounds, hitDistance))
+			if (RayAABB(engineCam.cameraPos, rayDir, minBounds, maxBounds, hitDistance))
 			{
 				if (hitDistance < closetHitDistance)
 				{

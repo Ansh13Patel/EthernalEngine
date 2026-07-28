@@ -24,7 +24,7 @@ int main()
         return -1;
     }
 
-    EthernalEngine::Scene scene{ &window };
+    EthernalEngine::Scene scene{ &window, editorUI.viewport };
     EthernalEngine::Input input{ &window, &scene };
 
     float deltaFrame = 0.0f;
@@ -33,21 +33,28 @@ int main()
     while (!window.WindowShouldClose())
     {
         glfwPollEvents();
+
         float currentFrame = glfwGetTime();
         deltaFrame = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        renderer.Clear();
+        input.ProcessKeyAndMouseInput(deltaFrame, editorUI.viewport);
 
         editorUI.BeginFrame();
-		editorUI.RenderUI(&scene);
+        editorUI.RenderUI(&scene);
 
-        input.ProcessKeyAndMouseInput(deltaFrame);
+        if (scene.GetSceneBuffer() != nullptr)
+            scene.GetSceneBuffer()->Bind();
 
+        renderer.Clear();
         scene.Update(deltaFrame);
         renderer.Draw(scene);
 
-		editorUI.EndFrame();    
+        if (scene.GetSceneBuffer() != nullptr)
+            scene.GetSceneBuffer()->Unbind();
+
+        editorUI.EndFrame();
+
         window.SwapBuffers();
 
         if (scene.pendingSceneLoad)

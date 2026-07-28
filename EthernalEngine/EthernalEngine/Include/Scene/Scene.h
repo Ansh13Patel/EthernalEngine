@@ -10,6 +10,7 @@
 #include "Components/DirectionalLight.h"
 #include "Components/PointLight.h"
 #include "Components/SpotLight.h"
+#include "Rendering/FrameBuffer.h"
 
 #include <vector>
 #include <nlohmann/json.hpp>
@@ -17,10 +18,11 @@ using json = nlohmann::json;
 
 namespace EthernalEngine
 {
+	struct Viewport;
 	class Scene
 	{
 	public:
-		Scene(Window* window);
+		Scene(Window* window, Viewport& viewport);
 		~Scene();
 		void Update(float deltaTime);
 		void AddGameObject(GameObject* gameObject);
@@ -30,7 +32,7 @@ namespace EthernalEngine
 		int GetGameObjectCount() const { return static_cast<int>(gameObjects.size()); }
 		std::vector<GameObject*>& GetGameObjects() { return gameObjects; }
 		void SelectGameObject(glm::vec3& rayDir);
-		EngineCamera& GetCamera() { return EngineCamera; }
+		EngineCamera& GetCamera() { return engineCam; }
 		DirectionalLight* GetDirectionalLight() { return directionalLight; }
 		std::vector<PointLight*> GetPointLights() { return pointLights; }
 		std::vector<SpotLight*> GetSpotLights() { return spotLights; }
@@ -41,6 +43,7 @@ namespace EthernalEngine
 		SpotLight* CreateGameObjectWithSpotLight();
 		GameObject* GetSelectedGameObject();
 		Skybox* GetSkybox() { return skybox; }	
+		FrameBuffer* GetSceneBuffer() { return sceneBuffer; }
 		void SetSelectedGameObject(GameObject* gameObject);
 		CubeMesh* GetCubeMesh() { return cubeMesh; }
 		Shader* GetCubeShader() { return defaultShader; }
@@ -59,13 +62,14 @@ namespace EthernalEngine
 		void AddAllLights();
 
 	private:
+		FrameBuffer* sceneBuffer;
 		std::vector<GameObject*> gameObjects;
 		DirectionalLight* directionalLight;
 		std::vector<PointLight*> pointLights;
 		std::vector<SpotLight*> spotLights;
 		Window* m_window = nullptr;
 		GameObject* selectedGameObject = nullptr;
-		EngineCamera EngineCamera;
+		EngineCamera engineCam;
 		Skybox* skybox = nullptr;
 		CubeMesh* cubeMesh = nullptr;
 		Shader* defaultShader = nullptr;

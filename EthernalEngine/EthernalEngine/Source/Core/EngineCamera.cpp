@@ -1,13 +1,12 @@
 #include "Core/EngineCamera.h"
-
+#include <Editor/EditorUI.h>
 #include<glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
 namespace EthernalEngine
 {
-	EngineCamera::EngineCamera(Window* window)
+	EngineCamera::EngineCamera(Viewport& viewport) : m_viewport(viewport)
 	{
-		this->m_window = window;
 		cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 		cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 		cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -64,6 +63,17 @@ namespace EthernalEngine
 
 	glm::mat4 EngineCamera::GetProjectionMatrix() const
 	{
-		return glm::perspective(glm::radians(fov), (float)m_window->GetWidth() / (float)m_window->GetHeight(), 0.1f, 100.0f);
+		float width = m_viewport.viewportSize.x;
+		float height = m_viewport.viewportSize.y;
+		if (width <= 0 || height <= 0) return glm::mat4(1.0f);
+
+		if (isPerspective)
+		{
+			return glm::perspective(glm::radians(fov), (float)width / (float)height, 0.1f, 100.0f);
+		}
+		else
+		{
+			return glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 50.0f);
+		}
 	}
 }

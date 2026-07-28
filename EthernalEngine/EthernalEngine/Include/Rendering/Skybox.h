@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Rendering/Shader.h"
-#include "Core/EngineCamera.h"
 #include "Rendering/CubeMap.h"
 
 #include <memory>
@@ -9,6 +8,7 @@
 
 namespace EthernalEngine
 {
+	class EngineCamera;
 	class Skybox 
 	{
 	public:

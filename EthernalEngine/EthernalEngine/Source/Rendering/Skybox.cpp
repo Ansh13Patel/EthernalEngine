@@ -1,4 +1,5 @@
 #include "Rendering/Skybox.h"
+#include "Core/EngineCamera.h"
 
 #include <algorithm>
 

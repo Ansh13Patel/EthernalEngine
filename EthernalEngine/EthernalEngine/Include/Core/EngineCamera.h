@@ -5,10 +5,11 @@
 
 namespace EthernalEngine
 {
+	struct Viewport;
 	class EngineCamera
 	{
 	public:
-		EngineCamera(Window* window);
+		EngineCamera(Viewport& viewport);
 		~EngineCamera() = default;
 		void Update(float deltaTime);
 		void UpdateCameraRotation(float xOffset, float yOffset);
@@ -19,7 +20,7 @@ namespace EthernalEngine
 		glm::mat4 GetProjectionMatrix() const;
 
 	private:
-		Window* m_window = nullptr;
+		Viewport& m_viewport;
 		float cameraSpeed = 3.0f;	
 		float cameraPanSpeed = 0.05f;
 		float cameraScrollSpeed = 0.25f;
@@ -31,6 +32,7 @@ namespace EthernalEngine
 		float yaw;
 		float pitch;
 		float fov;
+		bool isPerspective = true;
 	};
 
 }

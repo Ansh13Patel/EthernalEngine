@@ -33,7 +33,7 @@ namespace EthernalEngine
 	void Renderer::Draw(Scene& scene)
 	{
 		std::vector<GameObject*>& gameobjects = scene.GetGameObjects();
-		EngineCamera EngineCamera = scene.GetCamera();
+		EngineCamera& EngineCamera = scene.GetCamera();
 		Skybox* skybox = scene.GetSkybox();
 
 		for (GameObject* obj : gameobjects)
