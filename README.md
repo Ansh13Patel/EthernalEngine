@@ -3,7 +3,8 @@
 EthernalEngine is a lightweight, modular OpenGL-based game engine and editor written in modern C++. This README documents the project's features, architecture, build instructions, workflows, and contribution guidelines so contributors and users can quickly get started.
 
 
-<img width="1275" height="692" alt="image" src="https://github.com/user-attachments/assets/4bd772a0-7ca7-46db-a8f6-60b95709438c" />
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/3b858ddd-2414-463a-9368-2d8f62689214" />
+
 
 ---
 
