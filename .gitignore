@@ -121,3 +121,7 @@ desktop.ini
 CMakeFiles/
 CMakeCache.txt
 CMakeUserPresets.json
+EthernalEngine/EthernalEngine/build/_deps/assimp-src/
+EthernalEngine/EthernalEngine/build/_deps/glfw-src/
+EthernalEngine/EthernalEngine/build/_deps/imgui-src/
+EthernalEngine/EthernalEngine/build/_deps/nlohmann_json-src/
