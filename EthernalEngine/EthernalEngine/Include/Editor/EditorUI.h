@@ -50,7 +50,7 @@ namespace EthernalEngine
 		void HierarchyTab(Scene* scene);
 		void InspectorTab(GameObject* gameObject);
 		void SceneTab(Scene* scene);
-		void GameTab();
+		void GameTab(Scene* scene);
 		void ProjectTab();
 		void ConsoleTab();
 		void DrawGizmo(GameObject* selectedGameObject, EngineCamera* EngineCamera);
@@ -61,7 +61,8 @@ namespace EthernalEngine
 
 	public:
 		ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;
-		Viewport viewport;
+		Viewport sceneViewport;
+		Viewport gameViewport;
 
 	private:
 		DirectionalLightEditorUI dlEditorUI;

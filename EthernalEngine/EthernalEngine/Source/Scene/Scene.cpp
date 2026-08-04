@@ -2,25 +2,28 @@
 #include "Rendering/Model.h"
 #include "Helper/DebugDraw.h"
 #include "Editor/EditorUI.h"
+#include "Components/Camera.h"
 
 #include<iostream>
 
 
 namespace EthernalEngine
 {
-	Scene::Scene(Window* window, Viewport& viewport) : m_window(window), engineCam(viewport)
+	Scene::Scene(Window* window, Viewport& sceneViewport, Viewport& gameViewport) : m_window(window), 
+		engineCam(sceneViewport), m_gameViewport(gameViewport)
 	{
 		pendingSceneLoad = false;
 		directionalLight = nullptr;
 		skybox = new Skybox();
-		skybox->SetupSkybox({
+	/*	skybox->SetupSkyboxUsingCubemap({
 			"Textures/Skybox/right.png",
 			"Textures/Skybox/left.png",
 			"Textures/Skybox/top.png",
 			"Textures/Skybox/bottom.png",
 			"Textures/Skybox/front.png",
 			"Textures/Skybox/back.png"
-			});
+			});*/
+		skybox->SetupProceduralSkybox();
 		if (defaultShader == nullptr)
 		{
 			defaultShader = new Shader();
@@ -34,11 +37,19 @@ namespace EthernalEngine
 		sceneBuffer = new FrameBuffer();
 		sceneBuffer->Create(window->GetWidth(), window->GetHeight());
 		DebugDraw::Init();
+
+		BaseSceneSetup();
 	}
 
 	Scene::~Scene()
 	{
 		ClearScene();
+	}
+
+	void Scene::BaseSceneSetup()
+	{
+		AddCamera(CreateGameObjectWithCamera());
+		AddDirectionalLight(CreateGameObjectWithDirectionalLight());
 	}
 
 	void Scene::AddGameObject(GameObject* gameObject)
@@ -62,6 +73,14 @@ namespace EthernalEngine
 	void Scene::AddSpotLight(SpotLight* spotLight)
 	{
 		this->spotLights.push_back(spotLight);
+	}
+
+	void Scene::AddCamera(Camera* cam)
+	{
+		if (this->mainCamera == nullptr)
+		{
+			this->mainCamera = cam;
+		}
 	}
 
 	void Scene::Update(float deltaTime)
@@ -157,6 +176,17 @@ namespace EthernalEngine
 		return spotLight;
 	}
 
+	Camera* Scene::CreateGameObjectWithCamera()
+	{
+		GameObject* cameraObj = new GameObject("Main Camera");
+		Camera* cam = new Camera(cameraObj,m_window, m_gameViewport);
+		cameraObj->AddComponent(cam);
+
+		AddGameObject(cameraObj);
+
+		return cam;
+	}
+
 	void Scene::SelectGameObject(glm::vec3& rayDir)
 	{
 		float closetHitDistance = FLT_MAX;
@@ -168,7 +198,7 @@ namespace EthernalEngine
 			glm::vec3 minBounds = transform->position - (transform->scale * 0.5f);
 			glm::vec3 maxBounds = transform->position + (transform->scale * 0.5f);
 			float hitDistance;
-			if (RayAABB(engineCam.cameraPos, rayDir, minBounds, maxBounds, hitDistance))
+            if (RayAABB(engineCam.transform.position, rayDir, minBounds, maxBounds, hitDistance))
 			{
 				if (hitDistance < closetHitDistance)
 				{

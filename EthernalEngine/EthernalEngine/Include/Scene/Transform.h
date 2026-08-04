@@ -11,8 +11,9 @@ namespace EthernalEngine
 	public:
 		Transform();
 		~Transform() = default;
-		glm::vec3 GetForward();
-		glm::vec3 GetRight();
+        glm::vec3 GetForward() const;
+		glm::vec3 GetRight() const;
+		glm::vec3 GetUp() const;
 		glm::mat4 GetLocalMatrix();
 		glm::mat4 GetWorldMatrix();
 		void SetParent(Transform* newParent) { parent = newParent; }

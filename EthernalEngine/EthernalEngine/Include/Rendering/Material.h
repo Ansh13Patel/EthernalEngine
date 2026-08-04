@@ -11,13 +11,14 @@ namespace EthernalEngine
 {
 	class Scene;
 	class GameObject;
+	class ICamera;
 
 	class Material 
 	{
 	public:
 		Material() = default;
 		~Material() = default;
-		void Update(Scene& scene, GameObject* gameobject);
+		void Update(Scene& scene, GameObject* gameobject, ICamera* cam);
 		void SetShader(Shader* newShader) { shader = newShader; }
 		void SetBaseTexture(std::shared_ptr<Texture> newTexture) { baseTexture = newTexture; }
 		Shader* GetShader() const { return shader; }

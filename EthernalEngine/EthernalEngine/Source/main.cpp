@@ -2,6 +2,7 @@
 #include "Rendering/Renderer.h"
 #include "Scene/Scene.h"
 #include "Editor/EditorUI.h"
+#include "Components/Camera.h"
 #include "Core/Input.h"
 
 #include <glad/glad.h>
@@ -24,7 +25,7 @@ int main()
         return -1;
     }
 
-    EthernalEngine::Scene scene{ &window, editorUI.viewport };
+    EthernalEngine::Scene scene{ &window, editorUI.sceneViewport, editorUI.gameViewport };
     EthernalEngine::Input input{ &window, &scene };
 
     float deltaFrame = 0.0f;
@@ -38,7 +39,7 @@ int main()
         deltaFrame = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        input.ProcessKeyAndMouseInput(deltaFrame, editorUI.viewport);
+        input.ProcessKeyAndMouseInput(deltaFrame, editorUI.sceneViewport);
 
         editorUI.BeginFrame();
         editorUI.RenderUI(&scene);
@@ -48,10 +49,19 @@ int main()
 
         renderer.Clear();
         scene.Update(deltaFrame);
-        renderer.Draw(scene);
+        renderer.Draw(scene, &scene.GetCamera(), true);
 
         if (scene.GetSceneBuffer() != nullptr)
             scene.GetSceneBuffer()->Unbind();
+
+        if (scene.GetMainCamera() != nullptr && scene.GetMainCamera()->GetCameraBuffer() != nullptr)
+            scene.GetMainCamera()->GetCameraBuffer()->Bind();
+
+        renderer.Clear();
+        renderer.Draw(scene, scene.GetMainCamera(), false);
+
+        if (scene.GetMainCamera() != nullptr && scene.GetMainCamera()->GetCameraBuffer() != nullptr)
+            scene.GetMainCamera()->GetCameraBuffer()->Unbind();
 
         editorUI.EndFrame();
 

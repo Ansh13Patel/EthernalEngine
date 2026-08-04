@@ -8,19 +8,21 @@
 
 namespace EthernalEngine
 {
-	class EngineCamera;
+    class EngineCamera;
+	class ICamera;
 	class Skybox 
 	{
 	public:
 		Skybox();
 		~Skybox() = default;
-		void SetupSkybox(const CubeMapFace& faces);
-		void Draw(EngineCamera& camera);
+		void SetupSkyboxUsingCubemap(const CubeMapFace& faces);
+		void SetupProceduralSkybox();
+        void Draw(const ICamera& camera);
 
 	private:
 		unsigned int skyboxVAO, skyboxVBO;
 		std::unique_ptr<Shader> skyboxShader;
-		std::unique_ptr<CubeMap> cubeMap;
+		std::unique_ptr<CubeMap> cubeMap = nullptr;
 		std::vector<float> skyboxVertices;
 	};
 }

@@ -19,16 +19,19 @@ using json = nlohmann::json;
 namespace EthernalEngine
 {
 	struct Viewport;
+	class Camera;
 	class Scene
 	{
 	public:
-		Scene(Window* window, Viewport& viewport);
+		Scene(Window* window, Viewport& sceneViewport, Viewport& gameViewport);
 		~Scene();
+		void BaseSceneSetup();
 		void Update(float deltaTime);
 		void AddGameObject(GameObject* gameObject);
 		void AddDirectionalLight(DirectionalLight* directioanllight);
 		void AddPointLight(PointLight* pointlight);
 		void AddSpotLight(SpotLight* spotlight);
+		void AddCamera(Camera* cam);
 		int GetGameObjectCount() const { return static_cast<int>(gameObjects.size()); }
 		std::vector<GameObject*>& GetGameObjects() { return gameObjects; }
 		void SelectGameObject(glm::vec3& rayDir);
@@ -41,9 +44,11 @@ namespace EthernalEngine
 		DirectionalLight* CreateGameObjectWithDirectionalLight();
 		PointLight* CreateGameObjectWithPointLight();
 		SpotLight* CreateGameObjectWithSpotLight();
+		Camera* CreateGameObjectWithCamera();
 		GameObject* GetSelectedGameObject();
-		Skybox* GetSkybox() { return skybox; }	
+		Skybox* GetSkybox() { return skybox; }
 		FrameBuffer* GetSceneBuffer() { return sceneBuffer; }
+		Camera* GetMainCamera() { return mainCamera; }
 		void SetSelectedGameObject(GameObject* gameObject);
 		CubeMesh* GetCubeMesh() { return cubeMesh; }
 		Shader* GetCubeShader() { return defaultShader; }
@@ -62,7 +67,9 @@ namespace EthernalEngine
 		void AddAllLights();
 
 	private:
-		FrameBuffer* sceneBuffer;
+		FrameBuffer* sceneBuffer = nullptr;
+		Viewport& m_gameViewport;
+		Camera* mainCamera = nullptr;
 		std::vector<GameObject*> gameObjects;
 		DirectionalLight* directionalLight;
 		std::vector<PointLight*> pointLights;

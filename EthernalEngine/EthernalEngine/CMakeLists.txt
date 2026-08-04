@@ -83,6 +83,7 @@ Source/Rendering/FrameBuffer.cpp
 Source/Components/DirectionalLight.cpp
 Source/Components/PointLight.cpp
 Source/Components/SpotLight.cpp
+Source/Components/Camera.cpp
 
 Source/Scene/GameObject.cpp
 Source/Scene/Scene.cpp
@@ -98,7 +99,7 @@ ${imgui_SOURCE_DIR}/imgui_tables.cpp
 ${imgui_SOURCE_DIR}/imgui_widgets.cpp
 ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
 ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
-)
+ "Source/Editor/MainCameraEditorUI.cpp" "Include/Editor/MainCameraEditorUI.h")
 
 target_include_directories(
     EthernalEngine

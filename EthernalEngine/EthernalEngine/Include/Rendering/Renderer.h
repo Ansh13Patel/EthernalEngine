@@ -15,7 +15,7 @@ namespace EthernalEngine
 		Renderer() = default;
 		~Renderer() = default;
 		void Clear();
-		void Draw(Scene& scene);
+		void Draw(Scene& scene, ICamera* cam, bool isEngineCam);
 
 	private:
 		void UpdateDirectionalLightOnObject(Scene& scene, GameObject* obj);

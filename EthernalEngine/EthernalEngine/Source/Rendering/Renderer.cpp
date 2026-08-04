@@ -6,21 +6,21 @@
 
 namespace EthernalEngine
 {
-	static void DrawGameObjectRecursive(GameObject* obj, Scene& scene)
+	static void DrawGameObjectRecursive(GameObject* obj, Scene& scene, ICamera* cam)
 	{
 		if (!obj) return;
 
 		Material* mat = obj->GetMaterial();
 		if (mat != nullptr)
 		{
-			mat->Update(scene, obj);
+			mat->Update(scene, obj, cam);
 		}
 
 		obj->Draw();
 
 		for (GameObject* child : obj->childObjects)
 		{
-			DrawGameObjectRecursive(child, scene);
+			DrawGameObjectRecursive(child, scene, cam);
 		}
 	}
 
@@ -30,25 +30,27 @@ namespace EthernalEngine
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void Renderer::Draw(Scene& scene)
+	void Renderer::Draw(Scene& scene,ICamera* cam, bool isEngineCam)
 	{
 		std::vector<GameObject*>& gameobjects = scene.GetGameObjects();
-		EngineCamera& EngineCamera = scene.GetCamera();
 		Skybox* skybox = scene.GetSkybox();
 
 		for (GameObject* obj : gameobjects)
 		{
 			if (obj)
 			{
-				DrawGameObjectRecursive(obj, scene);
+				DrawGameObjectRecursive(obj, scene, cam);
 			}
 		}
-		if (skybox != NULL)
+		if (skybox != NULL && isEngineCam == true)
 		{
-			skybox->Draw(EngineCamera);
+			skybox->Draw(*cam);
 		}
-		DrawLightDebugGizmo(scene);
-		DebugDraw::Draw(scene);
+		if (isEngineCam == true)
+		{
+			DrawLightDebugGizmo(scene);
+			DebugDraw::Draw(scene);
+		}
 	}
 
 	void Renderer::DrawLightDebugGizmo(Scene& scene)

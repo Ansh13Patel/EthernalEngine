@@ -1,6 +1,5 @@
 #pragma once
 #include "Components/Light.h"
-#include "Scene/GameObject.h"
 
 namespace EthernalEngine
 {
@@ -14,7 +13,6 @@ namespace EthernalEngine
 		void DeserializeComponent(const json& componentJson) override;
 
 	public:
-		GameObject* gameobject;
 		float ambientStrength;
 	};
 }

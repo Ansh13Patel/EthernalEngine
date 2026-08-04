@@ -33,15 +33,21 @@ namespace EthernalEngine
 		return GetLocalMatrix();
 	}
 
-	glm::vec3 Transform::GetForward()
+    glm::vec3 Transform::GetForward() const
 	{
 		glm::vec3 forward = rotation * glm::vec3(0.0f, 0.0f, -1.0f);
 		return glm::normalize(forward);
 	}
 
-	glm::vec3 Transform::GetRight()
+    glm::vec3 Transform::GetRight() const
 	{
 		glm::vec3 forward = rotation * glm::vec3(1.0f, 0.0f, 0.0f);
 		return glm::normalize(forward);
+	}
+
+    glm::vec3 Transform::GetUp() const
+	{
+		glm::vec3 up = rotation * glm::vec3(0.0f, 1.0f, 0.0f);
+		return glm::normalize(up);
 	}
 }

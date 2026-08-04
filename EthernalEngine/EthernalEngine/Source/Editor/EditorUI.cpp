@@ -2,7 +2,7 @@
 #include "Helper/FileHelper.h"
 #include "Editor/EditorPopup.h"
 #include "IconsFontAwesome7.h"
-
+#include "Components/Camera.h"
 
 #include <windows.h>
 #include <commdlg.h>
@@ -105,7 +105,7 @@ namespace EthernalEngine
 		ImGui::End();
 
 		SceneTab(scene);
-		GameTab();
+		GameTab(scene);
 		ProjectTab();
 		HierarchyTab(scene);
 		InspectorTab(scene->GetSelectedGameObject());
@@ -137,20 +137,43 @@ namespace EthernalEngine
 			ImVec2(0, 1),
 			ImVec2(1, 0));
 
-		viewport.viewportFocused = ImGui::IsItemFocused();
-		viewport.viewportHovered = ImGui::IsItemHovered();
-		viewport.viewportMax = ImGui::GetItemRectMax();
-		viewport.viewportMin = ImGui::GetItemRectMin();
-		viewport.viewportSize = ImGui::GetItemRectSize();
+		sceneViewport.viewportFocused = ImGui::IsItemFocused();
+		sceneViewport.viewportHovered = ImGui::IsItemHovered();
+		sceneViewport.viewportMax = ImGui::GetItemRectMax();
+		sceneViewport.viewportMin = ImGui::GetItemRectMin();
+		sceneViewport.viewportSize = ImGui::GetItemRectSize();
 
 		DrawGizmo(scene->GetSelectedGameObject(), &scene->GetCamera());
 
 		ImGui::End();
 	}
 
-	void EditorUI::GameTab()
+	void EditorUI::GameTab(Scene* scene)
 	{
 		ImGui::Begin(EditorWindowName::Game);
+
+		ImVec2 size = ImGui::GetContentRegionAvail();
+
+		if (scene->GetMainCamera() != nullptr && scene->GetMainCamera()->GetCameraBuffer() != nullptr)
+		{
+			FrameBuffer* frameBuffer = scene->GetMainCamera()->GetCameraBuffer();
+			if (frameBuffer != nullptr)
+			{
+				frameBuffer->Resize(size.x, size.y);
+			}
+			ImGui::Image(
+				(ImTextureID)(uintptr_t)scene->GetMainCamera()->GetCameraBuffer()->GetColorTexture(),
+				size,
+				ImVec2(0, 1),
+				ImVec2(1, 0));
+
+			gameViewport.viewportFocused = ImGui::IsItemFocused();
+			gameViewport.viewportHovered = ImGui::IsItemHovered();
+			gameViewport.viewportMax = ImGui::GetItemRectMax();
+			gameViewport.viewportMin = ImGui::GetItemRectMin();
+			gameViewport.viewportSize = ImGui::GetItemRectSize();
+		}
+
 		ImGui::End();
 	}
 
@@ -365,8 +388,8 @@ namespace EthernalEngine
 
 		ImGuizmo::SetDrawlist();
 
-		ImGuizmo::SetRect(viewport.viewportMin.x, viewport.viewportMin.y,
-			viewport.viewportMax.x - viewport.viewportMin.x, viewport.viewportMax.y - viewport.viewportMin.y);
+		ImGuizmo::SetRect(sceneViewport.viewportMin.x, sceneViewport.viewportMin.y,
+			sceneViewport.viewportMax.x - sceneViewport.viewportMin.x, sceneViewport.viewportMax.y - sceneViewport.viewportMin.y);
 
 		glm::mat4 view = engineCamera->GetViewMatrix();
 		glm::mat4 projection = engineCamera->GetProjectionMatrix();

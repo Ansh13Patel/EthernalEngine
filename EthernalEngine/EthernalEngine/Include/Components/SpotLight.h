@@ -1,6 +1,5 @@
 #pragma once
 #include "Components/Light.h"
-#include "Scene/GameObject.h"
 
 namespace EthernalEngine
 {
@@ -17,6 +16,5 @@ namespace EthernalEngine
 	public:
 		float spotAngle;
 		float range;
-		GameObject* gameobject;
 	};
 }

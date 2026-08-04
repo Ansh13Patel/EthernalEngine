@@ -1,64 +1,81 @@
+
+#define GLM_ENABLE_EXPERIMENTAL
 #include "Core/EngineCamera.h"
 #include <Editor/EditorUI.h>
-#include<glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <iostream>
 
 namespace EthernalEngine
 {
-	EngineCamera::EngineCamera(Viewport& viewport) : m_viewport(viewport)
+    EthernalEngine::EngineCamera::EngineCamera(Viewport& viewport)
+		: m_viewport(viewport)
 	{
-		cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-		cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-		cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+        transform.position = glm::vec3(0.0f, 0.0f, 3.0f);
+        transform.rotation = glm::quat(glm::vec3(0.0f));
 
-		yaw = -90.0f;
-		pitch = 0.0f;
-		fov = 45.0f;
-	}
+        yaw = -90.0f;
+        pitch = 0.0f;
+        fov = 45.0f;
+    }
 
-	void EngineCamera::UpdateCameraRotation(float xOffset, float yOffset)
+    void EngineCamera::UpdateCameraRotation(float xOffset, float yOffset)
 	{
 		yaw += xOffset;
 		pitch += yOffset;
 		pitch = glm::clamp(pitch, -89.0f, 89.0f);
 
 		glm::vec3 direction;
-
 		direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 		direction.y = sin(glm::radians(pitch));
 		direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-		
-		cameraFront = glm::normalize(direction);
+		direction = glm::normalize(direction);
+
+		// Build a view matrix looking in the new direction, then extract rotation
+		glm::mat4 view = glm::lookAt(transform.position, transform.position + direction, glm::vec3(0.0f, 1.0f, 0.0f));
+		glm::mat4 model = glm::inverse(view);
+		transform.rotation = glm::quat_cast(model);
 	}
 
-	void EngineCamera::UpdateCameraFov(float yScrollOffset)
+	glm::vec3 EngineCamera::GetPosition() const
 	{
-		cameraPos += cameraFront * cameraScrollSpeed * yScrollOffset;
+		return transform.position;
 	}
 
-	void EngineCamera::MoveCamera(bool forward, bool backward, bool right, bool left,bool up, bool down, float deltatime)
+
+    void EngineCamera::UpdateCameraFov(float yScrollOffset)
+	{
+		// Use scroll to move camera along its forward direction (zoom)
+		transform.position += transform.GetForward() * cameraScrollSpeed * yScrollOffset;
+	}
+
+    void EngineCamera::MoveCamera(bool forward, bool backward, bool right, bool left,bool up, bool down, float deltatime)
 	{
 		if (forward)
-			cameraPos += cameraFront * cameraSpeed * deltatime;
+			transform.position += transform.GetForward() * cameraSpeed * deltatime;
 		if (backward)
-			cameraPos -= cameraFront * cameraSpeed * deltatime;
+			transform.position -= transform.GetForward() * cameraSpeed * deltatime;
 		if (right)
-			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltatime;
+			transform.position += transform.GetRight() * cameraSpeed * deltatime;
 		if (left)
-			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed * deltatime;
+			transform.position -= transform.GetRight() * cameraSpeed * deltatime;
+		if (up)
+			transform.position += transform.GetUp() * cameraSpeed * deltatime;
+		if (down)
+			transform.position -= transform.GetUp() * cameraSpeed * deltatime;
 	}
 
-	void EngineCamera::MoveCamera(float xOffset, float yOffset)
+    void EngineCamera::MoveCamera(float xOffset, float yOffset)
 	{
-		glm::vec3 right = glm::normalize(glm::cross(cameraFront, cameraUp));
+		glm::vec3 right = transform.GetRight();
 
-		cameraPos -= right * xOffset * cameraPanSpeed;
-		cameraPos -= cameraUp * yOffset * cameraPanSpeed;
+		transform.position -= right * xOffset * cameraPanSpeed;
+		transform.position -= transform.GetUp() * yOffset * cameraPanSpeed;
 	}
 
-	glm::mat4 EngineCamera::GetViewMatrix() const
+    glm::mat4 EngineCamera::GetViewMatrix() const
 	{
-		return glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        return glm::lookAt(transform.position, transform.position + transform.GetForward(), transform.GetUp());
 	}
 
 	glm::mat4 EngineCamera::GetProjectionMatrix() const

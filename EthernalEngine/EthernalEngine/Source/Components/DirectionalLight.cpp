@@ -5,7 +5,7 @@ namespace EthernalEngine
 {
 	DirectionalLight::DirectionalLight(GameObject* gameobject)
 	{
-		this->gameobject = gameobject;
+		this->parentObj = gameobject;
 		ambientStrength = 0.2f;
 		specularStrength = 0.5f;
 		intensity = 1.0f;
@@ -14,10 +14,10 @@ namespace EthernalEngine
 
 	void DirectionalLight::Draw()
 	{
-		if (gameobject->GetIsSelected())
+		if (parentObj->GetIsSelected())
 		{
-			glm::vec3 startPos = gameobject->transform->position;
-			glm::vec3 endPos = gameobject->transform->position + (gameobject->transform->GetForward() * 0.25f);
+			glm::vec3 startPos = parentObj->transform->position;
+			glm::vec3 endPos = parentObj->transform->position + (parentObj->transform->GetForward() * 0.25f);
 
 			DebugDraw::DrawLine(startPos, endPos, glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 		}
