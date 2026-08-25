@@ -13,6 +13,8 @@ namespace EthernalEngine
 		void Unbind();
 		void Resize(uint32_t newWidth, uint32_t newHeight);
 		GLuint GetColorTexture() { return m_ColorTexture; }
+		uint32_t GetWidth() const { return m_width; }
+		uint32_t GetHeight() const { return m_height; }
 
 	private:
         uint32_t windowWidth, windowHeight, m_width, m_height;

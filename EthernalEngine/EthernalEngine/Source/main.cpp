@@ -17,14 +17,14 @@ int main()
 {
 	EthernalEngine::EditorUI editorUI;
     EthernalEngine::Window window;
-	EthernalEngine::Renderer renderer;
 
     if (!SetupAndInitialize(&window, &editorUI, true))
     {
         std::cout << "Failed to setup and initialize" << std::endl;
         return -1;
     }
-
+    
+    EthernalEngine::Renderer renderer;
     EthernalEngine::Scene scene{ &window, editorUI.sceneViewport, editorUI.gameViewport };
     EthernalEngine::Input input{ &window, &scene };
 
@@ -49,7 +49,7 @@ int main()
 
         renderer.Clear();
         scene.Update(deltaFrame);
-        renderer.Draw(scene, &scene.GetCamera(), true);
+        renderer.Render(scene, &scene.GetCamera(), true);
 
         if (scene.GetSceneBuffer() != nullptr)
             scene.GetSceneBuffer()->Unbind();
@@ -58,7 +58,7 @@ int main()
             scene.GetMainCamera()->GetCameraBuffer()->Bind();
 
         renderer.Clear();
-        renderer.Draw(scene, scene.GetMainCamera(), false);
+        renderer.Render(scene, scene.GetMainCamera(), false);
 
         if (scene.GetMainCamera() != nullptr && scene.GetMainCamera()->GetCameraBuffer() != nullptr)
             scene.GetMainCamera()->GetCameraBuffer()->Unbind();

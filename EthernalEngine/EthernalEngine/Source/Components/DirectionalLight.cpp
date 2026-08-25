@@ -23,6 +23,16 @@ namespace EthernalEngine
 		}
 	}
 
+	glm::mat4 DirectionalLight::GetLightSpaceMatrix(const glm::vec3& sceneCenter) const
+	{
+		float nearPlane = 1.0f;
+		float farPlane = 100.0f;
+		glm::mat4 lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, nearPlane, farPlane);
+		glm::vec3 lightDir = parentObj->transform->GetForward();
+		glm::mat4 lightView = glm::lookAt(sceneCenter - lightDir * 10.0f, sceneCenter, glm::vec3(0.0f, 1.0f, 0.0f));
+		return lightProjection * lightView;
+	}
+
 	json DirectionalLight::SerializeComponent() const
 	{
 		json componentJson = Light::SerializeComponent();

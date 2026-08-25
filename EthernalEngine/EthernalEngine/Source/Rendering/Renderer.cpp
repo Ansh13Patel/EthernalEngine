@@ -6,22 +6,46 @@
 
 namespace EthernalEngine
 {
-	static void DrawGameObjectRecursive(GameObject* obj, Scene& scene, ICamera* cam)
+	void Renderer::RenderGameObjectRecursive(GameObject* obj, Scene& scene, ICamera* cam)
 	{
 		if (!obj) return;
 
 		Material* mat = obj->GetMaterial();
 		if (mat != nullptr)
 		{
+			shadowMap.BindTexture(GL_TEXTURE5);
 			mat->Update(scene, obj, cam);
+			obj->Draw();
 		}
 
-		obj->Draw();
 
 		for (GameObject* child : obj->childObjects)
 		{
-			DrawGameObjectRecursive(child, scene, cam);
+			RenderGameObjectRecursive(child, scene, cam);
 		}
+	}
+
+	void Renderer::RenderGameObjectShadowRecursive(GameObject* obj)
+	{
+		if (!obj) return;
+
+		if (shadowShader != nullptr && obj->GetMesh() != nullptr)
+		{
+			shadowShader->SetMat4("model", obj->transform->GetWorldMatrix());
+			obj->Draw();
+		}
+
+		for (GameObject* child : obj->childObjects)
+		{
+			RenderGameObjectShadowRecursive(child);
+		}
+	}
+
+	Renderer::Renderer()
+	{
+		shadowShader = new Shader();
+		shadowShader->LoadFromFile("Shaders/ShadowDepth.vert", "Shaders/ShadowDepth.frag");
+		shadowMap.Create(1024, 1024);
 	}
 
 	void Renderer::Clear()
@@ -30,18 +54,12 @@ namespace EthernalEngine
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void Renderer::Draw(Scene& scene,ICamera* cam, bool isEngineCam)
+	void Renderer::Render(Scene& scene,ICamera* cam, bool isEngineCam)
 	{
-		std::vector<GameObject*>& gameobjects = scene.GetGameObjects();
+		RenderShadowPass(scene);
+		RenderScenePass(scene, cam);
 		Skybox* skybox = scene.GetSkybox();
 
-		for (GameObject* obj : gameobjects)
-		{
-			if (obj)
-			{
-				DrawGameObjectRecursive(obj, scene, cam);
-			}
-		}
 		if (skybox != NULL && isEngineCam == true)
 		{
 			skybox->Draw(*cam);
@@ -50,6 +68,41 @@ namespace EthernalEngine
 		{
 			DrawLightDebugGizmo(scene);
 			DebugDraw::Draw(scene);
+		}
+	}
+
+	void Renderer::RenderScenePass(Scene& scene, ICamera* cam)
+	{
+		std::vector<GameObject*>& gameobjects = scene.GetGameObjects();
+
+		for (GameObject* obj : gameobjects)
+		{
+			if (obj)
+			{
+				RenderGameObjectRecursive(obj, scene, cam);
+			}
+		}
+	}
+
+	void Renderer::RenderShadowPass(Scene& scene)
+	{
+		DirectionalLight* dl = scene.GetDirectionalLight();
+		if (dl != nullptr)
+		{
+			glm::vec3 sceneCenter(0.0f, 0.0f, 0.0f);
+			glm::mat4 lightSpaceMatrix = dl->GetLightSpaceMatrix(sceneCenter);
+			shadowMap.BindForWriting();
+			shadowShader->Use();
+			shadowShader->SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+			std::vector<GameObject*>& gameobjects = scene.GetGameObjects();
+			for (GameObject* obj : gameobjects)
+			{
+				if (obj)
+				{
+					RenderGameObjectShadowRecursive(obj);
+				}
+			}
+			shadowMap.Unbind(scene.GetSceneBuffer()->GetWidth(), scene.GetSceneBuffer()->GetHeight());
 		}
 	}
 

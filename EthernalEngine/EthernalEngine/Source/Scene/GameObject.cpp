@@ -14,7 +14,7 @@ namespace EthernalEngine
 
 	void GameObject::Draw()
 	{
-        if (mesh && material)
+        if (mesh)
         {
             mesh->Draw();
         }

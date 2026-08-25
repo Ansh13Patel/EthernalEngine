@@ -64,6 +64,7 @@ Source/Editor/MeshEditorUI.cpp
 Source/Editor/SpotLightEditorUI.cpp
 Source/Editor/MaterialEditorUI.cpp
 Source/Editor/EditorPopup.cpp
+Source/Editor/MainCameraEditorUI.cpp
 
 Source/Helper/FileHelper.cpp
 Source/Helper/DebugDraw.cpp
@@ -79,6 +80,7 @@ Source/Rendering/Material.cpp
 Source/Rendering/Skybox.cpp
 Source/Rendering/CubeMap.cpp
 Source/Rendering/FrameBuffer.cpp
+Source/Rendering/ShadowMap.cpp
 
 Source/Components/DirectionalLight.cpp
 Source/Components/PointLight.cpp
@@ -98,8 +100,7 @@ ${imgui_SOURCE_DIR}/imgui_draw.cpp
 ${imgui_SOURCE_DIR}/imgui_tables.cpp
 ${imgui_SOURCE_DIR}/imgui_widgets.cpp
 ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
-${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
- "Source/Editor/MainCameraEditorUI.cpp" "Include/Editor/MainCameraEditorUI.h")
+${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp)
 
 target_include_directories(
     EthernalEngine

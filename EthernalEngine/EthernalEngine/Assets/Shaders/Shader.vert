@@ -9,11 +9,13 @@ uniform vec3 baseColor;
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 uLightSpaceMatrix;
 
 out vec2 TexCoords;
 out vec4 BaseColor;
 out vec3 Normal;
 out vec3 FragPos;
+out vec4 FragPosLightSpace;
 
 void main()
 {
@@ -28,4 +30,6 @@ void main()
     TexCoords = aTexCoord;
 
     BaseColor = vec4( baseColor, 1.0);
+
+    FragPosLightSpace = uLightSpaceMatrix * worldPos;
 }

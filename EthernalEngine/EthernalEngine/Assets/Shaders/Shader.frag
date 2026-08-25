@@ -36,12 +36,14 @@ in vec2 TexCoords;
 in vec4 BaseColor;
 in vec3 Normal;
 in vec3 FragPos;
+in vec4 FragPosLightSpace;
 
 out vec4 FragColor;
 
 uniform sampler2D image;
 uniform samplerCube skybox;
 uniform vec3 viewPos;
+uniform sampler2D shadowMap;
 uniform float shininess;
 uniform float metallic;
 uniform float roughness;
@@ -61,6 +63,7 @@ vec3 CalculatePointLights();
 vec3 CalculateSpotLights();
 vec3 CalculateReflectionColor();
 vec3 CalculateRefractionColor();
+float CalculateShadow(vec4 fragPosLightSpace);
 
 void main()
 {
@@ -119,7 +122,9 @@ vec3 CalculateDirectionalLight()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
     vec3 specular = directionalLight.specularStrength * spec * directionalLight.color.rgb;
 
-    vec3 finalLightColor = (ambient + diffuse + specular) * directionalLight.intensity;
+    float shadow = CalculateShadow(FragPosLightSpace);
+
+    vec3 finalLightColor = (ambient + (1.0 - shadow) * (diffuse + specular)) * directionalLight.intensity;
     return finalLightColor;
 }
 
@@ -190,4 +195,27 @@ vec3 CalculateSpotLights()
 
     vec3 finalLightColor = (diffuseColor + specularColor);
     return finalLightColor;
+}
+
+float CalculateShadow(vec4 fragPosLightSpace)
+{
+   vec3 projcoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+
+   projcoords = projcoords * 0.5 + 0.5;
+
+   if(projcoords.x < 0.0 || projcoords.x > 1.0 ||
+      projcoords.y < 0.0 || projcoords.y > 1.0 ||
+      projcoords.z > 1.0)
+      return 0.0;
+
+   float closestDepth = texture(shadowMap, projcoords.xy).r;
+   float currentDepth = projcoords.z;
+
+   vec3 normal = normalize(Normal);
+   vec3 lightDir = normalize(-directionalLight.direction);
+
+   float bias = max(0.005 * (1.0 - dot(normal, lightDir)),
+                    0.0005);
+
+   return currentDepth - bias > closestDepth ? 1.0 : 0.0;
 }

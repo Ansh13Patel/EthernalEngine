@@ -2,6 +2,7 @@
 
 #include "Scene/GameObject.h"
 #include "Core/EngineCamera.h"
+#include "Rendering/ShadowMap.h"
 
 #include <vector>
 
@@ -12,15 +13,20 @@ namespace EthernalEngine
 	class Renderer 
 	{
 	public:
-		Renderer() = default;
+		Renderer();
 		~Renderer() = default;
 		void Clear();
-		void Draw(Scene& scene, ICamera* cam, bool isEngineCam);
+		void Render(Scene& scene, ICamera* cam, bool isEngineCam);
 
 	private:
-		void UpdateDirectionalLightOnObject(Scene& scene, GameObject* obj);
-		void UpdatePointLightsOnObject(Scene& scene, GameObject* obj);
-		void UpdateSpotLightsOnObject(Scene& scene, GameObject* obj);
 		void DrawLightDebugGizmo(Scene& scene);
+		void RenderScenePass(Scene& scene,ICamera* cam);
+		void RenderGameObjectRecursive(GameObject* obj, Scene& scene, ICamera* cam);
+		void RenderShadowPass(Scene& scene);
+		void RenderGameObjectShadowRecursive(GameObject* obj);
+
+	private:
+		ShadowMap& shadowMap = ShadowMap();
+		Shader* shadowShader = nullptr;
 	};
 }

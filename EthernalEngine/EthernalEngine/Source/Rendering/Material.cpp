@@ -16,6 +16,7 @@ namespace EthernalEngine
 		{
 			shader->Use();
 			shader->SetInt("image", 0);
+			shader->SetInt("shadowMap", 5);
 
 			shader->SetMat4("view", cam->GetViewMatrix());
 			shader->SetMat4("projection", cam->GetProjectionMatrix());
@@ -47,12 +48,12 @@ namespace EthernalEngine
 		if (dirLight != nullptr && dirLight->enable)
 		{
 			glm::vec3 forwardDir = dirLight->parentObj->transform->GetForward();
-			// corrected uniform name to match shader struct (direction)
 			shader->SetFloat3("directionalLight.direction", std::vector<float>{forwardDir.x, forwardDir.y, forwardDir.z}.data());
 			shader->SetFloat("directionalLight.ambientStrength", dirLight->ambientStrength);
 			shader->SetFloat("directionalLight.specularStrength", dirLight->specularStrength);
 			shader->SetFloat("directionalLight.intensity", dirLight->intensity);
 			shader->SetFloat4("directionalLight.color", dirLight->lightColor);
+			shader->SetMat4("uLightSpaceMatrix", dirLight->GetLightSpaceMatrix(glm::vec3(0.0f, 0.0f, 0.0f)));
 		}
 	}
 
