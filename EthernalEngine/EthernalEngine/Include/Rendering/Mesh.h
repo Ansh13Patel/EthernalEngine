@@ -14,7 +14,8 @@ enum DefaultMeshType
     None,
     Cube,
     Sphere,
-    Cylinder
+    Cylinder,
+    Plane
 };
 namespace EthernalEngine
 {

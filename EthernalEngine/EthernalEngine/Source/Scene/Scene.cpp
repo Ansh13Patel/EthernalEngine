@@ -15,15 +15,8 @@ namespace EthernalEngine
 		pendingSceneLoad = false;
 		directionalLight = nullptr;
 		skybox = new Skybox();
-	/*	skybox->SetupSkyboxUsingCubemap({
-			"Textures/Skybox/right.png",
-			"Textures/Skybox/left.png",
-			"Textures/Skybox/top.png",
-			"Textures/Skybox/bottom.png",
-			"Textures/Skybox/front.png",
-			"Textures/Skybox/back.png"
-			});*/
 		skybox->SetupProceduralSkybox();
+
 		if (defaultShader == nullptr)
 		{
 			defaultShader = new Shader();
@@ -32,6 +25,14 @@ namespace EthernalEngine
 		if (cubeMesh == nullptr)
 		{
 			cubeMesh = new CubeMesh();
+		}
+		if(planeMesh == nullptr)
+		{
+			planeMesh = new PlaneMesh();
+		}
+		if(sphereMesh == nullptr)
+		{
+			sphereMesh = new SphereMesh(0.5f, 32, 16);
 		}
 
 		sceneBuffer = new FrameBuffer();
@@ -113,22 +114,36 @@ namespace EthernalEngine
 		return selectedGameObject;
 	}
 
-	GameObject* Scene::CreateCubeGameObject(std::string name)
+	GameObject* Scene::CreateDefaultGameObject(std::string name, DefaultMeshType type)
 	{
-		GameObject* newCube = new GameObject(name);
-		newCube->defaultMeshType = DefaultMeshType::Cube;
+		GameObject* newObject = new GameObject(name);
 
 		std::shared_ptr<Texture> texture = std::make_shared<Texture>();
 		texture->LoadTextureFromPath("Textures/White.png");
+
 		Material* mat = nullptr;
 		mat = new Material();
 		mat->SetShader(defaultShader);
 		mat->SetBaseTexture(texture);
 
-		newCube->SetMesh(cubeMesh);
-		newCube->SetMaterial(mat);
+		newObject->defaultMeshType = type;
+		switch (type)
+		{
+		case DefaultMeshType::Cube:
+			newObject->SetMesh(cubeMesh);
+			break;
+		case DefaultMeshType::Plane:
+			newObject->SetMesh(planeMesh);
+			break;
+		case DefaultMeshType::Sphere:
+			newObject->SetMesh(sphereMesh);
+			break;
+		default:
+			break;
+		}
 
-		return newCube;
+		newObject->SetMaterial(mat);
+		return newObject;
 	}
 
 	GameObject* Scene::CreateGameObjectWithCustomModel(std::string name, std::string path)

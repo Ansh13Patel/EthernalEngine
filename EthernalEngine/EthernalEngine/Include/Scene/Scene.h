@@ -4,6 +4,8 @@
 #include "Core/EngineCamera.h"
 #include "Rendering/Renderer.h"
 #include "Rendering/CubeMesh.h"
+#include "Rendering/PlaneMesh.h"
+#include "Rendering/SphereMesh.h"
 #include "Rendering/Material.h"
 #include "Rendering/Skybox.h"
 #include "Core/Window.h"
@@ -39,7 +41,7 @@ namespace EthernalEngine
 		DirectionalLight* GetDirectionalLight() { return directionalLight; }
 		std::vector<PointLight*> GetPointLights() { return pointLights; }
 		std::vector<SpotLight*> GetSpotLights() { return spotLights; }
-		GameObject* CreateCubeGameObject(std::string name);
+		GameObject* CreateDefaultGameObject(std::string name, DefaultMeshType type = DefaultMeshType::None);
 		GameObject* CreateGameObjectWithCustomModel(std::string name, std::string path);
 		DirectionalLight* CreateGameObjectWithDirectionalLight();
 		PointLight* CreateGameObjectWithPointLight();
@@ -79,6 +81,8 @@ namespace EthernalEngine
 		EngineCamera engineCam;
 		Skybox* skybox = nullptr;
 		CubeMesh* cubeMesh = nullptr;
+		SphereMesh* sphereMesh = nullptr;
+		PlaneMesh* planeMesh = nullptr;
 		Shader* defaultShader = nullptr;
 		float ambientColor[4]{ 1.0f,1.0f,1.0f,1.0f };
 		float intensity = 0.2f;

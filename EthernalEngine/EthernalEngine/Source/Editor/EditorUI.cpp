@@ -235,7 +235,19 @@ namespace EthernalEngine
 			{
 				if (ImGui::MenuItem("Cube"))
 				{
-					scene->AddGameObject(scene->CreateCubeGameObject("NewCube"));
+					scene->AddGameObject(scene->CreateDefaultGameObject("NewCube", DefaultMeshType::Cube));
+				}
+				else if (ImGui::MenuItem("Sphere"))
+				{
+					scene->AddGameObject(scene->CreateDefaultGameObject("NewSphere", DefaultMeshType::Sphere));
+				}
+				else if (ImGui::MenuItem("Cylinder"))
+				{
+					scene->AddGameObject(scene->CreateDefaultGameObject("NewCylinder", DefaultMeshType::Cylinder));
+				}
+				else if (ImGui::MenuItem("Plane"))
+				{
+					scene->AddGameObject(scene->CreateDefaultGameObject("NewPlane", DefaultMeshType::Plane));
 				}
 				ImGui::EndMenu();
 			}
