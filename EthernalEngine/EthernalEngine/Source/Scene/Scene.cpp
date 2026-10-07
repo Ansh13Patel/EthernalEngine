@@ -28,7 +28,7 @@ namespace EthernalEngine
 		}
 		if(planeMesh == nullptr)
 		{
-			planeMesh = new PlaneMesh();
+			planeMesh = new PlaneMesh(1.0f, 1.0f, 0.1f);
 		}
 		if(sphereMesh == nullptr)
 		{
