@@ -6,6 +6,7 @@
 #include "Rendering/CubeMesh.h"
 #include "Rendering/PlaneMesh.h"
 #include "Rendering/SphereMesh.h"
+#include "Rendering/CylinderMesh.h"
 #include "Rendering/Material.h"
 #include "Rendering/Skybox.h"
 #include "Core/Window.h"
@@ -83,6 +84,7 @@ namespace EthernalEngine
 		CubeMesh* cubeMesh = nullptr;
 		SphereMesh* sphereMesh = nullptr;
 		PlaneMesh* planeMesh = nullptr;
+		CylinderMesh* cylinderMesh = nullptr;
 		Shader* defaultShader = nullptr;
 		float ambientColor[4]{ 1.0f,1.0f,1.0f,1.0f };
 		float intensity = 0.2f;

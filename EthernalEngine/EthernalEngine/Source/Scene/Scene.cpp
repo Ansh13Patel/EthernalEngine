@@ -28,11 +28,15 @@ namespace EthernalEngine
 		}
 		if(planeMesh == nullptr)
 		{
-			planeMesh = new PlaneMesh(1.0f, 1.0f, 0.1f);
+			planeMesh = new PlaneMesh(10.0f, 10.0f, 0.1f);
 		}
 		if(sphereMesh == nullptr)
 		{
 			sphereMesh = new SphereMesh(0.5f, 32, 16);
+		}
+		if(cylinderMesh == nullptr)
+		{
+			cylinderMesh = new CylinderMesh(0.5f, 1.0f, 32);
 		}
 
 		sceneBuffer = new FrameBuffer();
@@ -138,6 +142,8 @@ namespace EthernalEngine
 		case DefaultMeshType::Sphere:
 			newObject->SetMesh(sphereMesh);
 			break;
+		case DefaultMeshType::Cylinder:
+			newObject->SetMesh(cylinderMesh);
 		default:
 			break;
 		}
@@ -162,6 +168,8 @@ namespace EthernalEngine
 		DirectionalLight* dirLight = new DirectionalLight(dirLightObj);
 		dirLightObj->components.push_back(dirLight);
 
+		dirLightObj->transform->rotation = glm::quat(glm::radians(glm::vec3(-45.0f, 0.0f, 0.0f)));
+		dirLightObj->transform->position = glm::vec3(0.0f, 10.0f, 10.0f);
 		AddGameObject(dirLightObj);
 
 		return dirLight;

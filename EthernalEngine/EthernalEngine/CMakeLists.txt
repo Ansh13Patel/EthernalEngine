@@ -72,6 +72,7 @@ Source/Helper/DebugDraw.cpp
 Source/Rendering/CubeMesh.cpp
 Source/Rendering/PlaneMesh.cpp
 Source/Rendering/SphereMesh.cpp
+Source/Rendering/CylinderMesh.cpp
 Source/Rendering/Mesh.cpp
 Source/Rendering/Model.cpp
 Source/Rendering/Renderer.cpp
