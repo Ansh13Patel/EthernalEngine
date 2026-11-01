@@ -332,6 +332,15 @@ namespace EthernalEngine
 					case DefaultMeshType::Cube:
 						newGameObject->SetMesh(cubeMesh);
 						break;
+					case DefaultMeshType::Sphere:
+						newGameObject->SetMesh(sphereMesh);
+						break;
+					case DefaultMeshType::Cylinder:
+						newGameObject->SetMesh(cylinderMesh);
+						break;
+					case DefaultMeshType::Plane:
+						newGameObject->SetMesh(planeMesh);
+						break;
 					default:
 						break;
 					}
@@ -347,6 +356,14 @@ namespace EthernalEngine
 	{
 		ClearScene();
 		DeserializeScene(pendingSceneData);
+
+		if (mainCamera == nullptr)
+		{
+			Camera* cam = CreateGameObjectWithCamera();
+			cam->parentObj->transform->position = glm::vec3(0.0f, 0.0f, 15.0f);
+			AddCamera(cam);
+		}
+
 		pendingSceneLoad = false;
 	}
 
@@ -361,6 +378,8 @@ namespace EthernalEngine
 		}
 
 		directionalLight = nullptr;
+		mainCamera = nullptr;          
+		selectedGameObject = nullptr;
 
 		gameObjects.clear();
 		pointLights.clear();

@@ -58,7 +58,8 @@ int main()
             scene.GetMainCamera()->GetCameraBuffer()->Bind();
 
         renderer.Clear();
-        renderer.Render(scene, scene.GetMainCamera(), false);
+        if (scene.GetMainCamera() != nullptr)
+            renderer.Render(scene, scene.GetMainCamera(), false);
 
         if (scene.GetMainCamera() != nullptr && scene.GetMainCamera()->GetCameraBuffer() != nullptr)
             scene.GetMainCamera()->GetCameraBuffer()->Unbind();
